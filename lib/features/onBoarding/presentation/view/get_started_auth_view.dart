@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/asstes_manager.dart';
+import 'package:plant_hub_app/features/onBoarding/presentation/widget/build_social_button.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
@@ -22,7 +24,11 @@ class GetStartedScreen extends StatelessWidget {
             SizedBox(height: SizeConfig().height(0.02)),
             TitleGetStartedView(),
             SizedBox(height: SizeConfig().height(0.09)),
-            SizedBox(height: SizeConfig().height(0.02)),
+            BuildSocialButton(label: AppKeyStringTr.continueWithGoogle, image: AssetsManager.logoGoogle, onPressed: (){}),
+            SizedBox(height: SizeConfig().height(0.03)),
+            BuildSocialButton(label: AppKeyStringTr.continueWithFacebook, image: AssetsManager.logoFacebook, onPressed: (){})
+
+            ,SizedBox(height: SizeConfig().height(0.02)),
             const Spacer(),
             OutlinedButtonWidget(
               nameButton: AppKeyStringTr.signUp,

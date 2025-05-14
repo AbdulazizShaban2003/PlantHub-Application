@@ -156,7 +156,7 @@ class AppThemes {
         backgroundColor: ColorsManager.greyColor.shade200,
         side: BorderSide.none,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-        minimumSize: const Size(double.infinity, 50),
+        minimumSize: const Size(double.infinity, 40),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -207,6 +207,10 @@ class AppThemes {
       ),
       labelLarge: TextStyle(
         color: Color(0xFFFFFFFF),
+        fontWeight: FontWeight.bold,
+      ),
+      labelMedium: TextStyle(
+        color: Color(0xFF1E1E1E),
         fontWeight: FontWeight.bold,
       ),
       titleMedium: TextStyle(color: Colors.grey.shade600),
