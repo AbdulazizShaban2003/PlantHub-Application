@@ -1,0 +1,50 @@
+import 'package:easy_localization/easy_localization.dart';
+
+class AppKeyStringTr {
+  static String nameApp = 'NameApp'.tr();
+  static String titleOnBoardingPage1 = "titleOnBoardingPage1".tr();
+  static String titleOnBoardingPage2 = 'titleOnBoardingPage2'.tr();
+  static String titleOnBoardingPage3 = 'titleOnBoardingPage3'.tr();
+  static String subtitleOnBoardingPage1 = 'subtitleOnBoardingPage2'.tr();
+  static String subtitleOnBoardingPage2 = 'subtitleOnBoardingPage2'.tr();
+  static String subtitleOnBoardingPage3 = 'subtitleOnBoardingPage3'.tr();
+  static String skip = 'skip'.tr();
+  static String kContinue = 'kContinue'.tr();
+  static String getStarted = 'getStarted'.tr();
+  static String titleForGetStarted = 'titleForGetStarted'.tr();
+  static String subtitleForGetStarted = 'subtitleForGetStarted'.tr();
+  static String privacyPolicyTermsOfService = 'privacyPolicyTermsOfService'.tr();
+  static String login = 'login'.tr();
+  static String signUp = 'signUp'.tr();
+  static String continueWithGoogle = 'continueWithGoogle'.tr();
+  static String continueWithApple = 'continueWithApple'.tr();
+  static String continueWithFacebook = 'continueWithFacebook'.tr();
+  static String askPlantExpert =  'askPlantExpert'.tr();
+  static String subtitleAskPlantExpert = 'subtitleAskPlantExpert'.tr();
+  static String popularArticles = 'popularArticles'.tr();
+  static String viewAll = 'viewAll'.tr();
+  static String exploreBooks = 'exploreBooks'.tr();
+  static String explorePlants = "explorePlants".tr();
+  static String searchPlant = 'searchPlant'.tr();
+  static String home = 'home'.tr();
+  static String diagnose = 'diagnose'.tr();
+  static String myPlant = 'myPlant'.tr();
+  static String account = 'account'.tr();
+  static String titleForgetPassword = 'titleForgetPassword'.tr();
+  static String subtitleForgetPassword = 'subtitleForgetPassword'.tr();
+  static String yourRegisteredEmail = "yourRegisteredEmail".tr();
+  static String sendLink = 'sendLink'.tr();
+  static String email = 'email'.tr();
+  static String password = "password".tr();
+  static String or = 'or'.tr();
+  static String forgetPassword = 'forgetPassword'.tr();
+  static String rememberMe = 'rememberMe'.tr();
+  static String onBoarding = "onBoarding";
+  static String username = 'username'.tr();
+  static String titleLoginView = 'titleLoginView'.tr();
+  static String subtitleLoginView = 'subtitleLoginView'.tr();
+  static String confirmPassword = "confirmPassword".tr();
+  static String enterPassword = "enterPassword".tr();
+  static String emailCannotEmpty = "emailCannotEmpty".tr();
+
+}
