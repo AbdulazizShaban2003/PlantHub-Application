@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/onBoarding/presentation/view/onBoarding_view.dart';
+import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
 class PlantHub extends StatefulWidget {
@@ -20,7 +21,7 @@ class _PlantHubState extends State<PlantHub> {
             darkTheme: AppThemes.darkTheme,
             themeMode: ThemeMode.dark,
             theme: AppThemes.darkTheme,
-            home: OnBoardingView(),
+            home: SplashView(),
     );
   }
 }
