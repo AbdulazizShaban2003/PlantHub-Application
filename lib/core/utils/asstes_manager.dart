@@ -1,4 +1,4 @@
-class AsstesManager {
+class AssetsManager {
   static const String logoApp = "assets/images/logo_icon.png";
   static const String imageOnboarding1 = "assets/images/onBoarding1.png";
   static const String imageOnboarding2 = "assets/images/onBoarding2.png";

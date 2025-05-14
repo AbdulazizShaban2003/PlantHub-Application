@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../config/theme/app_colors.dart';
-import '../utils/size_config.dart';
-
 class OutlinedButtonWidget extends StatelessWidget {
    OutlinedButtonWidget({
     super.key,

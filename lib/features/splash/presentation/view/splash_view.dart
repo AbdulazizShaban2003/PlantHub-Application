@@ -49,7 +49,7 @@ class _SplashViewState extends State<SplashView> {
               child: SizedBox(
                 width: 200,
                 child: Image(
-                  image: AssetImage(AsstesManager.logoApp),
+                  image: AssetImage(AssetsManager.logoApp),
                 ),
               ),
             ),

@@ -136,8 +136,6 @@ class AppThemes {
       ),
       prefixIconColor: Colors.grey.shade400,
     ),
-    dividerColor: Colors.grey.withOpacity(0.1),
-
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: ColorsManager.whiteColor,
@@ -147,9 +145,10 @@ class AppThemes {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     ),
+
     dividerTheme: DividerThemeData(
-      color: ColorsManager.greyColor.shade50,
-      thickness: SizeConfig().height(0.0001),
+        thickness: SizeConfig().height(0.001),
+        color:  Colors.white.withOpacity(0.2)
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(

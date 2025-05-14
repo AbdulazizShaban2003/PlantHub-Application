@@ -69,6 +69,7 @@ dependencies:
   url_launcher: ^6.2.5
   flutter_native_splash: ^2.4.6
   typewritertext: ^3.0.9
+  smooth_page_indicator: ^1.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

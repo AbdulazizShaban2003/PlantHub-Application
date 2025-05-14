@@ -13,7 +13,7 @@ class ImageComponent extends StatelessWidget {
       width: SizeConfig().width(0.5),
       height: SizeConfig().height(0.2),
       child: Image(
-        image: AssetImage(AsstesManager.getStartedLogo),
+        image: AssetImage(AssetsManager.getStartedLogo),
       ),
     );
   }
