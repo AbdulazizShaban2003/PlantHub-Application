@@ -62,7 +62,7 @@ class _SplashViewState extends State<SplashView> {
                 style:Theme.of(context).textTheme.headlineLarge!.copyWith(
                   color: ColorsManager.whiteColor
                 ),
-                duration: const Duration(milliseconds: 100),
+                duration: const Duration(milliseconds: 80),
               ),
             ),
             const Spacer(),
