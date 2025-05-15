@@ -119,6 +119,7 @@ class AppThemes {
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
     primaryColor: Color(0xFF388E3C),
+
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(
         color: Colors.grey.shade400,
@@ -199,8 +200,8 @@ class AppThemes {
         fontSize: 22,
         fontWeight: FontWeight.bold,
       ),
-      bodyLarge: TextStyle(color: Color(0xDDFFFFFF)),
-      bodyMedium: TextStyle(color: Color(0x99FFFFFF)),
+      bodyLarge: TextStyle(color: Color(0xDDFFFFFF),fontWeight: FontWeight.bold),
+      bodyMedium: TextStyle(color: Color(0xDDFFFFFF)),
       bodySmall: TextStyle(
         color: Color(0xFFFFFFFF),
         fontWeight: FontWeight.bold,
