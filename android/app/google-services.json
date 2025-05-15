@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "439084202195",
+    "project_id": "planthub-409a9",
+    "storage_bucket": "planthub-409a9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:439084202195:android:0bc1a2024cef54aae5fc26",
+        "android_client_info": {
+          "package_name": "com.example.plant_hub_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxu1uRWluUS-DN-lJ449iXDxTlAyL50Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
