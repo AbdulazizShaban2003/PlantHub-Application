@@ -1,0 +1,43 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class BuildCircleIcon extends StatelessWidget {
+   const BuildCircleIcon({super.key, required this.showBadge, required this.iconData});
+ final  bool showBadge ;
+ final IconData iconData;
+  @override
+  Widget build(BuildContext context) {
+    return  Stack(
+      children: [
+        Container(
+          width: 30,
+          height: 30,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: IconButton(
+            onPressed: () {},
+            icon: Icon(iconData,size: 15,),
+            splashRadius: 18,
+          ),
+        ),
+        if (showBadge!)
+          Positioned(
+            right: 10,
+            top: 10,
+            child: Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+
