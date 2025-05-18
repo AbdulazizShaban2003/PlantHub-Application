@@ -4,6 +4,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
+import '../../../chatAi/persentation/views/chat_view.dart';
 
 class CustomAskExpert extends StatelessWidget {
   const CustomAskExpert({super.key});
@@ -42,6 +43,10 @@ class CustomAskExpert extends StatelessWidget {
                     style: Theme.of(context).textTheme.labelSmall,
                     nameButton: AppKeyStringTr.askPlantExpert,
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        RouteHelper.navigateTo(const ChatView()),
+                      );
                     },
                   ),
                 ],

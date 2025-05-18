@@ -13,6 +13,10 @@
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
+		<key>NSSpeechRecognitionUsageDescription</key>
+        <string>Needed for converting speech to text</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Needed for converting speech to text also</string>
 		<string>PlantHub</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
