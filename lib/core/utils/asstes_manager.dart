@@ -12,5 +12,6 @@ class AssetsManager {
   static const String getStartedLogo ="assets/images/Green-leaves-logo.png";
   static const String questionsBroImage ="assets/images/Questions-bro.png";
   static const String forgetPasswordImage ="assets/animation/forgetPassword.json";
+  static const String backgroundGetStarted ="assets/images/background_getstarted.jpg";
 
 }

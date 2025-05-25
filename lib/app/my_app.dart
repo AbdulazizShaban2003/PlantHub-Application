@@ -1,14 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/forget_password_view.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
-import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
-import 'package:plant_hub_app/features/onBoarding/presentation/view/onBoarding_view.dart';
 import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
+import '../features/articles/provider.dart';
 import '../features/chatAi/controller/chat_provider.dart';
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});
@@ -22,6 +18,8 @@ class _PlantHubState extends State<PlantHub> {
     return  MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+    ChangeNotifierProvider(
+    create: (context) => PlantProvider(),)
 
       ],
       child: MaterialApp(
@@ -32,7 +30,7 @@ class _PlantHubState extends State<PlantHub> {
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.dark,
               theme: AppThemes.darkTheme,
-              home: HomeView()
+              home: SplashView(),
       ),
     );
   }
