@@ -142,7 +142,7 @@ class AppThemes {
         foregroundColor: ColorsManager.whiteColor,
         backgroundColor: ColorsManager.greenPrimaryColor,
         side: BorderSide.none,
-        minimumSize: const Size(double.infinity, 40),
+        minimumSize: const Size(double.infinity, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     ),
@@ -219,7 +219,7 @@ class AppThemes {
     ),
     iconTheme: IconThemeData(color: Color(0xFFFFFFFF), size: 25),
     colorScheme: ColorScheme.dark(
-      primary: Color(0xFF388E3C),
+      primary: ColorsManager.greenPrimaryColor,
       secondary: Color(0xFF66BB6A),
       error: Color(0xFFFF5252),
       background: Color(0xFFFFFFFF),

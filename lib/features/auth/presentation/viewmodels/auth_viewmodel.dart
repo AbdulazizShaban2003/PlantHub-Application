@@ -135,12 +135,18 @@ class AuthViewModel with ChangeNotifier {
     }
     try {
       await forgotPasswordUseCase.call(email);
+
+      Navigator.of(context, rootNavigator: true).pop(); // close dialog
       FlushbarHelper.showSuccess(context: context, message: 'Password reset link sent to your email');
-      Navigator.pop(context);
-      Navigator.pushReplacement(context, RouteHelper.navigateTo(LoginView()));
+
+      Future.delayed(Duration(milliseconds: 300), () {
+        Navigator.pop(context); // close forget password screen
+        Navigator.pushReplacement(context, RouteHelper.navigateTo(LoginView()));
+      });
+
     } catch (e) {
-      Navigator.of(context, rootNavigator: true).pop();
-     await handleError(e, context);
+      Navigator.of(context, rootNavigator: true).pop(); // close dialog
+      await handleError(e, context);
     } finally {
       _setLoading(false);
     }

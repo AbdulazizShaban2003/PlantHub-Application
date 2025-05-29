@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
+import '../controller/vaildator_auth_controller.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/custom_confirm_password.dart';
 import '../widgets/custom_email_widget.dart';
@@ -17,7 +18,12 @@ class SignUpView extends StatefulWidget {
   @override
   State<SignUpView> createState() => _SignUpViewState();
 }
-
+final formKey = GlobalKey<FormState>();
+final emailController = TextEditingController();
+final passwordController = TextEditingController();
+final confirmPasswordController = TextEditingController();
+final usernameController = TextEditingController();
+final validatorController = ValidatorController();
 class _SignUpViewState extends State<SignUpView> {
   @override
   Widget build(BuildContext context) {
@@ -28,7 +34,7 @@ class _SignUpViewState extends State<SignUpView> {
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Form(
-            key: authViewModel.formKey,
+            key: formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -61,29 +67,29 @@ class _SignUpViewState extends State<SignUpView> {
                 SizedBox(height: SizeConfig().height(0.02)),
                 CustomEmailWidget(
                   context: context,
-                  validatorController: authViewModel.validatorController,
-                  emailController: authViewModel.emailController,
+                  validatorController: validatorController,
+                  emailController:emailController,
                 ),
                 SizedBox(height: SizeConfig().height(0.02)),
                 CustomPasswordWidget(
-                  validatorController: authViewModel.validatorController,
-                  passwordController: authViewModel.passwordController,
+                  validatorController: validatorController,
+                  passwordController: passwordController,
                 ),
                 SizedBox(height: SizeConfig().height(0.02)),
                 CustomConfirmPassword(
                   context: context,
-                  validatorController: authViewModel.validatorController,
-                  passwordController: authViewModel.passwordController,
+                  validatorController: validatorController,
+                  passwordController: passwordController,
                   confirmPasswordController:
-                      authViewModel.confirmPasswordController,
+                  confirmPasswordController,
                 ),
                 SizedBox(height: SizeConfig().height(0.08)),
                 OutlinedButtonWidget(
                   nameButton: AppKeyStringTr.signUp,
                   onPressed: () async {
-                    if (authViewModel.formKey.currentState!.validate()) {
-                      if (authViewModel.passwordController.text !=
-                          authViewModel.confirmPasswordController.text) {
+                    if (formKey.currentState!.validate()) {
+                      if (passwordController.text !=
+                          confirmPasswordController.text) {
                         FlushbarHelper.showError(
                           context: context,
                           message: 'Passwords do not match',
@@ -91,9 +97,9 @@ class _SignUpViewState extends State<SignUpView> {
                       }
 
                       await authViewModel.signUp(
-                        name: authViewModel.usernameController.text.trim(),
-                        email: authViewModel.emailController.text.trim(),
-                        password: authViewModel.passwordController.text.trim(),
+                        name: usernameController.text.trim(),
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
                         context: context,
                       );
                     }

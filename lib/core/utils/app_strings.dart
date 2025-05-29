@@ -46,5 +46,6 @@ class AppKeyStringTr {
   static String confirmPassword = "confirmPassword".tr();
   static String enterPassword = "enterPassword".tr();
   static String emailCannotEmpty = "emailCannotEmpty".tr();
+  static String dontHaveAccount = "dontHaveAccount".tr();
 
 }

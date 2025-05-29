@@ -61,6 +61,11 @@
   "yourRegisteredEmail": "بريدك الإلكتروني المسجل",
   "titleForgetPassword": "هل نسيت كلمة المرور؟ 🔑",
   "forgetPassword" :  "نسيت الباسورد ؟",
-  "rememberMe" : "Remember me"
+  "rememberMe": "تذكرني",
+  "titleLoginView": "مرحبًا بعودتك 👋",
+  "enterPassword": "أدخل كلمة المرور",
+  "confirmPassword": "تأكيد كلمة المرور",
+  "subtitleLoginView": "لنواصل رحلتك الخضراء",
+  "dontHaveAccount": "ليس لديك حساب ؟"
 
 }

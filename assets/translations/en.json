@@ -63,14 +63,11 @@
   "yourRegisteredEmail" : "Your Registered Email",
   "titleForgetPassword" : "Forget Your Password? 🔑",
   "emailCannotEmpty":"Email can't be empty",
-  "sucessfullOperation":"Sucessfull Operation",
-  "login": "log in",
   "titleLoginView":"Welcome Back!👋",
-  "subtitleLoginView": "Let's Continue Your Green Journey",
   "enterPassword": "Enter Password",
   "confirmPassword": "Confirm Password",
   "subtitleLoginView": "Let's Continue Your Green Journey",
-  "subtitleLoginView": "Let's Continue Your Green Journey",
+  "dontHaveAccount": "Don't have an account ?",
   "forgetPassword" : "Forget Password ?"
 
 }
