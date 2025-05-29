@@ -135,7 +135,7 @@ class PopularArticles extends StatelessWidget {
                                           content: Text(
                                             article.isBookmarked
                                                 ? 'Added to bookmarks'
-                                                : 'Removed from bookmarks',
+                                                : 'Rved from bookmarks',
                                           ),
                                         ),
                                       );

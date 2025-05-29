@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../config/theme/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -7,6 +8,7 @@ import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
 import '../../../onBoarding/presentation/widget/build_social_button.dart';
 import '../controller/vaildator_auth_controller.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/custom_email_widget.dart';
 import '../widgets/custom_password_widget.dart';
 import '../widgets/header_login_widget.dart';
@@ -19,31 +21,24 @@ class LoginView extends StatefulWidget {
   State<LoginView> createState() => _LoginViewState();
 }
 
+// Update the _LoginViewState class in login_view.dart
 class _LoginViewState extends State<LoginView> {
-  final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _rememberMe = false;
-  final validatorController = ValidatorController();
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  bool _rememberMe = false;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _buildLoginForm());
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+
+    return Scaffold(body: _buildLoginForm(authViewModel));
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildLoginForm(AuthViewModel authViewModel) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Form(
-          key: _formKey,
+          key: authViewModel.formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -53,13 +48,13 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(height: SizeConfig().height(0.022)),
               CustomEmailWidget(
                 context: context,
-                validatorController: validatorController,
-                emailController: _emailController,
+                validatorController: authViewModel.validatorController,
+                emailController: authViewModel.emailController,
               ),
               SizedBox(height: SizeConfig().height(0.015)),
               CustomPasswordWidget(
-                validatorController: validatorController,
-                passwordController: _passwordController,
+                validatorController: authViewModel.validatorController,
+                passwordController: authViewModel.passwordController,
               ),
               SizedBox(height: SizeConfig().height(0.015)),
               Row(
@@ -67,7 +62,14 @@ class _LoginViewState extends State<LoginView> {
                 children: [
                   Row(
                     children: [
-                      Checkbox(value: false, onChanged: (v) {}),
+                      Checkbox(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            _rememberMe = value!;
+                          });
+                        },
+                      ),
                       Text(
                         AppKeyStringTr.rememberMe,
                         style: Theme.of(context).textTheme.bodySmall,
@@ -80,8 +82,7 @@ class _LoginViewState extends State<LoginView> {
                         context,
                         RouteHelper.navigateTo(
                           ForgetPasswordView(
-                            emailController: _emailController,
-                            formKey: _formKey,
+                            emailController: authViewModel.emailController,
                           ),
                         ),
                       );
@@ -99,10 +100,15 @@ class _LoginViewState extends State<LoginView> {
               OutlinedButtonWidget(
                 nameButton: AppKeyStringTr.login,
                 onPressed: () async {
-
+                  if (authViewModel.formKey.currentState!.validate()) {
+                    await authViewModel.login(
+                      email: authViewModel.emailController.text.trim(),
+                      password: authViewModel.emailController.text.trim(),
+                      context: context,
+                    );
+                  }
                 },
-                foregroundColor:
-                Theme.of(context).colorScheme.onSecondary,
+                foregroundColor: Theme.of(context).colorScheme.onSecondary,
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               SizedBox(height: SizeConfig().height(0.08)),
@@ -116,10 +122,18 @@ class _LoginViewState extends State<LoginView> {
                   Expanded(child: Divider()),
                 ],
               ),
-              SizedBox(height: SizeConfig().height(0.01)),
-              BuildSocialButton(label: AppKeyStringTr.continueWithGoogle, image: AssetsManager.logoGoogle, onPressed: (){}),
+              SizedBox(height: SizeConfig().height(0.03)),
+              BuildSocialButton(
+                  label: AppKeyStringTr.continueWithGoogle,
+                  image: AssetsManager.logoGoogle,
+                  onPressed: () {}),
               SizedBox(height: SizeConfig().height(0.02)),
-              BuildSocialButton(label: AppKeyStringTr.continueWithFacebook, image: AssetsManager.logoFacebook, onPressed: (){}),
+             Row(
+               children: [
+                 Text("Don't have an account? ",
+                     style: Theme.of(context).textTheme.bodySmall),
+               ],
+             ),
               SizedBox(height: SizeConfig().height(0.015)),
             ],
           ),

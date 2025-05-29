@@ -1,35 +1,26 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import '../../../../config/routes/route_helper.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
-
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
 import '../components/build_Text_field.dart';
-import '../controller/operation_controller.dart';
 import '../controller/vaildator_auth_controller.dart';
-
-class ForgetPasswordView extends StatefulWidget {
+import '../viewmodels/auth_viewmodel.dart';
+class ForgetPasswordView extends StatelessWidget {
   const ForgetPasswordView({
     super.key,
     required this.emailController,
-    required this.formKey,
   });
 
   final TextEditingController emailController;
-  final GlobalKey<FormState> formKey;
 
-  @override
-  State<ForgetPasswordView> createState() => _ForgetPasswordViewState();
-}
-
-final operationController = OperationController();
-
-class _ForgetPasswordViewState extends State<ForgetPasswordView> {
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: true);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -40,7 +31,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
             children: [
               SizedBox(height: SizeConfig().height(0.04)),
               InkWell(
-                onTap: (){
+                onTap: () {
                   Navigator.pop(context);
                 },
                 child: Icon(
@@ -75,14 +66,21 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
               SizedBox(height: SizeConfig().height(0.02)),
               BuildTextField(
                 validator: ValidatorController().emailValid,
-                preffixIcon: Icon(Icons.email_outlined),
+                prefixIcon: Icon(Icons.email_outlined, size: 18),
                 hintText: AppKeyStringTr.email,
-                controller: widget.emailController,
+                controller: emailController,
               ),
-              SizedBox(height: SizeConfig().height(0.15)),
+              SizedBox(height: SizeConfig().height(0.06)),
               OutlinedButtonWidget(
                 nameButton: AppKeyStringTr.sendLink,
-                onPressed: () {},
+                onPressed: () async {
+                  if (authViewModel.formKey.currentState!.validate()) {
+                    await authViewModel.forgotPassword(
+                      email: emailController.text.trim(),
+                      context: context,
+                    );
+                  }
+                },
               ),
               SizedBox(height: SizeConfig().height(0.01)),
             ],

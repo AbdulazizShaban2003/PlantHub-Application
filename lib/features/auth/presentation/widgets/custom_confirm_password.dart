@@ -32,7 +32,6 @@ class CustomConfirmPassword extends StatelessWidget {
                 validator: validatorController.passwordValid,
                 hintText: AppKeyStringTr.confirmPassword,
                 controller: confirmPasswordController,
-                preffixIcon: Icon(Icons.lock_outline, size: 20),
               )
       ],
     );

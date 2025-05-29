@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.example.plant_hub_app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

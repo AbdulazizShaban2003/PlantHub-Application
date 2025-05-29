@@ -13,12 +13,12 @@ final TextEditingController usernameController;
         Text(
             AppKeyStringTr.username,
         ),
-        SizedBox(height: SizeConfig().height(0.016)),
+        SizedBox(height: SizeConfig().height(0.02)),
         BuildTextField(
           keyboardType: TextInputType.text,
           hintText:  AppKeyStringTr.username,
           controller: usernameController,
-          preffixIcon: Icon(Icons.person)
+          prefixIcon: Icon(Icons.person,size: 18,)
         ),
       ],
     );

@@ -29,7 +29,7 @@ class CustomEmailWidget extends StatelessWidget {
           hintText: AppKeyStringTr.email,
           validator: validatorController.emailValid,
           controller: _emailController,
-          preffixIcon: Icon(Icons.email_outlined, size: 20),
+          prefixIcon: Icon(Icons.email_outlined, size: 18),
         ),
       ],
     );

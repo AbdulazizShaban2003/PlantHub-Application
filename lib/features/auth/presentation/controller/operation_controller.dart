@@ -4,8 +4,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../../../config/theme/app_colors.dart';
 
 class OperationController{
-  void showErrorDialog(String message,BuildContext context) {
-    showDialog(
+  Future<void> showErrorDialog(String message,BuildContext context) async{
+   await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => Dialog(
@@ -18,16 +18,23 @@ class OperationController{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error, color: Colors.red, size: 40),
+                Icon(Icons.error, color: Colors.red, size: 80),
                 const SizedBox(height: 10),
                 const Text(
                   'Error',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,color: ColorsManager.blackColor),
                 ),
                 const SizedBox(height: 10),
-                Text(message, textAlign: TextAlign.center),
+                Text(message, textAlign: TextAlign.center,style: TextStyle(
+                    fontSize: 14, color: ColorsManager.blackColor
+                ),),
                 const SizedBox(height: 20),
                 TextButton(
+                  style: TextButton.styleFrom(
+                    backgroundColor: ColorsManager.greenPrimaryColor,
+                    foregroundColor: ColorsManager.whiteColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
                   onPressed: () => Navigator.pop(context),
                   child: const Text('OK'),
                 )
@@ -39,7 +46,7 @@ class OperationController{
     );
   }
 
-  void showLoadingDialog(BuildContext context, {String message = 'Log in...'}) {
+  Future<void> showLoadingDialog(BuildContext context, String message) async{
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -55,7 +62,7 @@ class OperationController{
               children: [
                 SpinKitRing(color: ColorsManager.greenPrimaryColor),
                 const SizedBox(height: 20),
-                Text(message, style: const TextStyle(fontSize: 16)),
+                Text(message, style: const TextStyle(fontSize: 16,color: ColorsManager.blackColor), textAlign: TextAlign.center),
               ],
             ),
           ),
@@ -72,26 +79,31 @@ class OperationController{
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         child: SizedBox(
           width: 300,
-          height: 180,
+          height: 250,
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check_circle, color: ColorsManager.greenPrimaryColor, size: 50),
+                Icon(Icons.check_circle, color: ColorsManager.greenPrimaryColor, size: 80),
                 const SizedBox(height: 10),
                 const Text(
                   'Success',
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold,color: ColorsManager.whiteColor),
                 ),
                 const SizedBox(height: 10),
-                Text(message, textAlign: TextAlign.center, style: const TextStyle(fontSize: 10)),
+                Text(message, textAlign: TextAlign.center,style: TextStyle(
+                    fontSize: 14, color: ColorsManager.blackColor
+                ),),
+                const SizedBox(height: 10),
               ],
             ),
           ),
         ),
       ),
     );
+    await Future.delayed(Duration(seconds: 2));
+    Navigator.of(context).pop();
   }
 
 }

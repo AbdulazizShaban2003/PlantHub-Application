@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../components/build_Text_field.dart';
 import '../controller/vaildator_auth_controller.dart';
+import '../viewmodels/password_visibility_provider.dart';
 
 class CustomPasswordWidget extends StatelessWidget {
   const CustomPasswordWidget({
@@ -17,6 +19,8 @@ class CustomPasswordWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final passwordVisibilityProvider = Provider.of<PasswordVisibilityProvider>(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,12 +30,20 @@ class CustomPasswordWidget extends StatelessWidget {
         ),
         SizedBox(height: SizeConfig().height(0.006)),
         BuildTextField(
+          obscureText: passwordVisibilityProvider.obscureText,
           keyboardType: TextInputType.visiblePassword,
           controller: passwordController,
           validator: validatorController.passwordValid,
           hintText: AppKeyStringTr.enterPassword,
-          preffixIcon: Icon(Icons.lock_outline, size: 20),
-          suffixIcon: InkWell(child: Icon(Icons.visibility_off, size: 20)),
+          prefixIcon: Icon(Icons.lock_outline, size: 18),
+          suffixIcon: InkWell(
+
+              onTap: () {
+                passwordVisibilityProvider.toggleVisibility();
+              },
+              child: Icon( passwordVisibilityProvider.obscureText
+                  ? Icons.visibility_off
+                  : Icons.visibility, size: 18)),
         ),
       ],
     );
