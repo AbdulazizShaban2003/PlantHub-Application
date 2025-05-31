@@ -4,7 +4,6 @@ import 'package:plant_hub_app/features/articles/data/models/plant_model.dart';
 import 'data/data.dart';
 
 class PlantViewModel with ChangeNotifier {
-  // حالة التطبيق
   Plant? _selectedPlant;
   List<Plant> _allPlants = [];
   List<Plant> _filteredPlants = [];
@@ -21,9 +20,9 @@ class PlantViewModel with ChangeNotifier {
   String get searchQuery => _searchQuery;
 
   final PlantRepository  _plantRepository= PlantRepository();
-
-
-  // جلب نبات بواسطة ID مع تحسينات معالجة الأخطاء
+  PlantViewModel(){
+    _filteredPlants = _allPlants;
+  }
   Future<void> fetchPlantById(String id) async {
     if (id.isEmpty) {
       _setError('يجب تحديد معرف النبات');
@@ -49,8 +48,6 @@ class PlantViewModel with ChangeNotifier {
       _stopLoading();
     }
   }
-
-  // جلب جميع النباتات مع تحسينات التحميل
   Future<void> fetchAllPlants() async {
     try {
       _startLoading();
@@ -58,6 +55,9 @@ class PlantViewModel with ChangeNotifier {
 
       if (plants.isEmpty) {
         _setError('لا توجد نباتات متاحة حالياً');
+        if (_allPlants.isEmpty) {
+          await fetchAllPlants();
+        }
       } else {
         _allPlants = plants;
         _filteredPlants = plants;
@@ -73,39 +73,21 @@ class PlantViewModel with ChangeNotifier {
     }
   }
 
-  // بحث محسّن بالنباتات
-  Future<void> searchPlants(String query) async {
-    final trimmedQuery = query.trim();
-    _searchQuery = trimmedQuery.toLowerCase();
+  void searchPlants(String query) {
+    _searchQuery = query.trim().toLowerCase();
 
-    if (trimmedQuery.isEmpty) {
+    if (_searchQuery.isEmpty) {
       _filteredPlants = _allPlants;
-      _clearError();
-      notifyListeners();
-      return;
+    } else {
+      _filteredPlants = _allPlants.where((plant) {
+        // البحث فقط في الاسم والوصف
+        return plant.name.toLowerCase().contains(_searchQuery) ||
+            (plant.description?.toLowerCase().contains(_searchQuery) ?? false);
+      }).toList();
     }
 
-    try {
-      _startLoading();
-      _filteredPlants = await _plantRepository.searchPlants(trimmedQuery);
-
-      if (_filteredPlants.isEmpty) {
-        _setError('لا توجد نتائج تطابق "$trimmedQuery"');
-      } else {
-        _clearError();
-      }
-    } on FirebaseException catch (e) {
-      _setError(_translateFirebaseError(e));
-    } catch (e) {
-      _setError('تعذر إكمال البحث');
-      debugPrint('Search error: $e');
-    } finally {
-      _stopLoading();
-    }
-  }
-
-  // إدارة حالة التحميل والبحث
-  void clearSearch() {
+    notifyListeners();
+  }  void clearSearch() {
     _searchQuery = '';
     _filteredPlants = _allPlants;
     _clearError();
@@ -116,14 +98,11 @@ class PlantViewModel with ChangeNotifier {
     _selectedPlant = null;
     notifyListeners();
   }
-
-  // طرق مساعدة
   void _startLoading() {
     _isLoading = true;
     _error = null;
     notifyListeners();
   }
-
   void _stopLoading() {
     _isLoading = false;
     notifyListeners();
@@ -137,7 +116,6 @@ class PlantViewModel with ChangeNotifier {
   void _clearError() {
     _error = null;
   }
-
   String _translateFirebaseError(FirebaseException e) {
     switch (e.code) {
       case 'permission-denied':

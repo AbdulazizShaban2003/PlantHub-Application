@@ -138,27 +138,35 @@ class PlantRepository {
       );
     }
   }
-
   Future<List<Plant>> searchPlants(String query) async {
     try {
-      final querySnapshot = await _plantsCollection
-          .where('name_lowercase', isGreaterThanOrEqualTo: query.toLowerCase())
-          .where('name_lowercase', isLessThanOrEqualTo: '${query.toLowerCase()}\uf8ff')
-          .get();
+      final trimmedQuery = query.trim();
+      if (trimmedQuery.isEmpty) {
+        return [];
+      }
 
-      return querySnapshot.docs
-          .map((doc) => Plant.fromFirestore(doc))
-          .toList();
+      final lowerQuery = trimmedQuery.toLowerCase();
+
+      final nameQuery = _plantsCollection
+          .where('name_lowercase', isGreaterThanOrEqualTo: lowerQuery)
+          .where('name_lowercase', isLessThanOrEqualTo: '$lowerQuery\uf8ff')
+          .limit(10);
+
+      final descQuery = _plantsCollection
+          .where('description_lowercase', isGreaterThanOrEqualTo: lowerQuery)
+          .where('description_lowercase', isLessThanOrEqualTo: '$lowerQuery\uf8ff')
+          .limit(10);
+
+      final snapshots = await Future.wait([nameQuery.get(), descQuery.get()]);
+      final uniqueDocs = snapshots.expand((s) => s.docs).toSet();
+
+      return uniqueDocs.map(Plant.fromFirestore).toList();
     } on FirebaseException catch (e) {
-      throw RepositoryException(
-        'Failed to search plants with query: $query',
-        code: e.code,
-        stackTrace: e.stackTrace,
-      );
+      throw RepositoryException('فشل البحث: ${e.message}');
+    } catch (e) {
+      throw RepositoryException('خطأ غير متوقع أثناء البحث');
     }
-  }
-
-  Future<List<Map<String, dynamic>>> searchPlantsAsMaps(String query) async {
+  }  Future<List<Map<String, dynamic>>> searchPlantsAsMaps(String query) async {
     try {
       final querySnapshot = await _plantsCollection
           .where('name', isGreaterThanOrEqualTo: query)
