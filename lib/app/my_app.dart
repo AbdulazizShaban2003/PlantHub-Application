@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/data/data.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
+import 'package:plant_hub_app/features/articles/presentation/views/article_plant_view.dart';
 import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
@@ -92,7 +93,7 @@ class _PlantHubState extends State<PlantHub> {
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.dark,
               theme: AppThemes.darkTheme,
-              home: ArticlePlantDetailsView(plantId: "OomCjGlaOrSXtaHl0d3W")
+              home: PlantsPage()
       ),
     );
   }

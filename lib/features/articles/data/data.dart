@@ -142,8 +142,8 @@ class PlantRepository {
   Future<List<Plant>> searchPlants(String query) async {
     try {
       final querySnapshot = await _plantsCollection
-          .where('name', isGreaterThanOrEqualTo: query)
-          .where('name', isLessThanOrEqualTo: '$query\uf8ff')
+          .where('name_lowercase', isGreaterThanOrEqualTo: query.toLowerCase())
+          .where('name_lowercase', isLessThanOrEqualTo: '${query.toLowerCase()}\uf8ff')
           .get();
 
       return querySnapshot.docs
