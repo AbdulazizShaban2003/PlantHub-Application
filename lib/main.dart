@@ -16,15 +16,16 @@ void main() async {
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
   );
+
   await sl<CacheHelper>().init();
   await EasyLocalization.ensureInitialized();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+  visualDensity: VisualDensity.adaptivePlatformDensity;
 
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('ar'), Locale('en')],
+      supportedLocales: [Locale('en')],
       path: 'assets/translations',
-      fallbackLocale: Locale('ar'),
+      fallbackLocale: Locale('en'),
       child: PlantHub(),
     ),
   );

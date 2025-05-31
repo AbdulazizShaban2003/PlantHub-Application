@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/features/articles/views/popular_articles.dart';
+import 'package:plant_hub_app/features/articles/data/data.dart';
+import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
 import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
@@ -8,7 +9,7 @@ import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
-import '../features/articles/view_model/plant_provider.dart';
+import '../features/articles/view_model.dart';
 import '../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../features/auth/domain/repositories/auth_repository_impl.dart';
 import '../features/auth/domain/usecases/forgot_password_usecase.dart';
@@ -31,10 +32,9 @@ class _PlantHubState extends State<PlantHub> {
     SizeConfig().init(context);
     return  MultiProvider(
       providers: [
+
         ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
         ChangeNotifierProvider(create: (context) => ChatProvider()),
-        ChangeNotifierProvider(
-          create: (context) => PlantProvider(),),
         Provider(create: (_) => OperationController()),
         Provider(create: (_) => AuthRemoteDataSource()),
         Provider(
@@ -53,11 +53,16 @@ class _PlantHubState extends State<PlantHub> {
               (context) =>
               LoginUseCase(repository: context.read<AuthRepositoryImpl>()),
         ),
+
         Provider(
           create:
               (context) => ForgotPasswordUseCase(
             repository: context.read<AuthRepositoryImpl>(),
           ),
+
+        ),
+        Provider(
+          create: (_) => PlantRepository(),
         ),
         Provider(
           create: (context) => SignInWithGoogleUseCase(
@@ -65,6 +70,10 @@ class _PlantHubState extends State<PlantHub> {
           ),
         ),
         ChangeNotifierProvider(
+          create: (_) => PlantViewModel(),
+        ),
+        ChangeNotifierProvider(
+
           create:
               (context) => AuthViewModel(
             signUpUseCase: context.read<SignUpUseCase>(),
@@ -83,7 +92,7 @@ class _PlantHubState extends State<PlantHub> {
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.dark,
               theme: AppThemes.darkTheme,
-              home: LoginView(),
+              home: ArticlePlantDetailsView(plantId: "OomCjGlaOrSXtaHl0d3W")
       ),
     );
   }
