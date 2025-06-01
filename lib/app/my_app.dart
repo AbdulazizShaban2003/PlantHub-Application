@@ -1,15 +1,11 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/features/articles/data/data.dart';
-import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_view.dart';
 import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
-import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
+import '../features/articles/domain/repositories/plant_repo.dart';
 import '../features/articles/view_model.dart';
 import '../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../features/auth/domain/repositories/auth_repository_impl.dart';
@@ -20,8 +16,6 @@ import '../features/auth/presentation/controller/operation_controller.dart';
 import '../features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import '../features/auth/presentation/viewmodels/password_visibility_provider.dart';
 import '../features/chatAi/controller/chat_provider.dart';
-import 'package:provider/provider.dart';
-
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});
   @override

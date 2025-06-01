@@ -16,6 +16,7 @@ class Plant {
   final ClimaticConditions climaticConditions;
   final Distribution distribution;
   final List<Disease> diseases;
+  final bool isBookmarked;
 
   Plant({
     this.id = '',
@@ -28,6 +29,7 @@ class Plant {
     required this.climaticConditions,
     required this.distribution,
     required this.diseases,
+    this.isBookmarked = false,
   });
 
   factory Plant.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {

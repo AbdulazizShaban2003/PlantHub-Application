@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageGallery extends StatelessWidget {
@@ -21,16 +22,24 @@ class ImageGallery extends StatelessWidget {
             padding: const EdgeInsets.only(right: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                images[index],
+              child: CachedNetworkImage(
+                imageUrl: images[index],
                 width: 150,
                 fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 150,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.broken_image),
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.error, color: Colors.red),
+                ),
+                fadeInDuration: const Duration(milliseconds: 300),
+                fadeInCurve: Curves.easeIn,
               ),
+
             ),
           );
         },

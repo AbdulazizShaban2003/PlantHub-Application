@@ -74,6 +74,7 @@ dependencies:
   flutter_tts: ^4.2.2
   another_flushbar: ^1.12.30
   internet_connection_checker: ^3.0.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:

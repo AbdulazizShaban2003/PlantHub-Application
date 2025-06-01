@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/data/models/plant_model.dart';
-import 'data/data.dart';
+import 'domain/repositories/plant_repo.dart';
 
 class PlantViewModel with ChangeNotifier {
   Plant? _selectedPlant;
