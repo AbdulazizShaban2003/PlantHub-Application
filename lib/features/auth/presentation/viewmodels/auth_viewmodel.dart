@@ -74,12 +74,21 @@ class AuthViewModel with ChangeNotifier {
     try {
       await signUpUseCase.call(name: name, email: email, password: password);
       FlushbarHelper.showSuccess(context: context, message: 'Account created successfully!');
+      Navigator.pop(context); // close loading dialog
       if (FirebaseAuth.instance.currentUser!.emailVerified == true) {
         Navigator.pushReplacement(context, RouteHelper.navigateTo(HomeView()));
       } else {
-        FlushbarHelper.showWarning(context: context, message: 'Please verify your email before logging in.',);
+        FlushbarHelper.showWarning(
+          context: context,
+          message: 'Please verify your email before logging in.',
+        );
+
         Navigator.pop(context);
+
+        await Future.delayed(Duration(milliseconds: 100));
         Navigator.pushReplacement(context, RouteHelper.navigateTo(LoginView()));
+
+
       }
     } catch (e) {
       Navigator.pop(context);

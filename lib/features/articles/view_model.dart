@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/data/models/plant_model.dart';
+import 'package:provider/provider.dart';
+import '../bookMark/bookmark_service.dart';
 import 'domain/repositories/plant_repo.dart';
 
 class PlantViewModel with ChangeNotifier {
@@ -127,5 +129,25 @@ class PlantViewModel with ChangeNotifier {
       default:
         return 'حدث خطأ في النظام: ${e.message}';
     }
+  }
+
+// داخل PlantViewModel
+  Future<List<Plant>> getBookmarkedPlants(BuildContext context) async {
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+    final bookmarks = await bookmarkService.getUserBookmarks().first;
+
+    return allPlants.where((plant) {
+      return bookmarks.any((bookmark) => bookmark.itemId == plant.id);
+    }).toList();
+  }
+
+  Stream<List<Plant>> getBookmarkedPlantsStream(BuildContext context) {
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+
+    return bookmarkService.getUserBookmarks().asyncMap((bookmarks) {
+      return allPlants.where((plant) {
+        return bookmarks.any((bookmark) => bookmark.itemId == plant.id);
+      }).toList();
+    });
   }
 }

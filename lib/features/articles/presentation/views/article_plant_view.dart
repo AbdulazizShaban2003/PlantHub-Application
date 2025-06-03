@@ -1,15 +1,61 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
 import 'package:plant_hub_app/features/articles/view_model.dart';
+import 'package:plant_hub_app/features/home/presentation/widgets/custom_category_card.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../../../core/errors/flush_bar.dart';
+import '../../../../core/function/flush_bar_fun.dart';
+import '../../../auth/presentation/views/login_view.dart';
+import '../../../bookMark/bookmark_button.dart';
+import '../../data/models/plant_model.dart';
 import '../widgets/custom_no_plant_widget.dart';
 
-class PlantsPage extends StatelessWidget {
+class PlantsPage extends StatefulWidget {
   const PlantsPage({super.key});
 
+  @override
+  State<PlantsPage> createState() => _PlantsPageState();
+}
+late TabController _tabController;
+
+class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderStateMixin{
+  late TabController _tabController;
+  Future<void> signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+
+      FlushbarHelper.showSuccess(
+        context: context,
+        message: 'Logged out successfully.',
+      );
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          RouteHelper.navigateTo(LoginView()),
+              (route) => false,
+        );
+      });
+    } catch (e) {
+      handleError(e, context);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
@@ -20,43 +66,60 @@ class PlantsPage extends StatelessWidget {
     });
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
             title: const Text('Popular Articles'),
             centerTitle: true,
             pinned: true,
             floating: true,
-            expandedHeight: 0,
             forceElevated: true,
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: const [
+                Tab(text: 'All Articles'),
+                Tab(text: 'My Bookmarks'),
+              ],
+            ),
           ),
-
           SliverPadding(
             padding: const EdgeInsets.all(1),
             sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.search),
-                      hintText: 'Search articles..',
-                      suffixIcon: plantProvider.searchQuery.isNotEmpty
-                          ? IconButton(
-                        icon: const Icon(Icons.clear),
-                        onPressed: () => plantProvider.clearSearch(),
-                      )
-                          : null,
-                    ),
-                    onChanged: (value) {
-                      plantProvider.searchPlants(value);
-                    },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 18.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: 'Search articles..',
+                    suffixIcon: plantProvider.searchQuery.isNotEmpty
+                        ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () => plantProvider.clearSearch(),
+                    )
+                        : null,
                   ),
-                  const SizedBox(height: 16),
-                ],
+                  onChanged: (value) {
+                    plantProvider.searchPlants(value);
+                  },
+                ),
               ),
             ),
           ),
+        ],
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildAllArticles(plantProvider),
+            _buildBookmarkedArticles(plantProvider,context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAllArticles(PlantViewModel plantProvider) {
+     return CustomScrollView(
+        slivers: [
 
           if (plantProvider.isLoading)
             SliverPadding(
@@ -139,6 +202,13 @@ class PlantsPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            IconButton(
+                              onPressed: () {
+                                signOut(context);
+                              },
+                              icon: Icon(Icons.local_airport),
+                            ),
+
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(
@@ -161,14 +231,24 @@ class PlantsPage extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(height: 12),
-                            Text(
-                              article.description,
-                              maxLines: 2,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                overflow: TextOverflow.ellipsis,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 325,
+                                  child: Text(
+                                    article.description,
+                                    maxLines: 2,
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      overflow: TextOverflow.ellipsis,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                                BookmarkButton(itemId: article.id),
+
+                              ],
                             ),
                           ],
                         ),
@@ -180,6 +260,127 @@ class PlantsPage extends StatelessWidget {
               ),
             ),
         ],
+    );
+  }
+}
+Widget _buildBookmarkedArticles(PlantViewModel plantProvider,BuildContext context) {
+  return StreamBuilder<List<Plant>>(
+    stream: plantProvider.getBookmarkedPlantsStream(context),
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      }
+
+      if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      }
+
+      final bookmarkedPlants = snapshot.data ?? [];
+
+      if (bookmarkedPlants.isEmpty) {
+        return const Center(child: Text('No bookmarked articles yet'));
+      }
+
+      return CustomScrollView(
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                  final article = bookmarkedPlants[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          RouteHelper.navigateTo(
+                            ArticlePlantDetailsView(plantId: article.id),
+                          ),
+                        );
+                      },
+                      child: PlantCard(
+                        plantId: article.id,
+                        imageUrl: article.image,
+                        description: article.description,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            RouteHelper.navigateTo(
+                              ArticlePlantDetailsView(plantId: article.id),
+                            ),
+                          );
+                        },
+                      ),
+                        ),
+                  );
+                },
+                childCount: bookmarkedPlants.length,
+              ),
+            ),
+          ),        ],
+      );
+    },
+  );
+}
+
+class PlantCard extends StatelessWidget {
+  final String plantId;
+  final String imageUrl;
+  final String description;
+  final VoidCallback onTap;
+
+  const PlantCard({
+    super.key,
+    required this.plantId,
+    required this.imageUrl,
+    required this.description,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24.0),
+      child: InkWell(
+        onTap: onTap,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                width: double.infinity,
+                height: 200,
+                fit: BoxFit.cover,
+                placeholder: (context, url) => Container(
+                  color: Colors.grey[200],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[200],
+                  child: const Icon(Icons.error, color: Colors.red),
+                ),
+                fadeInDuration: const Duration(milliseconds: 300),
+                fadeInCurve: Curves.easeIn,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              description,
+              maxLines: 2,
+              style: const TextStyle(
+                fontSize: 18,
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

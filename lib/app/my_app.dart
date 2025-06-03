@@ -1,7 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_view.dart';
 import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
@@ -15,6 +17,7 @@ import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/controller/operation_controller.dart';
 import '../features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import '../features/auth/presentation/viewmodels/password_visibility_provider.dart';
+import '../features/bookMark/bookmark_service.dart';
 import '../features/chatAi/controller/chat_provider.dart';
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});
@@ -47,6 +50,9 @@ class _PlantHubState extends State<PlantHub> {
           create:
               (context) =>
               LoginUseCase(repository: context.read<AuthRepositoryImpl>()),
+        ),
+        Provider<BookmarkService>(
+          create: (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
         ),
 
         Provider(
