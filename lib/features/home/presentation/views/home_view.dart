@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../config/theme/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
+import '../../../articles/domain/repositories/plant_repo.dart';
+import '../../../articles/view_model.dart';
+import '../../../bookMark/bookmark_service.dart';
+import '../../../chatAi/controller/chat_provider.dart';
 import '../widgets/hom_view_body.dart';
 class HomeView extends StatefulWidget {
   @override
@@ -24,7 +30,7 @@ class _HomeViewState extends State<HomeView> {
   ];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       extendBody: true,
 
       body: Center(child: Screens[_selectedIndex]),

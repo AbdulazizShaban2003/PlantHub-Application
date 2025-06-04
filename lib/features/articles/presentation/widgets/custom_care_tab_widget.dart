@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
 
 import '../../data/models/care_guide_model.dart';
 import '../sections/care_item_section.dart';
@@ -15,49 +16,49 @@ class CareTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        SectionTitle(title: 'Watering', icon: Icons.water),
+        SectionTitle(title: AppKeyStringTr.watering, icon: Icons.water),
         CareItem(
-          title: 'Frequency',
+          title: AppKeyStringTr.frequency,
           content: care.fertilizer.frequency,
           icon: Icons.schedule,
         ),
         CareItem(
-          title: 'Notes',
+          title: AppKeyStringTr.notes,
           content: care.water.notes,
           icon: Icons.opacity,
         ),
 
-        SectionTitle(title: 'Fertilizing', icon: Icons.nature_people),
+        SectionTitle(title: AppKeyStringTr.fertilizing, icon: Icons.nature_people),
         CareItem(
-          title: 'Type',
+          title: AppKeyStringTr.type,
           content: care.fertilizer.type,
           icon: Icons.local_florist,
         ),
         CareItem(
-          title: 'Frequency',
+          title: AppKeyStringTr.frequency,
           content: care.fertilizer.frequency,
           icon: Icons.schedule_send,
         ),
         CareItem(
-          title: 'Warning',
+          title: AppKeyStringTr.warning,
           content: care.fertilizer.warning,
           icon: Icons.warning_amber_outlined,
         ),
 
-        SectionTitle(title: 'Humidity', icon: Icons.cut),
+        SectionTitle(title: AppKeyStringTr.humidity, icon: Icons.cut),
         CareItem(
-          title: 'preference',
+          title: AppKeyStringTr.preference,
           content: care.humidity.preference,
           icon: Icons.water_drop_outlined,
         ),
         CareItem(
-          title: 'risk',
+          title: AppKeyStringTr.risk,
           content: care.humidity.risk,
           icon: Icons.water_drop_rounded,
         ),
-        SectionTitle(title: 'Propagation', icon: Icons.cut),
+        SectionTitle(title: AppKeyStringTr.propagation, icon: Icons.cut),
         CareItem(
-          title: 'Method',
+          title: AppKeyStringTr.method,
           content: care.propagation.method,
           icon: Icons.add_circle_outline,
         ),
@@ -65,7 +66,7 @@ class CareTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: care.propagation.steps.map((material) {
             return CareItem(
-              title: 'Step ${care.propagation.steps.indexOf(material) + 1}',
+              title: '${AppKeyStringTr.step} ${care.propagation.steps.indexOf(material) + 1}',
               content: material,
               icon: Icons.check_circle_outline,
             );

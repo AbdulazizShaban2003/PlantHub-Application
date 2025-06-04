@@ -165,6 +165,7 @@ class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderState
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               sliver: SliverList(
+
                 delegate: SliverChildBuilderDelegate(
                       (context, index) {
                     final article = plantProvider.displayedPlants[index];

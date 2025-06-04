@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:plant_hub_app/core/utils/app_strings.dart';
 import '../../data/models/plant_model.dart';
 import '../components/plant_image_component.dart';
 import '../components/tab_bar_component.dart';
@@ -11,7 +11,10 @@ import 'diseases_tab_widget.dart';
 class PlantDetailsContent extends StatefulWidget {
   final Plant plant;
 
-  const PlantDetailsContent({super.key, required this.plant});
+  const PlantDetailsContent({
+    super.key,
+    required this.plant,
+  });
 
   @override
   State<PlantDetailsContent> createState() => _PlantDetailsContentState();
@@ -19,8 +22,14 @@ class PlantDetailsContent extends StatefulWidget {
 
 class _PlantDetailsContentState extends State<PlantDetailsContent> {
   int _selectedTabIndex = 0;
-  final _tabs = ['Overview', 'Diseases', 'Conditions', 'Care'];
+  final _tabs = [AppKeyStringTr.overview,AppKeyStringTr.diseases, AppKeyStringTr.conditions, AppKeyStringTr.care];
   final _pageController = PageController();
+  @override
+  void initState() {
+
+    super.initState();
+
+  }
 
   @override
   void dispose() {
@@ -45,6 +54,7 @@ class _PlantDetailsContentState extends State<PlantDetailsContent> {
             );
           },
         ),
+
         Expanded(
           child: PageView(
             controller: _pageController,

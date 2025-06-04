@@ -1,5 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../view_model.dart';
 
 class PlantCard extends StatelessWidget {
   final String plantId;
@@ -17,6 +20,12 @@ class PlantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (plantProvider.allPlants.isEmpty && !plantProvider.isLoading) {
+        plantProvider.fetchAllPlants();
+      }
+    });
     return Padding(
       padding: const EdgeInsets.only(bottom: 24.0),
       child: InkWell(

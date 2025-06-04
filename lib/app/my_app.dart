@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_view.dart';
 import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
+import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/utils/size_config.dart';
@@ -31,8 +32,18 @@ class _PlantHubState extends State<PlantHub> {
     return  MultiProvider(
       providers: [
 
-        ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
+        ChangeNotifierProvider(
+          create: (_) => PlantViewModel(),
+        ),
+
         ChangeNotifierProvider(create: (context) => ChatProvider()),
+        Provider(
+          create: (_) => PlantRepository(),
+        ),
+        Provider<BookmarkService>(
+          create: (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
+        ),
+        ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
         Provider(create: (_) => OperationController()),
         Provider(create: (_) => AuthRemoteDataSource()),
         Provider(
@@ -51,10 +62,6 @@ class _PlantHubState extends State<PlantHub> {
               (context) =>
               LoginUseCase(repository: context.read<AuthRepositoryImpl>()),
         ),
-        Provider<BookmarkService>(
-          create: (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
-        ),
-
         Provider(
           create:
               (context) => ForgotPasswordUseCase(
@@ -63,15 +70,9 @@ class _PlantHubState extends State<PlantHub> {
 
         ),
         Provider(
-          create: (_) => PlantRepository(),
-        ),
-        Provider(
           create: (context) => SignInWithGoogleUseCase(
             repository: context.read<AuthRepositoryImpl>(),
           ),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => PlantViewModel(),
         ),
         ChangeNotifierProvider(
 
@@ -93,7 +94,7 @@ class _PlantHubState extends State<PlantHub> {
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.dark,
               theme: AppThemes.darkTheme,
-              home: PlantsPage()
+              home: HomeView()
       ),
     );
   }

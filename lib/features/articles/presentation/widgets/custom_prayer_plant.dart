@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
 
 import '../../../../core/utils/size_config.dart';
 import '../../data/models/plant_model.dart';
@@ -18,24 +19,24 @@ class CustomPrayerPlant extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text("Name :",
+            Text(AppKeyStringTr.name,
                 style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 )),
-            const SizedBox(width: 35),
+             SizedBox(width: SizeConfig().width(0.05)),
             Text(plant.name, style: Theme.of(context).textTheme.bodyLarge),
           ],
         ),
-        const SizedBox(height: 10),
+         SizedBox(height: SizeConfig().height(0.015)),
         Row(
           children: [
-            Text("Category :",
+            Text(AppKeyStringTr.category,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 )),
-            const SizedBox(width: 20),
+             SizedBox(width: SizeConfig().width(0.05)),
             SizedBox(
-              width: SizeConfig().width(0.7),
+              width: SizeConfig().width(0.5),
               child: Text(plant.category, style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               )),

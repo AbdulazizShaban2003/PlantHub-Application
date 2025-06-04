@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 import '../../../../config/theme/app_colors.dart';
 import '../../../home/presentation/widgets/custom_ask_expert.dart';
@@ -19,35 +21,35 @@ class OverviewTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 16),
+          SizedBox(height: SizeConfig().height(0.015)),
           Text(
-            "Prayer Plant",
+            AppKeyStringTr.prayerPlant,
             style: Theme.of(context).textTheme.headlineMedium,
           ),
-          const SizedBox(height: 20),
+           SizedBox(height: SizeConfig().height(0.015)),
           CustomPrayerPlant(plant: plant),
-          const SizedBox(height: 16),
-          SectionTitle(title: 'Photo Gallery', icon: Icons.image),
+           SizedBox(height: SizeConfig().height(0.015)),
+          SectionTitle(title: AppKeyStringTr.photoGallery, icon: Icons.image),
           ImageGallery(images: plant.listImage),
-          SectionTitle(title: 'Description', icon: Icons.description),
+          SectionTitle(title: AppKeyStringTr.description, icon: Icons.description),
           Text(
             plant.description,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
 
-          SectionTitle(title: 'Distribution', icon: Icons.location_on),
-          const SizedBox(height: 8),
-          const SizedBox(height: 16),
+          SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
+           SizedBox(height: SizeConfig().height(0.015)),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Native Distribution:',
+                AppKeyStringTr.nativeDistribution,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 8),
+               SizedBox(height: SizeConfig().height(0.015)),
               Text(
                 plant.distribution.native,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -57,16 +59,16 @@ class OverviewTab extends StatelessWidget {
             ],
           ),
 
-          const SizedBox(height: 24),
+          SizedBox(height: SizeConfig().height(0.015)),
           Text(
-            'Current Distribution:',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            AppKeyStringTr.currentDistribution,
+            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 25),
+           SizedBox(height: SizeConfig().height(0.015)),
           SizedBox(
-            height: 100,
+            height: SizeConfig().height(0.1),
             child: GridView.builder(
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -78,8 +80,8 @@ class OverviewTab extends StatelessWidget {
               itemBuilder: (context, index) {
                 final distribution = plant.distribution;
                 return Text(
-                  distribution.current[index],
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  "${distribution.current[index]} ,",
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 );
@@ -87,101 +89,13 @@ class OverviewTab extends StatelessWidget {
               itemCount: plant.distribution.current.length,
             ),
           ),
-          const SizedBox(height: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 200,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    "assets/images/mapping.jpg",
-                    height: 200,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image_not_supported),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      leading: Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent.shade100.withOpacity(0.7),
-                        ),
-                      ),
-                      title: Text("Potential Invasive"),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      leading: Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: Colors.greenAccent.shade100.withOpacity(0.7),
-                        ),
-                      ),
-                      title: Text("Native"),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ListTile(
-                      leading: Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: Colors.orangeAccent.shade100.withOpacity(0.7),
-                        ),
-                      ),
-                      title: Text("Cultivated"),
-                    ),
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      leading: Container(
-                        width: 15,
-                        height: 15,
-                        decoration: BoxDecoration(
-                          color: Colors.redAccent.shade100.withOpacity(0.7),
-                        ),
-                      ),
-                      title: Text("No species Reported"),
-                    ),
-                  ),
-                ],
-              )
-
-            ],
-          ),
-          const SizedBox(height: 45),
-          SectionTitle(title: 'Ask an Expert', icon: Icons.help_outline),
-          const SizedBox(height: 25),
+             SizedBox(height: SizeConfig().height(0.015)),
+          SectionTitle(title: AppKeyStringTr.askPlantExpert, icon: Icons.help_outline),
+           SizedBox(height: SizeConfig().height(0.015)),
           const CustomAskExpert(),
-          const SizedBox(height: 25),
-          Divider(
-            color: ColorsManager.greyColor,
-            thickness: 1,
-          ),
-          const SizedBox(height: 15),
+           SizedBox(height: SizeConfig().height(0.015)),
+          Divider(),
+          SizedBox(height:SizeConfig().height(0.015)),
         ],
       ),
     );

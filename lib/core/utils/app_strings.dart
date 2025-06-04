@@ -47,5 +47,39 @@ class AppKeyStringTr {
   static String enterPassword = "enterPassword".tr();
   static String emailCannotEmpty = "emailCannotEmpty".tr();
   static String dontHaveAccount = "dontHaveAccount".tr();
+  static String watering ="Watering";
+  static String fertilizing = "Fertilizing";
+  static String humidity = "Humidity";
+  static String propagation = "Propagation";
+  static String frequency = "Frequency";
+  static String notes = "Notes";
+  static String type = "Type";
+  static String warning = "Warning";
+  static String preference = "Preference";
+  static String risk = "Risk";
+  static String method = "Method";
+  static String step = "Step";
+  static String temperature = "Temperature";
+  static String soil = "Soil";
+  static String moisture = "Moisture";
+  static String sensitivity = "Sensitivity";
+  static String noPlantFound =  'No Plants Found';
+  static String noPlantFoundDescription = 'Check your keywords or try searching with another keywords.';
+  static String prayerPlant = "Prayer Plant";
+  static String plantDetails = "Plant Details";
+  static String description = "Description";
+  static String distribution = "Distribution";
+  static String nativeDistribution = "Native Distribution :";
+  static String currentDistribution = "Current Distribution :";
+  static String photoGallery = "Photo Gallery";
+  static String name = "Name :";
+  static String category = "Category :";
+  static String overview = "Overview";
+  static String care = "Care";
+  static String diseases = "Diseases";
+  static String conditions = "Conditions";
+
+
+
 
 }

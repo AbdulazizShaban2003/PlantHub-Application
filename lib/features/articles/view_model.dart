@@ -131,7 +131,6 @@ class PlantViewModel with ChangeNotifier {
     }
   }
 
-// داخل PlantViewModel
   Future<List<Plant>> getBookmarkedPlants(BuildContext context) async {
     final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
     final bookmarks = await bookmarkService.getUserBookmarks().first;
