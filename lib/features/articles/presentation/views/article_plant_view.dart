@@ -13,6 +13,7 @@ import '../../../auth/presentation/views/login_view.dart';
 import '../../../bookMark/bookmark_button.dart';
 import '../../data/models/plant_model.dart';
 import '../widgets/custom_no_plant_widget.dart';
+import '../widgets/plant_card_widget.dart';
 
 class PlantsPage extends StatefulWidget {
   const PlantsPage({super.key});
@@ -20,34 +21,12 @@ class PlantsPage extends StatefulWidget {
   @override
   State<PlantsPage> createState() => _PlantsPageState();
 }
-late TabController _tabController;
-
 class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderStateMixin{
   late TabController _tabController;
-  Future<void> signOut(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut();
-
-      FlushbarHelper.showSuccess(
-        context: context,
-        message: 'Logged out successfully.',
-      );
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushAndRemoveUntil(
-          context,
-          RouteHelper.navigateTo(LoginView()),
-              (route) => false,
-        );
-      });
-    } catch (e) {
-      handleError(e, context);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
+
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -66,6 +45,7 @@ class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderState
     });
 
     return Scaffold(
+
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
@@ -202,13 +182,6 @@ class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                signOut(context);
-                              },
-                              icon: Icon(Icons.local_airport),
-                            ),
-
                             ClipRRect(
                               borderRadius: BorderRadius.circular(12),
                               child: CachedNetworkImage(
@@ -234,7 +207,7 @@ class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderState
                             Row(
                               children: [
                                 SizedBox(
-                                  width: 325,
+                                  width: 250,
                                   child: Text(
                                     article.description,
                                     maxLines: 2,
@@ -263,7 +236,32 @@ class _PlantsPageState extends State<PlantsPage>  with SingleTickerProviderState
     );
   }
 }
-Widget _buildBookmarkedArticles(PlantViewModel plantProvider,BuildContext context) {
+// ... (الكود السابق يبقى كما هو حتى دالة _buildBookmarkedArticles)
+
+Widget _buildBookmarkedArticles(PlantViewModel plantProvider, BuildContext context) {
+  final currentUser = FirebaseAuth.instance.currentUser;
+
+  if (currentUser == null) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('Please login to view your bookmarks'),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginView()),
+              );
+            },
+            child: const Text('Login'),
+          ),
+        ],
+      ),
+    );
+  }
+
   return StreamBuilder<List<Plant>>(
     stream: plantProvider.getBookmarkedPlantsStream(context),
     builder: (context, snapshot) {
@@ -272,38 +270,51 @@ Widget _buildBookmarkedArticles(PlantViewModel plantProvider,BuildContext contex
       }
 
       if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text('something went wrong: ${snapshot.error}'),
+          ]
+          ),
+        );
       }
 
       final bookmarkedPlants = snapshot.data ?? [];
 
       if (bookmarkedPlants.isEmpty) {
-        return const Center(child: Text('No bookmarked articles yet'));
+        return const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.bookmark_border, size: 48, color: Colors.grey),
+              SizedBox(height: 16),
+              Text('No bookmarked articles yet'),
+              SizedBox(height: 8),
+              Text(
+                'Tap the bookmark icon to save articles',
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
+          ),
+        );
       }
 
-      return CustomScrollView(
-        slivers: [
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  final article = bookmarkedPlants[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          RouteHelper.navigateTo(
-                            ArticlePlantDetailsView(plantId: article.id),
-                          ),
-                        );
-                      },
-                      child: PlantCard(
-                        plantId: article.id,
-                        imageUrl: article.image,
-                        description: article.description,
+      return RefreshIndicator(
+        onRefresh: () async {
+          await plantProvider.fetchAllPlants();
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final article = bookmarkedPlants[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16.0),
+                      child: InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
@@ -312,76 +323,38 @@ Widget _buildBookmarkedArticles(PlantViewModel plantProvider,BuildContext contex
                             ),
                           );
                         },
-                      ),
+                        child: Stack(
+                          children: [
+                            PlantCard(
+                              plantId: article.id,
+                              imageUrl: article.image,
+                              description: article.description,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  RouteHelper.navigateTo(
+                                    ArticlePlantDetailsView(plantId: article.id),
+                                  ),
+                                );
+                              },
+                            ),
+                            Positioned(
+                              top: 8,
+                              right: 8,
+                              child: BookmarkButton(itemId: article.id),
+                            ),
+                          ],
                         ),
-                  );
-                },
-                childCount: bookmarkedPlants.length,
-              ),
-            ),
-          ),        ],
-      );
-    },
-  );
-}
-
-class PlantCard extends StatelessWidget {
-  final String plantId;
-  final String imageUrl;
-  final String description;
-  final VoidCallback onTap;
-
-  const PlantCard({
-    super.key,
-    required this.plantId,
-    required this.imageUrl,
-    required this.description,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
-      child: InkWell(
-        onTap: onTap,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[200],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                      ),
+                    );
+                  },
+                  childCount: bookmarkedPlants.length,
                 ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.error, color: Colors.red),
-                ),
-                fadeInDuration: const Duration(milliseconds: 300),
-                fadeInCurve: Curves.easeIn,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              description,
-              maxLines: 2,
-              style: const TextStyle(
-                fontSize: 18,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
 }

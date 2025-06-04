@@ -142,7 +142,7 @@ class PlantViewModel with ChangeNotifier {
   }
 
   Stream<List<Plant>> getBookmarkedPlantsStream(BuildContext context) {
-    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: true);
 
     return bookmarkService.getUserBookmarks().asyncMap((bookmarks) {
       return allPlants.where((plant) {
