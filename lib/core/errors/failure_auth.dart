@@ -1,16 +1,16 @@
-class Failure {
+class FailureAuth {
   final String message;
-  Failure(this.message);
+  FailureAuth(this.message);
 }
 
-class ServerFailure extends Failure {
-  ServerFailure(String message) : super(message);
+class ServerFailureAuth extends FailureAuth {
+  ServerFailureAuth(super.message);
 }
 
-class CacheFailure extends Failure {
-  CacheFailure(String message) : super(message);
+class CacheFailure extends FailureAuth {
+  CacheFailure(super.message);
 }
 
-class FirebaseAuthFailure extends Failure {
-  FirebaseAuthFailure(String message) : super(message);
+class FirebaseAuthFailure extends FailureAuth {
+  FirebaseAuthFailure(super.message);
 }

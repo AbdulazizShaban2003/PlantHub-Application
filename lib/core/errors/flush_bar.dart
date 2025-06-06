@@ -18,7 +18,7 @@ Future<void> handleError(
   String message;
   String errorCode = 'unknown-error';
 
-  if (error is Failure) {
+  if (error is FailureAuth) {
     message = error.message;
     errorCode = error.message ?? 'custom-error';
   }

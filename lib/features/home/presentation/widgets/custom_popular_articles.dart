@@ -22,7 +22,6 @@ class CustomPopularArticles extends StatelessWidget {
         plantProvider.fetchAllPlants();
       }
     });
-
     return Column(
       children: [
         BuildHeader(header: AppKeyStringTr.popularArticles),
