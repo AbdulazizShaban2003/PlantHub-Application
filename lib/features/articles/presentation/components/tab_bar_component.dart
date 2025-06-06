@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import '../../../../config/theme/app_colors.dart';
 
 class TabBarComponent extends StatelessWidget {
@@ -7,7 +7,8 @@ class TabBarComponent extends StatelessWidget {
   final int selectedIndex;
   final ValueChanged<int> onTabSelected;
 
-  const TabBarComponent({super.key,
+  const TabBarComponent({
+    super.key,
     required this.tabs,
     required this.selectedIndex,
     required this.onTabSelected,
@@ -15,37 +16,43 @@ class TabBarComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: NeverScrollableScrollPhysics(),
-      child: Row(
-        children:
-        tabs.map((tab) {
-          final index = tabs.indexOf(tab);
-          final isSelected = selectedIndex == index;
+    final fontSize = SizeConfig().responsiveFont(13);
+    final horizontalPadding = SizeConfig().width(0.01);
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            child: ChoiceChip(
-              label: Text(tab),
-              selected: isSelected,
-              onSelected: (_) => onTabSelected(index),
-              selectedColor: ColorsManager.greenPrimaryColor,
-              labelStyle: TextStyle(
-                color: isSelected ? Colors.white : Colors.black,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-                side: BorderSide(
-                  color:
-                  isSelected
-                      ? ColorsManager.greenPrimaryColor
-                      : Colors.grey,
-                ),
-              ),
+    return SizedBox(
+      height: SizeConfig().height(0.05),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: tabs.length,
+        itemBuilder: (context, index) {
+          final isSelected = selectedIndex == index;
+          return _buildTabItem(tabs[index], isSelected, index, horizontalPadding, fontSize);
+        },
+      ),
+    );
+  }
+
+  Widget _buildTabItem(String tab, bool isSelected, int index, double horizontalPadding, double fontSize) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(30),
+        onTap: () => onTabSelected(index),
+        child: Container(
+          decoration: BoxDecoration(
+            color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.whiteColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.1), vertical: SizeConfig().height(0.01)),
+          child: Text(
+            tab,
+            style: TextStyle(
+              color: isSelected ? ColorsManager.whiteColor : ColorsManager.blackColor,
+              fontSize: fontSize,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
-          );
-        }).toList(),
+          ),
+        ),
       ),
     );
   }

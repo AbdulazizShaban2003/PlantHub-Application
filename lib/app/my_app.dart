@@ -18,7 +18,7 @@ import '../features/auth/domain/usecases/sign_up_usecase.dart';
 import '../features/auth/presentation/controller/operation_controller.dart';
 import '../features/auth/presentation/viewmodels/auth_viewmodel.dart';
 import '../features/auth/presentation/viewmodels/password_visibility_provider.dart';
-import '../features/bookMark/bookmark_service.dart';
+import '../features/bookMark/data/models/datasource/bookmark_service.dart';
 import '../features/chatAi/controller/chat_provider.dart';
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});

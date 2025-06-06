@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/data/models/plant_model.dart';
 import 'package:provider/provider.dart';
-import '../bookMark/bookmark_service.dart';
+import '../bookMark/data/models/datasource/bookmark_service.dart';
 import 'domain/repositories/plant_repo.dart';
 
 class PlantViewModel with ChangeNotifier {
@@ -12,8 +12,6 @@ class PlantViewModel with ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   String _searchQuery = '';
-
-  // Getter methods
   Plant? get selectedPlant => _selectedPlant;
   List<Plant> get allPlants => _allPlants;
   List<Plant> get displayedPlants => _searchQuery.isEmpty ? _allPlants : _filteredPlants;
@@ -27,7 +25,7 @@ class PlantViewModel with ChangeNotifier {
   }
   Future<void> fetchPlantById(String id) async {
     if (id.isEmpty) {
-      _setError('يجب تحديد معرف النبات');
+      _setError('Plant ID must be specified');
       return;
     }
 
@@ -36,7 +34,7 @@ class PlantViewModel with ChangeNotifier {
       final plant = await _plantRepository.getPlantById(id);
 
       if (plant == null) {
-        _setError('لم يتم العثور على النبات المطلوب');
+        _setError('The requested plant was not found');
       } else {
         _selectedPlant = plant;
         _clearError();
@@ -44,7 +42,7 @@ class PlantViewModel with ChangeNotifier {
     } on FirebaseException catch (e) {
       _setError(_translateFirebaseError(e));
     } catch (e) {
-      _setError('حدث خطأ غير متوقع أثناء جلب بيانات النبات');
+      _setError('An unexpected error occurred while fetching plant data');
       debugPrint('Error fetching plant: $e');
     } finally {
       _stopLoading();
@@ -56,7 +54,7 @@ class PlantViewModel with ChangeNotifier {
       final plants = await _plantRepository.getAllPlants();
 
       if (plants.isEmpty) {
-        _setError('لا توجد نباتات متاحة حالياً');
+        _setError('No plants are currently available');
         if (_allPlants.isEmpty) {
           await fetchAllPlants();
         }
@@ -68,7 +66,7 @@ class PlantViewModel with ChangeNotifier {
     } on FirebaseException catch (e) {
       _setError(_translateFirebaseError(e));
     } catch (e) {
-      _setError('تعذر تحميل قائمة النباتات');
+      _setError('Failed to load plants list');
       debugPrint('Error fetching plants: $e');
     } finally {
       _stopLoading();
@@ -82,7 +80,6 @@ class PlantViewModel with ChangeNotifier {
       _filteredPlants = _allPlants;
     } else {
       _filteredPlants = _allPlants.where((plant) {
-        // البحث فقط في الاسم والوصف
         return plant.name.toLowerCase().contains(_searchQuery) ||
             (plant.description?.toLowerCase().contains(_searchQuery) ?? false);
       }).toList();
@@ -121,13 +118,13 @@ class PlantViewModel with ChangeNotifier {
   String _translateFirebaseError(FirebaseException e) {
     switch (e.code) {
       case 'permission-denied':
-        return 'ليس لديك صلاحية الوصول للبيانات';
+        return 'You don\'t have permission to access the data';
       case 'not-found':
-        return 'البيانات المطلوبة غير متوفرة';
+        return 'The requested data is not available';
       case 'unavailable':
-        return 'الخدمة غير متوفرة. يرجى التأكد من اتصالك بالإنترنت';
+        return 'Service unavailable. Please check your internet connection';
       default:
-        return 'حدث خطأ في النظام: ${e.message}';
+        return 'A system error occurred: ${e.message}';
     }
   }
 

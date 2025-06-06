@@ -8,7 +8,6 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../articles/domain/repositories/plant_repo.dart';
 import '../../../articles/view_model.dart';
-import '../../../bookMark/bookmark_service.dart';
 import '../../../chatAi/controller/chat_provider.dart';
 import '../widgets/hom_view_body.dart';
 class HomeView extends StatefulWidget {

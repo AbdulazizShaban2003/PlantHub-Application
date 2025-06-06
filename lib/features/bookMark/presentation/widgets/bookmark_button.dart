@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'bookmark_service.dart';
+import '../../data/models/datasource/bookmark_service.dart';
 
 class BookmarkButton extends StatefulWidget {
   final String itemId;

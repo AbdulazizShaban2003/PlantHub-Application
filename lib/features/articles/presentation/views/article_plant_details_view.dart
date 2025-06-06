@@ -1,5 +1,9 @@
+import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/function/plant_share.dart';
+import '../../../bookMark/presentation/widgets/bookmark_button.dart';
 import '../../data/models/plant_model.dart';
 import '../../view_model.dart';
 import '../widgets/plant_details_content_widget.dart';
@@ -56,10 +60,13 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
             title: Text(viewModel.selectedPlant?.name ?? 'Plant Details'),
             centerTitle: true,
             actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: _loadPlantData,
-              ),
+
+              IconButton(onPressed: (){
+                sharePlantDetails(plant:viewModel.selectedPlant, context: context);
+
+              }, icon: Icon(Icons.share)),
+              BookmarkButton(itemId: viewModel.displayedPlants.isNotEmpty ? viewModel.displayedPlants.first.id : widget.plantId),
+
             ],
           ),
           body: _buildBody(viewModel),

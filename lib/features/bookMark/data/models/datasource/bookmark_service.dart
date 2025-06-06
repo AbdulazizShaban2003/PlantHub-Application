@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'bookmark_model.dart';
+import '../bookmark_model.dart';
 
 class BookmarkService with ChangeNotifier {
   final FirebaseFirestore _firestore;
@@ -13,7 +13,6 @@ class BookmarkService with ChangeNotifier {
     if (userId == null) throw Exception('User not authenticated');
 
     try {
-      // Check if already bookmarked to avoid duplicates
       final isBookmarked = await isItemBookmarked(itemId);
       if (isBookmarked) return;
 

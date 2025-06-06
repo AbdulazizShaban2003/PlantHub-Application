@@ -13,7 +13,7 @@ class Distribution {
 
   factory Distribution.fromJson(Map<String, dynamic> json) {
     return Distribution(
-      native: json['native'] ?? 'غير معروف',
+      native: json['native'] ?? 'Unknown or There is Not',
       current: List<String>.from(json['current'] ?? []),
       image: json['image'] ?? '',
       distributionImages: List<String>.from(json['listImage'] ?? []),

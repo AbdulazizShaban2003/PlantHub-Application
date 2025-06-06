@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 class InfoRow extends StatelessWidget {
   final String label;
@@ -9,20 +11,21 @@ class InfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding:  EdgeInsets.symmetric(vertical: SizeConfig().height(0.01)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-              '$label:',
-              style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold
+              '$label :',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: ColorsManager.blackColor,
               )
           ),
+           SizedBox(height: SizeConfig().height(0.01)),
           Text(value,style: TextStyle(
-              color: Colors.black
+              color: ColorsManager.blackColor,
+              fontSize: SizeConfig().responsiveFont(12),
           ),),
         ],
       ),

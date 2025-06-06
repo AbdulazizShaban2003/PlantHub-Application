@@ -78,7 +78,11 @@ class AppKeyStringTr {
   static String care = "Care";
   static String diseases = "Diseases";
   static String conditions = "Conditions";
-
+  static String causedBy= "Caused by";
+  static String symptoms = "Symptoms";
+  static String transmission = "Transmission";
+  static String treatment = "Treatment";
+  static  String searchArticles ='Search articles..';
 
 
 

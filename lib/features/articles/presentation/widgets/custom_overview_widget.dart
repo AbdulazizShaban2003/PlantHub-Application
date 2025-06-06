@@ -39,25 +39,22 @@ class OverviewTab extends StatelessWidget {
 
           SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
            SizedBox(height: SizeConfig().height(0.015)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppKeyStringTr.nativeDistribution,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-               SizedBox(height: SizeConfig().height(0.015)),
-              Text(
-                plant.distribution.native,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          Text(
+            AppKeyStringTr.nativeDistribution,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
           ),
+         SizedBox(height:  SizeConfig().height(0.015),),
+
+          Text(
+            plant.distribution.native,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          SizedBox(height: SizeConfig().height(0.015)),
 
           SizedBox(height: SizeConfig().height(0.015)),
           Text(
@@ -67,15 +64,16 @@ class OverviewTab extends StatelessWidget {
             ),
           ),
            SizedBox(height: SizeConfig().height(0.015)),
-          SizedBox(
-            height: SizeConfig().height(0.1),
+          AspectRatio(
+            aspectRatio: 1.5,
             child: GridView.builder(
+              shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 3,
+                crossAxisCount: 3,
+                crossAxisSpacing: 32,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1,
               ),
               itemBuilder: (context, index) {
                 final distribution = plant.distribution;

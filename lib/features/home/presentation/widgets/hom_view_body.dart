@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
+import '../../../articles/view_model.dart';
 import 'custom_app_bar_home_view.dart';
 import 'custom_ask_expert.dart';
 import 'custom_explore_book.dart';
@@ -13,12 +15,19 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (plantProvider.allPlants.isEmpty && !plantProvider.isLoading) {
+        plantProvider.fetchAllPlants();
+      }
+    });
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              title: CustomAppBarHomeView(),
+              title: CustomAppBarHomeView(plantProvider:plantProvider ),
             ),
           ];
         },

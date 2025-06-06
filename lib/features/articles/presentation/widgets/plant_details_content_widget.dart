@@ -57,6 +57,7 @@ class _PlantDetailsContentState extends State<PlantDetailsContent> {
 
         Expanded(
           child: PageView(
+            physics: NeverScrollableScrollPhysics(),
             controller: _pageController,
             onPageChanged: (index) => setState(() => _selectedTabIndex = index),
             children: [

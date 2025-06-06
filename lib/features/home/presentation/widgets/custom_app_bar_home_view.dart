@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
+import 'package:plant_hub_app/features/bookMark/presentation/views/bookmark_view.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
+import '../../../articles/view_model.dart';
 import '../components/build_circle_icon.dart';
 
 class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidget  {
   const CustomAppBarHomeView({
-    super.key,
+    super.key, required this.plantProvider,
   });
+  final PlantViewModel plantProvider;
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
   @override
@@ -27,6 +30,7 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
           SizedBox(width: SizeConfig().width(0.04)),
           BuildCircleIcon(
             onPressed: () {
+              Navigator.push(context, RouteHelper.navigateTo(BookmarkView(plantProvider: plantProvider )));
             },
             showBadge: false,
               iconData: CupertinoIcons.bookmark,

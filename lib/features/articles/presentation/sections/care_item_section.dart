@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 import '../../../../config/theme/app_colors.dart';
 
@@ -16,19 +17,21 @@ class CareItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin:  EdgeInsets.only(bottom: SizeConfig().height(0.015)),
       child: ListTile(
         leading: Icon(icon, color: ColorsManager.greenPrimaryColor),
         title: Text(
           title,
           style: Theme.of(
             context,
-          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: Colors.black87),
+          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: ColorsManager.blackColor),
         ),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8),
+          padding:  EdgeInsets.only(top: SizeConfig().height(0.01)),
           child: Text(content,style: TextStyle(
-              color: Colors.black
+              color: ColorsManager.blackColor,
+              fontSize: SizeConfig().responsiveFont(12),
+            fontWeight: FontWeight.w100,
           ),),
         ),
         minVerticalPadding: 16,

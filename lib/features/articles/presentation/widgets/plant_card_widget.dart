@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/cache/cache_network_image.dart';
 import '../../view_model.dart';
 
 class PlantCard extends StatelessWidget {
@@ -27,7 +29,7 @@ class PlantCard extends StatelessWidget {
       }
     });
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24.0),
+      padding:  EdgeInsets.only(bottom: SizeConfig().height(0.02)),
       child: InkWell(
         onTap: onTap,
         child: Column(
@@ -35,33 +37,15 @@ class PlantCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: imageUrl,
-                width: double.infinity,
-                height: 200,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
-                  color: Colors.grey[200],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-                errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.error, color: Colors.red),
-                ),
-                fadeInDuration: const Duration(milliseconds: 300),
-                fadeInCurve: Curves.easeIn,
-              ),
+              child: CacheNetworkImage(imageUrl: imageUrl, width: double.infinity,height: SizeConfig().height(0.25),),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: SizeConfig().height(0.01)),
             Text(
               description,
               maxLines: 2,
-              style: const TextStyle(
-                fontSize: 18,
-                overflow: TextOverflow.ellipsis,
-                fontWeight: FontWeight.bold,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontSize: SizeConfig().width(0.04),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -70,3 +54,4 @@ class PlantCard extends StatelessWidget {
     );
   }
 }
+

@@ -120,6 +120,7 @@ class AppThemes {
     brightness: Brightness.dark,
     primaryColor: Color(0xFF388E3C),
 
+
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(
         color: Colors.grey.shade400,
@@ -176,7 +177,7 @@ class AppThemes {
     scaffoldBackgroundColor: Color(0xFF121212),
     appBarTheme: AppBarTheme(
       backgroundColor: Color(0xFF121212),
-      foregroundColor: Colors.white,
+      foregroundColor: Colors.black,
       centerTitle: true,
       elevation: 0,
       actionsPadding: EdgeInsets.symmetric(horizontal: 10),
@@ -200,8 +201,13 @@ class AppThemes {
         fontSize: 22,
         fontWeight: FontWeight.bold,
       ),
+      headlineSmall: TextStyle(
+        color: Color(0xFFFFFFFF),
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
       bodyLarge: TextStyle(color: Color(0xDDFFFFFF),fontWeight: FontWeight.bold),
-      bodyMedium: TextStyle(color: Color(0xDDFFFFFF)),
+      bodyMedium: TextStyle(color: Color(0xDDFFFFFF) ,fontWeight: FontWeight.bold , fontSize: 16),
       bodySmall: TextStyle(
         color: Color(0xFFFFFFFF),
         fontWeight: FontWeight.bold,

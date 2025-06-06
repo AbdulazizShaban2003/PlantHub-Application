@@ -1,5 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/function/image_show_dialog.dart';
+
+import '../../../../core/utils/size_config.dart';
+
 
 class PlantImage extends StatelessWidget {
   final String imageUrl;
@@ -10,27 +14,18 @@ class PlantImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: AspectRatio(
-          aspectRatio: 16 / 9,
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            width: double.infinity,
-            height: 200,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-              color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[200],
-              child: const Icon(Icons.error, color: Colors.red),
-            ),
-            fadeInDuration: const Duration(milliseconds: 300),
-            fadeInCurve: Curves.easeIn,
+      child: GestureDetector(
+        onTap: (){
+          showFullScreenImage(context: context, imageUrl: imageUrl, heightSize: 0.35);
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: AspectRatio(
+            aspectRatio: 13 / 9,
+            child: CachedNetworkImage(imageUrl: imageUrl,
+              width: double.infinity,
+              height: SizeConfig().height(0.30),
+            )
           ),
         ),
       ),

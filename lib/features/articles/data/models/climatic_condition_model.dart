@@ -13,10 +13,10 @@ class ClimaticConditions {
 
   factory ClimaticConditions.fromJson(Map<String, dynamic> json) {
     return ClimaticConditions(
-      moisture: json['moisture'] ?? 'غير محدد',
-      sensitivity: json['sensitivity'] ?? 'غير محدد',
-      soil: json['soil'] ?? 'غير محدد',
-      temperature: json['temperature'] ?? 'غير محدد',
+      moisture: json['moisture'] ?? 'undefined 🤦',
+      sensitivity: json['sensitivity'] ?? 'undefined 🤦 ',
+      soil: json['soil'] ?? 'undefined 🤦',
+      temperature: json['temperature'] ?? 'undefined 🤦',
     );
   }
 

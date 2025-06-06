@@ -19,12 +19,12 @@ class Disease {
 
   factory Disease.fromJson(Map<String, dynamic> json) {
     return Disease(
-      name: json['name'] ?? 'مرض غير معروف',
+      name: json['name'] ?? 'unknown disease 🤷‍♀️🤷‍♀️',
       image: json['image'] ?? '',
       listImage: List<String>.from(json['listImage'] ?? []),
-      symptoms: json['symptoms'] ?? 'لا توجد أعراض محددة',
-      causedBy: json['causedBy'] ?? 'سبب غير معروف',
-      transmission: json['transmission'] ?? 'طريقة انتقال غير معروفة',
+      symptoms: json['symptoms'] ?? 'There are no specific symptoms.',
+      causedBy: json['causedBy'] ?? 'Unknown cause',
+      transmission: json['transmission'] ?? 'Unknown mode of transmission',
       treatment: List<String>.from(json['treatment'] ?? []),
     );
   }

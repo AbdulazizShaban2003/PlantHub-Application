@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 import '../../../../config/theme/app_colors.dart';
 
@@ -11,16 +12,16 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding:  EdgeInsets.symmetric(vertical: SizeConfig().height(0.04)),
       child: Row(
         children: [
           Icon(icon, color: ColorsManager.greenPrimaryColor),
-          const SizedBox(width: 8),
+           SizedBox(width: SizeConfig().width(0.02)),
           Text(
             title,
             style: Theme.of(
               context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

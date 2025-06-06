@@ -12,7 +12,7 @@ class ConditionsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         ConditionCard(
           icon: Icons.thermostat,
