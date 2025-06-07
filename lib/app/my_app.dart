@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/service/service_locator.dart';
 import '../core/utils/size_config.dart';
+import '../features/account/presentation/views/profile_view.dart';
 import '../features/articles/domain/repositories/plant_repo.dart';
 import '../features/articles/view_model.dart';
 import '../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -90,7 +91,7 @@ class _PlantHubState extends State<PlantHub> {
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.dark,
           theme: AppThemes.darkTheme,
-          home: SplashView(),
+          home: ProfilePage(),
     ))
         );
   }

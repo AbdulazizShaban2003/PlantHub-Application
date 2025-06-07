@@ -10,6 +10,7 @@ class BuildTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final TextEditingController controller;
   final VoidCallback? onSuffixIconPressed;
+  final bool  read;
 
   const BuildTextField({
     super.key,
@@ -21,6 +22,7 @@ class BuildTextField extends StatelessWidget {
     this.keyboardType,
     this.suffixIcon,
     this.onSuffixIconPressed,
+    this.read=false
   });
 
   @override
@@ -34,6 +36,7 @@ class BuildTextField extends StatelessWidget {
         color: Theme.of(context).colorScheme.onSecondary,
         fontSize: 12,
       ),
+      readOnly: read,
       controller: controller,
       keyboardType: keyboardType,
       obscureText: obscureText,

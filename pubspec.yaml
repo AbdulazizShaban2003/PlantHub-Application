@@ -82,6 +82,7 @@ dependencies:
   path: ^1.9.1
   image: ^4.5.4
   flutter_secure_storage: ^9.2.4
+  country_code_picker: ^3.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
