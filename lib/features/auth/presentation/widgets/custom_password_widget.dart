@@ -5,7 +5,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../components/build_Text_field.dart';
 import '../controller/vaildator_auth_controller.dart';
-import '../viewmodels/password_visibility_provider.dart';
+import '../manager/password_visibility_provider.dart';
 
 class CustomPasswordWidget extends StatelessWidget {
   const CustomPasswordWidget({

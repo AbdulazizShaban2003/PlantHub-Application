@@ -5,9 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:plant_hub_app/core/function/flush_bar_fun.dart';
-import 'package:plant_hub_app/features/auth/presentation/controller/operation_controller.dart';
-
-import '../../features/auth/presentation/views/forget_password_view.dart';
+import 'exceptions.dart';
 import 'failure_auth.dart';
 
 Future<void> handleError(
@@ -16,38 +14,43 @@ Future<void> handleError(
     [StackTrace? stackTrace]
     ) async {
   String message;
-  String errorCode = 'unknown-error';
 
   if (error is FailureAuth) {
-    message = error.message;
-    errorCode = error.message ?? 'custom-error';
+    message = error.message ?? 'An authentication error occurred';
   }
   else if (error is FirebaseAuthException) {
-    message = _getFirebaseAuthErrorMessage(error);
-    errorCode = error.code;
+    message = FirebaseErrors.authErrors[error.code] ??
+        error.message ??
+        'Authentication failed';
   }
   else if (error is FirebaseException) {
-    message = 'Database error: ${error.message}';
-    errorCode = error.code;
+    message = FirebaseErrors.firestoreErrors[error.code] ??
+        error.message ??
+        'Database operation failed';
   }
   else if (error is SocketException) {
     message = 'No internet connection';
-    errorCode = 'network-error';
   }
   else if (error is TimeoutException) {
     message = 'Request timed out. Please try again';
-    errorCode = 'timeout';
   }
   else if (error is PlatformException) {
     message = 'Platform error: ${error.message}';
-    errorCode = error.code;
+  }
+  else if (error is CustomException) {
+    message = error.message;
   }
   else {
     message = 'An unexpected error occurred';
-    errorCode = 'unknown-error';
   }
 
-FlushbarHelper.showError(context: context, message: message);
+  FlushbarHelper.showError(context: context, message: message);
+
+  // Optionally log the error for debugging
+  debugPrint('Error: $error');
+  if (stackTrace != null) {
+    debugPrint('Stack trace: $stackTrace');
+  }
 }
 
 String _getFirebaseAuthErrorMessage(FirebaseAuthException e) {

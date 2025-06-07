@@ -52,7 +52,7 @@ class GetStartedScreen extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
                 nameButton: AppKeyStringTr.login,
                 onPressed: () {
-                  Navigator.push(context, RouteHelper.navigateTo(const LoginView()));
+                  Navigator.pushReplacement(context, RouteHelper.navigateTo(const LoginView()));
                 },
               ),
               const Spacer(),

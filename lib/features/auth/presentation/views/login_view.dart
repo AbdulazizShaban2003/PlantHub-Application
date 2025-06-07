@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
+import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
 import 'package:provider/provider.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../config/theme/app_colors.dart';
@@ -9,18 +11,19 @@ import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
 import '../../../onBoarding/presentation/widget/build_social_button.dart';
 import '../controller/vaildator_auth_controller.dart';
-import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/custom_email_widget.dart';
 import '../widgets/custom_password_widget.dart';
 import '../widgets/header_login_widget.dart';
 import 'forget_password_view.dart';
+
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
+
   @override
   State<LoginView> createState() => _LoginViewState();
 }
-class _LoginViewState extends State<LoginView> {
 
+class _LoginViewState extends State<LoginView> {
   bool _rememberMe = false;
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
@@ -28,14 +31,27 @@ class _LoginViewState extends State<LoginView> {
   final confirmPasswordController = TextEditingController();
   final usernameController = TextEditingController();
   final validatorController = ValidatorController();
-  @override
-  Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
 
-    return Scaffold(body: _buildLoginForm(authViewModel));
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    usernameController.dispose();
+    super.dispose();
   }
 
-  Widget _buildLoginForm(AuthViewModel authViewModel) {
+  @override
+  Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthProviderManager>(context, listen: true);
+
+    return Scaffold(
+      body: authViewModel.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _buildLoginForm(authViewModel),
+    );
+  }
+  Widget _buildLoginForm(AuthProviderManager authViewModel) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -46,7 +62,7 @@ class _LoginViewState extends State<LoginView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: SizeConfig().height(0.08)),
-              HeaderLoginWidget(),
+              const HeaderLoginWidget(),
               SizedBox(height: SizeConfig().height(0.022)),
               CustomEmailWidget(
                 context: context,
@@ -83,9 +99,7 @@ class _LoginViewState extends State<LoginView> {
                       Navigator.push(
                         context,
                         RouteHelper.navigateTo(
-                          ForgetPasswordView(
-                            emailController: emailController, formKey: formKey,
-                          ),
+                          ForgetPasswordView(),
                         ),
                       );
                     },
@@ -105,9 +119,12 @@ class _LoginViewState extends State<LoginView> {
                   if (formKey.currentState!.validate()) {
                     await authViewModel.login(
                       email: emailController.text.trim(),
-                      password: emailController.text.trim(),
+                      password: passwordController.text.trim(),
                       context: context,
                     );
+                    if (authViewModel.user != null && authViewModel.isEmailVerified) {
+                      Navigator.pushReplacement(context, RouteHelper.navigateTo(HomeView()));
+                    }
                   }
                 },
                 foregroundColor: Theme.of(context).colorScheme.onSecondary,
@@ -116,42 +133,53 @@ class _LoginViewState extends State<LoginView> {
               SizedBox(height: SizeConfig().height(0.04)),
               Row(
                 children: [
-                  Expanded(child: Divider()),
+                  const Expanded(child: Divider()),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(AppKeyStringTr.or),
                   ),
-                  Expanded(child: Divider()),
+                  const Expanded(child: Divider()),
                 ],
               ),
               SizedBox(height: SizeConfig().height(0.03)),
               BuildSocialButton(
-                  label: AppKeyStringTr.continueWithGoogle,
-                  image: AssetsManager.logoGoogle,
-                  onPressed: () {}),
+                label: AppKeyStringTr.continueWithGoogle,
+                image: AssetsManager.logoGoogle,
+                onPressed: () async {
+                  await authViewModel.signInWithGoogle(context);
+                  if (authViewModel.user != null) {
+                    Navigator.pushReplacement(context, RouteHelper.navigateTo(HomeView()));
+                  }
+                },
+              ),
               SizedBox(height: SizeConfig().height(0.04)),
-             Row(
-               mainAxisAlignment: MainAxisAlignment.center,
-               children: [
-                 Text(AppKeyStringTr.dontHaveAccount,
-                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                       fontWeight: FontWeight.w300
-                     )),
-                 SizedBox(width: SizeConfig().width(0.05)),
-                 InkWell(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppKeyStringTr.dontHaveAccount,
+                    style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig().width(0.05)),
+                  InkWell(
                     onTap: () {
-                      Navigator.push(context, RouteHelper.navigateTo(SignUpView()));
+                      Navigator.push(
+                        context,
+                        RouteHelper.navigateTo(const SignUpView()),
+                      );
                     },
                     child: Text(
                       AppKeyStringTr.signUp,
                       style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         color: ColorsManager.greenPrimaryColor,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                   ),
-               ],
-             ),
+                ],
+              ),
               SizedBox(height: SizeConfig().height(0.015)),
             ],
           ),
