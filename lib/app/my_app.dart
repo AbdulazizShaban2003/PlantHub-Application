@@ -7,6 +7,7 @@ import 'package:plant_hub_app/features/auth/domain/usecases/google_sign.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:plant_hub_app/features/booking/home/presentation/views/book_view.dart';
 import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
+import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/service/service_locator.dart';
@@ -28,6 +29,8 @@ import '../features/booking/home/presentation/manger/featured_books_cubit/featur
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/controller/chat_provider.dart';
+import '../features/diagnosis/presentation/views/diagnosis_error.dart';
+import '../features/diagnosis/presentation/views/diagnosis_healthy.dart';
 
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});
@@ -132,7 +135,7 @@ class _PlantHubState extends State<PlantHub> {
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.dark,
           theme: AppThemes.darkTheme,
-          home: BookView(),
+          home: SplashView(),
     ))
         );
   }

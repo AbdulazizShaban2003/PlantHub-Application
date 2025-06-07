@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/core/utils/asstes_manager.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
 import 'package:plant_hub_app/features/onBoarding/presentation/widget/build_social_button.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -30,30 +32,28 @@ class GetStartedScreen extends StatelessWidget {
               ImageComponent(),
               SizedBox(height: SizeConfig().height(0.02)),
               TitleGetStartedView(),
-              SizedBox(height: SizeConfig().height(0.09)),
+              SizedBox(height: SizeConfig().height(0.1)),
               BuildSocialButton(
                 label: AppKeyStringTr.continueWithGoogle,
                 image: AssetsManager.logoGoogle,
                 onPressed: () {},
               ),
               SizedBox(height: SizeConfig().height(0.03)),
-              BuildSocialButton(
-                label: AppKeyStringTr.continueWithFacebook,
-                image: AssetsManager.logoFacebook,
-                onPressed: () {},
-              ),
-              SizedBox(height: SizeConfig().height(0.02)),
               const Spacer(),
               OutlinedButtonWidget(
                 nameButton: AppKeyStringTr.signUp,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, RouteHelper.navigateTo(const SignUpView()));
+                },
               ),
               SizedBox(height: SizeConfig().height(0.02)),
               OutlinedButtonWidget(
                 foregroundColor: Theme.of(context).colorScheme.primary,
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
                 nameButton: AppKeyStringTr.login,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, RouteHelper.navigateTo(const LoginView()));
+                },
               ),
               const Spacer(),
               Text(

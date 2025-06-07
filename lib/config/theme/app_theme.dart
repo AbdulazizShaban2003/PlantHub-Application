@@ -203,7 +203,7 @@ class AppThemes {
       ),
       headlineSmall: TextStyle(
         color: Color(0xFFFFFFFF),
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
       bodyLarge: TextStyle(color: Color(0xDDFFFFFF),fontWeight: FontWeight.bold),

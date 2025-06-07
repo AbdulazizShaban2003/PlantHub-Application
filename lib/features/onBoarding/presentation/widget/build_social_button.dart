@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 import '../../../../config/theme/app_colors.dart';
 
@@ -14,6 +15,9 @@ class BuildSocialButton extends StatelessWidget {
       
       textDirection: TextDirection.ltr,
       child: TextButton.icon(
+        style: OutlinedButton.styleFrom(
+        minimumSize:  Size(double.infinity, SizeConfig().height(0.07)),
+        ),
           onPressed: onPressed,
           icon: Image(image: AssetImage(image)),
           label: Padding(
