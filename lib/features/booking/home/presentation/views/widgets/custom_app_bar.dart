@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../../../../../config/routes/route_helper.dart';
-import '../../../../search/presentation/views/search_view.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
+import '../../../../../../core/utils/size_config.dart';
 class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({Key? key}) : super(key: key);
+  const CustomAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 40, bottom: 20),
-      child: Row(
+      padding:  EdgeInsets.only(top: SizeConfig().height(0.06), bottom: SizeConfig().height(0.02)),
+      child: Column(
         children: [
-          const Spacer(),
-          IconButton(
-              onPressed: () {
-                Navigator.push(context, RouteHelper.navigateTo(const SearchView()));
-              },
-              icon: const Icon(
-                FontAwesomeIcons.magnifyingGlass,
-                size: 22,
-              ))
+          Center(child: Text(AppKeyStringTr.popularBook,style: Theme.of(context).textTheme.headlineMedium,textAlign: TextAlign.center,)),
+          SizedBox(height: SizeConfig().height(0.02),),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig().width(0.04),
+                vertical: SizeConfig().height(0.03)),
+            child: TextFormField(
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.search),
+                hintText: AppKeyStringTr.searchArticles,
+
+              ),
+            ),
+          ),
         ],
       ),
     );

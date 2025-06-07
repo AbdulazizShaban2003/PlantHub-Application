@@ -10,13 +10,23 @@ class NewsetBooksCubit extends Cubit<NewsetBooksState> {
   NewsetBooksCubit(this.homeRepo) : super(NewsetBooksInitial());
 
   final HomeRepo homeRepo;
+
   Future<void> fetchNewestBooks() async {
     emit(NewsetBooksLoading());
     var result = await homeRepo.fetchNewsetBooks();
-    result.fold((failure) {
-      emit(NewsetBooksFailure(failure.errMessage));
-    }, (books) {
-      emit(NewsetBooksSuccess(books));
-    });
+    result.fold(
+          (failure) => emit(NewsetBooksFailure(failure.errMessage)),
+          (books) => emit(NewsetBooksSuccess(books)),
+    );
+  }
+
+  // دالة جديدة لجلب الكتب من جميع الفئات
+  Future<void> fetchBooksFromAllCategories() async {
+    emit(NewsetBooksLoading());
+    var result = await homeRepo.fetchBooksFromAllCategories();
+    result.fold(
+          (failure) => emit(NewsetBooksFailure(failure.errMessage)),
+          (books) => emit(NewsetBooksSuccess(books)),
+    );
   }
 }

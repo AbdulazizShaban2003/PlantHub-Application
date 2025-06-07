@@ -22,13 +22,13 @@ class BookListViewItem extends StatelessWidget {
 
         },
       child: SizedBox(
-        height: 125,
+        height: SizeConfig().height(0.21),
         child: Row(
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
                 
-                child: CacheNetworkImage(imageUrl: bookModel.volumeInfo.imageLinks?.thumbnail ?? '', width: SizeConfig().width(0.23), height: SizeConfig().height(0.4)))
+                child: CacheNetworkImage(imageUrl: bookModel.volumeInfo.imageLinks?.thumbnail ?? '', width: SizeConfig().width(0.3), height: SizeConfig().height(0.45)))
             ,const SizedBox(
               width: 30,
             ),
@@ -42,8 +42,7 @@ class BookListViewItem extends StatelessWidget {
                       bookModel.volumeInfo.title!,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      )
+                      style: Theme.of(context).textTheme.bodyMedium
                     ),
                   ),
                    SizedBox(
@@ -52,7 +51,8 @@ class BookListViewItem extends StatelessWidget {
                   Text(
                     bookModel.volumeInfo.authors![0],
                     style: Theme.of(context).textTheme.bodySmall!.copyWith(
-                      color: ColorsManager.greyColor
+                      color: ColorsManager.greyColor,
+                      fontStyle: FontStyle.italic
                     )
                   ),
                 ],

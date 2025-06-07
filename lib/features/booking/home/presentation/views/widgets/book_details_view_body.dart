@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:plant_hub_app/features/booking/home/presentation/views/widgets/similar_books_section.dart';
 
 import '../../../data/models/book_model/book_model.dart';
@@ -20,21 +21,18 @@ class BookDetailsViewBody extends StatelessWidget {
         SliverFillRemaining(
           hasScrollBody: false,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
+            padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.06)),
             child: Column(
               children: [
                 const CustomBookDetailsAppBar(),
-                BookDetailsSection(
-                  book: bookModel,
-                ),
-                const Expanded(
-                  child: SizedBox(
-                    height: 50,
+                BookDetailsSection(book: bookModel,),
+             SizedBox(
+                    height: SizeConfig().height(0.09),
                   ),
-                ),
+              
                 const SimilarBooksSection(),
-                const SizedBox(
-                  height: 40,
+                 SizedBox(
+                  height: SizeConfig().height(0.05),
                 ),
               ],
             ),

@@ -83,6 +83,11 @@ class AppKeyStringTr {
   static String transmission = "Transmission";
   static String treatment = "Treatment";
   static  String searchArticles ='Search articles..';
+  static String youCanAlsoLike ='You can also like';
+  static String popularBook="Popular Books";
+  static String searchBook = "Search book...";
+
+
 
 
 

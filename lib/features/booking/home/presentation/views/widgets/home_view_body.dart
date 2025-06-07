@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import '../../../../../../core/utils/styles.dart';
 import 'best_seller_list_view.dart';
 import 'best_seller_list_view_item.dart';
@@ -17,15 +19,12 @@ class BookViewBody extends StatelessWidget {
         SliverToBoxAdapter(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 30,
-                  ),
-                  child: CustomAppBar()),
+            children:  [
+
+              CustomAppBar(),
               FeaturedBooksListView(),
               SizedBox(
-                height: 50,
+                height: SizeConfig().height(0.03),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),

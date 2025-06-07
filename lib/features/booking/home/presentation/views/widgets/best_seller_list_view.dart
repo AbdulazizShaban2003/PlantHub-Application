@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 import '../../../../../../core/widgets/custom_error_widget.dart';
 import '../../../../../../core/widgets/custom_loading_indicator.dart';
@@ -20,7 +21,7 @@ class BestSellerListView extends StatelessWidget {
             itemCount: state.books.length,
             itemBuilder: (context, index) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10),
+                padding:  EdgeInsets.symmetric(vertical: SizeConfig().height(0.02)),
                 child: BookListViewItem(
                   bookModel: state.books[index],
                 ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/app_strings.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:plant_hub_app/features/booking/home/presentation/views/widgets/similar_books_list_view.dart';
 import '../../../../../../core/utils/styles.dart';
 
@@ -11,13 +13,11 @@ class SimilarBooksSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'You can also like',
-          style: Styles.textStyle14.copyWith(
-            fontWeight: FontWeight.w600,
-          ),
+          AppKeyStringTr.youCanAlsoLike,
+          style: Theme.of(context).textTheme.bodyLarge
         ),
-        const SizedBox(
-          height: 16,
+         SizedBox(
+          height: SizeConfig().height(0.04)
         ),
         const SimilarBooksListview(),
       ],
