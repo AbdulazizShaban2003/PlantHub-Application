@@ -123,7 +123,11 @@ class _LoginViewState extends State<LoginView> {
                       context: context,
                     );
                     if (authViewModel.user != null && authViewModel.isEmailVerified) {
-                      Navigator.pushReplacement(context, RouteHelper.navigateTo(HomeView()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        RouteHelper.navigateTo(HomeView()),
+                            (Route<dynamic> route) => false,
+                      );
                     }
                   }
                 },
@@ -148,7 +152,11 @@ class _LoginViewState extends State<LoginView> {
                 onPressed: () async {
                   await authViewModel.signInWithGoogle(context);
                   if (authViewModel.user != null) {
-                    Navigator.pushReplacement(context, RouteHelper.navigateTo(HomeView()));
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      RouteHelper.navigateTo(HomeView()),
+                          (Route<dynamic> route) => false,
+                    );
                   }
                 },
               ),

@@ -1,19 +1,25 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/auth/data/models/user_model.dart';
 import 'package:plant_hub_app/features/auth/domain/repositories/auth_repository.dart';
+import '../../../../config/routes/route_helper.dart';
 import '../../../../core/function/flush_bar_fun.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../controller/operation_controller.dart';
-
+import '../views/login_view.dart';
 class AuthProviderManager with ChangeNotifier {
   final AuthRepository _repository;
+  final OperationController operationController;
 
   bool _isLoading = false;
   String? _error;
   UserModel? _user;
   bool _isEmailVerified = false;
-  final OperationController operationController;
 
-  AuthProviderManager({required AuthRepository repository,    required this.operationController,
+  AuthProviderManager({
+    required AuthRepository repository,
+    required this.operationController,
   }) : _repository = repository;
 
   bool get isLoading => _isLoading;
@@ -35,12 +41,12 @@ class AuthProviderManager with ChangeNotifier {
         if (verified) {
           FlushbarHelper.showSuccess(
             context: context,
-            message: 'Email verified successfully!',
+            message: AppStrings.emailVerifiedSuccess,
           );
         } else {
           FlushbarHelper.showInfo(
             context: context,
-            message: 'Email not yet verified',
+            message: AppStrings.emailNotVerified,
           );
         }
         notifyListeners();
@@ -61,7 +67,7 @@ class AuthProviderManager with ChangeNotifier {
           (_) {
         FlushbarHelper.showSuccess(
           context: context,
-          message: 'Verification email resent successfully',
+          message: AppStrings.verificationEmailResent,
         );
       },
     );
@@ -77,13 +83,14 @@ class AuthProviderManager with ChangeNotifier {
     try {
       _setLoading(true);
       _setError(null);
-      operationController.showLoadingDialog(context, 'Signing up...');
+      operationController.showLoadingDialog(context, AppStrings.signingUp);
       final result = await _repository.signUpWithEmailAndPassword(
         name: name,
         email: email,
         password: password,
       );
-Navigator.pop(context);
+      Navigator.pop(context);
+
       await result.fold(
             (error) async {
           _setError(error);
@@ -96,16 +103,16 @@ Navigator.pop(context);
                 (error) => FlushbarHelper.showError(context: context, message: error),
                 (_) => FlushbarHelper.showSuccess(
               context: context,
-              message: 'Verification email sent. Please check your inbox.',
+              message: AppStrings.verificationEmailSent,
             ),
           );
         },
       );
     } catch (e) {
-      _setError('An unexpected error occurred');
+      _setError(AppStrings.unexpectedError);
       FlushbarHelper.showError(
         context: context,
-        message: 'Failed to create account: ${e.toString()}',
+        message: '${AppStrings.accountCreationFailed}${e.toString()}',
       );
     } finally {
       _setLoading(false);
@@ -120,8 +127,7 @@ Navigator.pop(context);
     try {
       _setLoading(true);
       _setError(null);
-      operationController.showLoadingDialog(context, 'Log in...');
-
+      operationController.showLoadingDialog(context, AppStrings.loggingIn);
 
       final result = await _repository.loginWithEmailAndPassword(
         email: email,
@@ -145,13 +151,13 @@ Navigator.pop(context);
               if (verified) {
                 FlushbarHelper.showSuccess(
                   context: context,
-                  message: 'Logged in successfully!',
+                  message: AppStrings.loginSuccess,
                 );
               } else {
                 _repository.sendEmailVerification();
                 FlushbarHelper.showWarning(
                   context: context,
-                  message: 'Please verify your email first. Verification email sent.',
+                  message: AppStrings.verifyEmailFirst,
                 );
               }
               notifyListeners();
@@ -160,10 +166,10 @@ Navigator.pop(context);
         },
       );
     } catch (e) {
-      _setError('Login failed');
+      _setError(AppStrings.loginFailed);
       FlushbarHelper.showError(
         context: context,
-        message: 'Failed to login: ${e.toString()}',
+        message: '${AppStrings.failedToLogin}${e.toString()}',
       );
     } finally {
       _setLoading(false);
@@ -177,28 +183,75 @@ Navigator.pop(context);
     try {
       _setLoading(true);
       _setError(null);
-      operationController.showLoadingDialog(context, 'Sent link...');
+      operationController.showLoadingDialog(context, AppStrings.validatingEmail);
 
-      final result = await _repository.sendPasswordResetEmail(email);
+      String cleanEmail = email.trim().toLowerCase();
+
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .where('email', isEqualTo: cleanEmail)
+          .get();
+
+      if (querySnapshot.docs.isEmpty) {
+        Navigator.pop(context);
+        _setError(AppStrings.emailNotFound);
+        FlushbarHelper.showError(
+          context: context,
+          message: AppStrings.noAccountFound,
+        );
+        return;
+      }
+
+      operationController.showLoadingDialog(context, AppStrings.sendingResetEmail);
+
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: cleanEmail);
+
       Navigator.pop(context);
 
-      result.fold(
-            (error) {
-          _setError(error);
-          FlushbarHelper.showError(context: context, message: error);
-        },
-            (_) {
-          FlushbarHelper.showSuccess(
-            context: context,
-            message: 'Password reset link sent to your email',
-          );
-        },
+      FlushbarHelper.showSuccess(
+        context: context,
+        message: '${AppStrings.resetLinkSent}$cleanEmail',
       );
+
+      Future.delayed(Duration(seconds: 2), () {
+        Navigator.pushAndRemoveUntil(
+          context,
+          RouteHelper.navigateTo(LoginView()),
+              (Route<dynamic> route) => false,
+        );
+      });
+
+    } on FirebaseAuthException catch (e) {
+      Navigator.pop(context);
+
+      switch (e.code) {
+        case 'user-not-found':
+          _setError(AppStrings.emailNotFound);
+          FlushbarHelper.showError(
+            context: context,
+            message: AppStrings.noAccountFound,
+          );
+          break;
+        case 'invalid-email':
+          _setError(AppStrings.invalidEmail);
+          FlushbarHelper.showError(
+            context: context,
+            message: AppStrings.enterValidEmail,
+          );
+          break;
+        default:
+          _setError(AppStrings.passwordResetFailed);
+          FlushbarHelper.showError(
+            context: context,
+            message: e.message ?? AppStrings.failedToSendReset,
+          );
+      }
     } catch (e) {
-      _setError('Password reset failed');
+      Navigator.pop(context);
+      _setError(AppStrings.passwordResetFailed);
       FlushbarHelper.showError(
         context: context,
-        message: 'Failed to send password reset: ${e.toString()}',
+        message: '${AppStrings.failedToReset}${e.toString()}',
       );
     } finally {
       _setLoading(false);
@@ -209,7 +262,7 @@ Navigator.pop(context);
     try {
       _setLoading(true);
       _setError(null);
-      operationController.showLoadingDialog(context, 'Signing ...');
+      operationController.showLoadingDialog(context, AppStrings.signingIn);
       final result = await _repository.signInWithGoogle();
       Navigator.pop(context);
       await result.fold(
@@ -227,7 +280,7 @@ Navigator.pop(context);
               _isEmailVerified = verified;
               FlushbarHelper.showSuccess(
                 context: context,
-                message: 'Signed in with Google successfully!',
+                message: AppStrings.googleSignInSuccess,
               );
               notifyListeners();
             },
@@ -235,10 +288,10 @@ Navigator.pop(context);
         },
       );
     } catch (e) {
-      _setError('Google sign-in failed');
+      _setError(AppStrings.googleSignInFailed);
       FlushbarHelper.showError(
         context: context,
-        message: 'Failed to sign in with Google: ${e.toString()}',
+        message: '${AppStrings.failedGoogleSignIn}${e.toString()}',
       );
     } finally {
       _setLoading(false);
@@ -249,7 +302,7 @@ Navigator.pop(context);
     try {
       _setLoading(true);
       _setError(null);
-      operationController.showLoadingDialog(context, 'log out ...');
+      operationController.showLoadingDialog(context, AppStrings.loggingOut);
 
       final result = await _repository.signOut();
 
@@ -264,7 +317,7 @@ Navigator.pop(context);
         },
       );
     } catch (e) {
-      _setError('Sign out failed');
+      _setError(AppStrings.signOutFailed);
     } finally {
       _setLoading(false);
     }

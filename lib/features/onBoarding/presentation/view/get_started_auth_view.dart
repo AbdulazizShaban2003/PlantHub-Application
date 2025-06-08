@@ -3,11 +3,14 @@ import 'package:plant_hub_app/core/utils/asstes_manager.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
 import 'package:plant_hub_app/features/onBoarding/presentation/widget/build_social_button.dart';
+import 'package:provider/provider.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/image_component.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
+import '../../../auth/presentation/manager/auth_provider.dart';
+import '../../../home/presentation/views/home_view.dart';
 import '../widget/title_get_started_widget.dart';
 
 class GetStartedScreen extends StatelessWidget {
@@ -15,6 +18,11 @@ class GetStartedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authViewModel = Provider.of<AuthProviderManager>(
+      context,
+      listen: true,
+    );
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -36,14 +44,26 @@ class GetStartedScreen extends StatelessWidget {
               BuildSocialButton(
                 label: AppKeyStringTr.continueWithGoogle,
                 image: AssetsManager.logoGoogle,
-                onPressed: () {},
+                onPressed: () async {
+                  await authViewModel.signInWithGoogle(context);
+                  if (authViewModel.user != null) {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      RouteHelper.navigateTo(HomeView()),
+                      (Route<dynamic> route) => false,
+                    );
+                  }
+                },
               ),
               SizedBox(height: SizeConfig().height(0.03)),
               const Spacer(),
               OutlinedButtonWidget(
                 nameButton: AppKeyStringTr.signUp,
                 onPressed: () {
-                  Navigator.push(context, RouteHelper.navigateTo(const SignUpView()));
+                  Navigator.push(
+                    context,
+                    RouteHelper.navigateTo(const SignUpView()),
+                  );
                 },
               ),
               SizedBox(height: SizeConfig().height(0.02)),
@@ -52,7 +72,10 @@ class GetStartedScreen extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.onPrimary,
                 nameButton: AppKeyStringTr.login,
                 onPressed: () {
-                  Navigator.pushReplacement(context, RouteHelper.navigateTo(const LoginView()));
+                  Navigator.pushReplacement(
+                    context,
+                    RouteHelper.navigateTo(const LoginView()),
+                  );
                 },
               ),
               const Spacer(),

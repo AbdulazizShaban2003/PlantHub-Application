@@ -1,8 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import '../../../../core/utils/app_strings.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/models/user_model.dart';
-import '../../domain/repositories/auth_repository.dart';
+import 'auth_repository.dart' show AuthRepository;
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -21,9 +23,9 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return Right(user);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Authentication failed. Please check your credentials.');
+      return Left(e.message ?? AppStrings.authFailed);
     } catch (e) {
-      return Left('An unexpected error occurred during login');
+      return Left(AppStrings.unexpectedLoginError);
     }
   }
 
@@ -42,9 +44,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await remoteDataSource.sendEmailVerification();
       return Right(user);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Registration failed. Please try again.');
+      return Left(e.message ?? AppStrings.registrationFailed);
     } catch (e) {
-      return Left('An unexpected error occurred during registration');
+      return Left(AppStrings.unexpectedRegistrationError);
     }
   }
 
@@ -54,9 +56,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await remoteDataSource.sendPasswordResetEmail(email);
       return const Right(unit);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Failed to send password reset email');
+      return Left(e.message ?? AppStrings.passwordResetFailed);
     } catch (e) {
-      return Left('An unexpected error occurred while sending reset email');
+      return Left(AppStrings.unexpectedResetError);
     }
   }
 
@@ -66,9 +68,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await remoteDataSource.sendEmailVerification();
       return const Right(unit);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Failed to send verification email');
+      return Left(e.message ?? AppStrings.verificationEmailFailed);
     } catch (e) {
-      return Left('An unexpected error occurred while sending verification email');
+      return Left(AppStrings.unexpectedVerificationError);
     }
   }
 
@@ -78,9 +80,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final isVerified = await remoteDataSource.checkEmailVerification();
       return Right(isVerified);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Failed to check email verification status');
+      return Left(e.message ?? AppStrings.checkVerificationFailed);
     } catch (e) {
-      return Left('An unexpected error occurred while checking verification status');
+      return Left(AppStrings.unexpectedCheckVerificationError);
     }
   }
 
@@ -90,9 +92,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final user = await remoteDataSource.signInWithGoogle();
       return Right(user);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Google sign in failed');
+      return Left(e.message ?? AppStrings.googleSignInFailed);
     } catch (e) {
-      return Left('An unexpected error occurred during Google sign in');
+      return Left(AppStrings.unexpectedGoogleSignInError);
     }
   }
 
@@ -102,9 +104,9 @@ class AuthRepositoryImpl implements AuthRepository {
       await remoteDataSource.signOut();
       return const Right(unit);
     } on FirebaseAuthException catch (e) {
-      return Left(e.message ?? 'Sign out failed');
+      return Left(e.message ?? AppStrings.signOutFailed);
     } catch (e) {
-      return Left('An unexpected error occurred during sign out');
+      return Left(AppStrings.unexpectedSignOutError);
     }
   }
 }

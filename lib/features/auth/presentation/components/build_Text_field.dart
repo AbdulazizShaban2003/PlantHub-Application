@@ -1,5 +1,6 @@
 // lib/features/auth/presentation/components/build_Text_field.dart
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 class BuildTextField extends StatelessWidget {
   final String hintText;
@@ -34,7 +35,7 @@ class BuildTextField extends StatelessWidget {
           : [AutofillHints.email],
       style: TextStyle(
         color: Theme.of(context).colorScheme.onSecondary,
-        fontSize: 12,
+        fontSize: SizeConfig().responsiveFont(14),
       ),
       readOnly: read,
       controller: controller,

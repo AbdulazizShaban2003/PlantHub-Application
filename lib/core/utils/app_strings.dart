@@ -154,4 +154,171 @@ class AppStrings{
   static const String soundDesc = 'Play sound when notifications arrive';
   static const String vibration = 'Vibration';
   static const String vibrationDesc = 'Vibrate when notifications arrive';
+  static const String emailVerifiedSuccess = 'Email verified successfully!';
+  static const String emailNotVerified = 'Email not yet verified';
+  static const String verificationEmailResent = 'Verification email resent successfully';
+  static const String signingUp = 'Signing up...';
+  static const String verificationEmailSent = 'Verification email sent. Please check your inbox.';
+  static const String unexpectedError = 'An unexpected error occurred';
+  static const String accountCreationFailed = 'Failed to create account: ';
+  static const String loggingIn = 'Log in...';
+  static const String loginSuccess = 'Logged in successfully!';
+  static const String verifyEmailFirst = 'Please verify your email first. Verification email sent.';
+  static const String loginFailed = 'Login failed';
+  static const String failedToLogin = 'Failed to login: ';
+  static const String validatingEmail = 'Validating email...';
+  static const String emailNotFound = 'Email not found in database';
+  static const String noAccountFound = 'No account found with this email address in our records.';
+  static const String sendingResetEmail = 'Sending reset email...';
+  static const String resetLinkSent = 'Password reset link sent to ';
+  static const String invalidEmail = 'Invalid email';
+  static const String enterValidEmail = 'Please enter a valid email address';
+  static const String passwordResetFailed = 'Password reset failed';
+  static const String failedToSendReset = 'Failed to send password reset email';
+  static const String failedToReset = 'Failed to send password reset: ';
+  static const String signingIn = 'Signing ...';
+  static const String googleSignInSuccess = 'Signed in with Google successfully!';
+  static const String googleSignInFailed = 'Google sign-in failed';
+  static const String failedGoogleSignIn = 'Failed to sign in with Google: ';
+  static const String loggingOut = 'log out ...';
+  static const String signOutFailed = 'Sign out failed';
+  static const String joinPlantHub = "Join PlantHub Today 👨‍🌾";
+  static const String createAccount = "Create an account to explore a world of plants and gardening tips.";
+  static const String signUp = "Sign Up";
+  static const String passwordsNotMatch = "Passwords do not match";
+  static const String usernameRequired = "Username is required";
+  static const String emailRequired = "Email is required";
+  static const String passwordRequired = "Password is required";
+  static const String passwordTooShort = "Password must be at least 6 characters";
+  static const String confirmPasswordRequired = "Please confirm your password";
+  static const String authFailed = 'Authentication failed. Please check your credentials.';
+  static const String unexpectedLoginError = 'An unexpected error occurred during login';
+  static const String registrationFailed = 'Registration failed. Please try again.';
+  static const String unexpectedRegistrationError = 'An unexpected error occurred during registration';
+  static const String unexpectedResetError = 'An unexpected error occurred while sending reset email';
+  static const String verificationEmailFailed = 'Failed to send verification email';
+  static const String unexpectedVerificationError = 'An unexpected error occurred while sending verification email';
+  static const String checkVerificationFailed = 'Failed to check email verification status';
+  static const String unexpectedCheckVerificationError = 'An unexpected error occurred while checking verification status';
+  static const String unexpectedGoogleSignInError = 'An unexpected error occurred during Google sign in';
+  static const String unexpectedSignOutError = 'An unexpected error occurred during sign out';
 }
+class RegxStrings {
+  // Regular expressions
+  static const String emailPattern =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+
+  static const String passwordPattern =
+      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+
+  static const String namePattern = r'^[a-zA-Z\s]+$';
+
+  static final Map<String, Map<String, String>> phonePatterns = {
+    'egypt': {
+      'regex': r'^01[0125][0-9]{8}$',
+      'message': 'Egyptian number must be 11 digits starting with 010, 011, 012, or 015',
+    },
+    'saudi': {
+      'regex': r'^05[0-9]{8}$',
+      'message': 'Saudi number must be 10 digits starting with 05',
+    },
+    'uae': {
+      'regex': r'^(050|052|054|055|056|058)[0-9]{7}$',
+      'message': 'UAE number must be 10 digits starting with 050, 052, 054, 055, 056, or 058',
+    },
+    'kuwait': {
+      'regex': r'^[569][0-9]{7}$',
+      'message': 'Kuwaiti number must be 8 digits starting with 5, 6, or 9',
+    },
+    'qatar': {
+      'regex': r'^(3|5|6|7)[0-9]{7}$',
+      'message': 'Qatari number must be 8 digits starting with 3, 5, 6, or 7',
+    },
+    'bahrain': {
+      'regex': r'^(3|6|9)[0-9]{7}$',
+      'message': 'Bahraini number must be 8 digits starting with 3, 6, or 9',
+    },
+    'oman': {
+      'regex': r'^9[0-9]{8}$',
+      'message': 'Omani number must be 9 digits starting with 9',
+    },
+    'jordan': {
+      'regex': r'^07[789][0-9]{7}$',
+      'message': 'Jordanian number must be 10 digits starting with 077, 078, or 079',
+    },
+    'lebanon': {
+      'regex': r'^(03|70|71|76|78|79|81)[0-9]{6}$',
+      'message': 'Lebanese number must be 8 digits starting with 03, 70, 71, 76, 78, 79, or 81',
+    },
+    'iraq': {
+      'regex': r'^07[0-9]{9}$',
+      'message': 'Iraqi number must be 11 digits starting with 07',
+    },
+    'morocco': {
+      'regex': r'^(06|07)[0-9]{8}$',
+      'message': 'Moroccan number must be 10 digits starting with 06 or 07',
+    },
+    'algeria': {
+      'regex': r'^(05|06|07)[0-9]{8}$',
+      'message': 'Algerian number must be 10 digits starting with 05, 06, or 07',
+    },
+    'tunisia': {
+      'regex': r'^[2459][0-9]{7}$',
+      'message': 'Tunisian number must be 8 digits starting with 2, 4, 5, or 9',
+    },
+    'palestine': {
+      'regex': r'^05[0-9]{8}$',
+      'message': 'Palestinian number must be 10 digits starting with 05',
+    },
+    'syria': {
+      'regex': r'^09[0-9]{8}$',
+      'message': 'Syrian number must be 10 digits starting with 09',
+    },
+    'yemen': {
+      'regex': r'^7[0-9]{8}$',
+      'message': 'Yemeni number must be 9 digits starting with 7',
+    },
+    'libya': {
+      'regex': r'^9[0-9]{8}$',
+      'message': 'Libyan number must be 9 digits starting with 9',
+    },
+    'sudan': {
+      'regex': r'^9[0-9]{8}$',
+      'message': 'Sudanese number must be 9 digits starting with 9',
+    },
+    'mauritania': {
+      'regex': r'^[0-9]{8}$',
+      'message': 'Mauritanian number must be 8 digits',
+    },
+    'djibouti': {
+      'regex': r'^77[0-9]{6}$',
+      'message': 'Djiboutian number must be 8 digits starting with 77',
+    },
+    'comoros': {
+      'regex': r'^3[0-9]{6}$',
+      'message': 'Comorian number must be 7 digits starting with 3',
+    },
+    'somalia': {
+      'regex': r'^[0-9]{8}$',
+      'message': 'Somali number must be 8 digits',
+    },
+  };
+
+  // Default phone validation fallback
+  static const String defaultPhoneRegex = r'^[0-9]{8,15}$';
+  static const String defaultPhoneMessage = 'Invalid phone number format';
+
+  // Error messages
+  static const String emptyEmail = 'Please Enter Email';
+  static const String invalidEmail = 'This Email is not Correct';
+
+  static const String emptyPassword = 'Please Enter password';
+  static const String invalidPassword = 'Enter valid password';
+  static const String shortPassword = 'Password should be at least 7 characters';
+
+  static const String emptyName = 'Enter Your Name';
+  static const String invalidName = 'This Name is not valid';
+
+  static const String emptyPhone = 'Please Enter phone number';
+}
+

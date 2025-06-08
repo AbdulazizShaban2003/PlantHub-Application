@@ -7,6 +7,7 @@ import '../../../../config/routes/route_helper.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
+import '../../../home/presentation/views/home_view.dart';
 import '../controller/vaildator_auth_controller.dart';
 import '../widgets/custom_confirm_password.dart';
 import '../widgets/custom_email_widget.dart';
@@ -64,12 +65,12 @@ class _SignUpViewState extends State<SignUpView> {
                 ),
                 SizedBox(height: SizeConfig().height(0.045)),
                 Text(
-                  "Join PlantHub Today 👨‍🌾",
+                  AppStrings.joinPlantHub,
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
                 SizedBox(height: SizeConfig().height(0.01)),
                 Text(
-                  "Create an account to explore a world of plants and gardening tips.",
+                  AppStrings.createAccount,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 SizedBox(height: SizeConfig().height(0.035)),
@@ -103,7 +104,7 @@ class _SignUpViewState extends State<SignUpView> {
                           confirmPasswordController.text) {
                         FlushbarHelper.showError(
                           context: context,
-                          message: 'Passwords do not match',
+                          message: AppStrings.passwordsNotMatch,
                         );
                         return;
                       }
@@ -114,6 +115,13 @@ class _SignUpViewState extends State<SignUpView> {
                         password: passwordController.text.trim(),
                         context: context,
                       );
+                      Future.delayed(Duration(seconds: 2),(){
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          RouteHelper.navigateTo(HomeView()),
+                              (Route<dynamic> route) => false,
+                        );
+                      });
 
                     }
                   },
