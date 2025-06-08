@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,10 @@ import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
 import '../core/service/service_locator.dart';
 import '../core/utils/size_config.dart';
+import '../features/account/domain/repository/profile_repository.dart';
+import '../features/account/domain/repository/profile_repository_impl.dart';
+import '../features/account/presentation/manager/profile_provider.dart';
+import '../features/account/presentation/views/account_view.dart';
 import '../features/account/presentation/views/profile_view.dart';
 import '../features/articles/domain/repositories/plant_repo.dart';
 import '../features/articles/view_model.dart';
@@ -31,7 +36,8 @@ class PlantHub extends StatefulWidget {
 }
 
 late final BookModel bookModel;
-
+final firebaseAuth = FirebaseAuth.instance;
+final firestore = FirebaseFirestore.instance;
 class _PlantHubState extends State<PlantHub> {
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,17 @@ class _PlantHubState extends State<PlantHub> {
                 remoteDataSource: context.read<AuthRemoteDataSource>(),
               ),
             ),
+            Provider<ProfileRepository>(
+              create: (_) => ProfileRepositoryImpl(
+                auth: firebaseAuth,
+                firestore: firestore,
+              ),
+            ),
+            ChangeNotifierProvider(
+              create: (context) => ProfileProvider(
+                context.read<ProfileRepository>(),
+              ),
+            ),
             ChangeNotifierProvider(create: (_) => PlantViewModel()),
             ChangeNotifierProvider(create: (_) => ChatProvider()),
             ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
@@ -91,7 +108,7 @@ class _PlantHubState extends State<PlantHub> {
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.dark,
           theme: AppThemes.darkTheme,
-          home: ProfilePage(),
+          home: ProfileView(),
     ))
         );
   }

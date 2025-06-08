@@ -13,13 +13,14 @@ class AppKeyStringTr {
   static String getStarted = 'getStarted'.tr();
   static String titleForGetStarted = 'titleForGetStarted'.tr();
   static String subtitleForGetStarted = 'subtitleForGetStarted'.tr();
-  static String privacyPolicyTermsOfService = 'privacyPolicyTermsOfService'.tr();
+  static String privacyPolicyTermsOfService =
+      'privacyPolicyTermsOfService'.tr();
   static String login = 'login'.tr();
   static String signUp = 'signUp'.tr();
   static String continueWithGoogle = 'continueWithGoogle'.tr();
   static String continueWithApple = 'continueWithApple'.tr();
   static String continueWithFacebook = 'continueWithFacebook'.tr();
-  static String askPlantExpert =  'askPlantExpert'.tr();
+  static String askPlantExpert = 'askPlantExpert'.tr();
   static String subtitleAskPlantExpert = 'subtitleAskPlantExpert'.tr();
   static String popularArticles = 'popularArticles'.tr();
   static String viewAll = 'viewAll'.tr();
@@ -47,7 +48,7 @@ class AppKeyStringTr {
   static String enterPassword = "enterPassword".tr();
   static String emailCannotEmpty = "emailCannotEmpty".tr();
   static String dontHaveAccount = "dontHaveAccount".tr();
-  static String watering ="Watering";
+  static String watering = "Watering";
   static String fertilizing = "Fertilizing";
   static String humidity = "Humidity";
   static String propagation = "Propagation";
@@ -63,8 +64,9 @@ class AppKeyStringTr {
   static String soil = "Soil";
   static String moisture = "Moisture";
   static String sensitivity = "Sensitivity";
-  static String noPlantFound =  'No Plants Found';
-  static String noPlantFoundDescription = 'Check your keywords or try searching with another keywords.';
+  static String noPlantFound = 'No Plants Found';
+  static String noPlantFoundDescription =
+      'Check your keywords or try searching with another keywords.';
   static String prayerPlant = "Prayer Plant";
   static String plantDetails = "Plant Details";
   static String description = "Description";
@@ -78,17 +80,29 @@ class AppKeyStringTr {
   static String care = "Care";
   static String diseases = "Diseases";
   static String conditions = "Conditions";
-  static String causedBy= "Caused by";
+  static String causedBy = "Caused by";
   static String symptoms = "Symptoms";
   static String transmission = "Transmission";
   static String treatment = "Treatment";
-  static  String searchArticles ='Search articles..';
-  static String youCanAlsoLike ='You can also like';
-  static String popularBook="Popular Books";
+  static String searchArticles = 'Search articles..';
+  static String youCanAlsoLike = 'You can also like';
+  static String popularBook = "Popular Books";
   static String searchBook = "Search book...";
-
-
-
-
-
+  static String save = "Save";
+  static String birthdate = "Birthdate";
+  static String myProfile = "My Profile";
+  static String phoneNumber = "Phone Number";
+  static String fullName = "Full Name";
+  static String gender = "Gender";
+  static String selectDate = "Select date";
+  static String male = "Male";
+  static String female = "Female";
+  static String searchCountry = "Search Country..";
+}
+class AppStringMassage{
+  static const String fillRequiredFields = "Please fill all required fields";
+  static const String savingProfile = "Saving profile...";
+  static const String profileSaved = "Profile saved successfully";
+  static const String profileSaveFailed = "Failed to save profile: ";
+  static const String noProfileData = "No profile data found";
 }

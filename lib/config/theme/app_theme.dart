@@ -7,7 +7,15 @@ class AppThemes {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: Color(0xFF4CAF50),
-
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: Colors.white,
+      headerBackgroundColor: Colors.green[800],
+      headerForegroundColor: Colors.white,
+      todayBorder: BorderSide(color: Colors.green),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.grey.shade200,
@@ -183,7 +191,16 @@ class AppThemes {
       actionsPadding: EdgeInsets.symmetric(horizontal: 10),
       actionsIconTheme: IconThemeData(color: Colors.white),
     ),
+    datePickerTheme: DatePickerThemeData(
 
+      backgroundColor: Colors.grey[900],
+      headerBackgroundColor: ColorsManager.greenPrimaryColor,
+      headerForegroundColor: Colors.white,
+      todayBorder: BorderSide(color: ColorsManager.greenPrimaryColor),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
     cardColor: Color(0xFF1E1E1E),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.black,
@@ -226,7 +243,7 @@ class AppThemes {
     iconTheme: IconThemeData(color: Color(0xFFFFFFFF), size: 25),
     colorScheme: ColorScheme.dark(
       primary: ColorsManager.greenPrimaryColor,
-      secondary: Color(0xFF66BB6A),
+      secondary: Color(0xFF121212),
       error: Color(0xFFFF5252),
       background: Color(0xFFFFFFFF),
       surface: Color(0xFFFFFFFF),

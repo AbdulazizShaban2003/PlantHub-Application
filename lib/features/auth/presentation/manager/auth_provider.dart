@@ -212,7 +212,6 @@ Navigator.pop(context);
       operationController.showLoadingDialog(context, 'Signing ...');
       final result = await _repository.signInWithGoogle();
       Navigator.pop(context);
-
       await result.fold(
             (error) async {
           _setError(error);
