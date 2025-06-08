@@ -26,6 +26,21 @@
         <!-- End of the Google Sign-in Section -->
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleURLTypes</key>
+        <array>
+          <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLName</key>
+        	<!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
+            <string>[Your project PRODUCT_BUNDLE_IDENTIFIER value]</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+              <!-- Your app title -->
+              <string>example</string>
+            </array>
+          </dict>
+        </array>
 		<key>CFBundleIdentifier</key>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 		<key>CFBundleInfoDictionaryVersion</key>

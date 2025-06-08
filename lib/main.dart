@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
-import 'package:hive_flutter/adapters.dart';
-import 'package:provider/provider.dart';import 'app/my_app.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:provider/provider.dart';
+import 'app/my_app.dart';
 import 'core/cache/cache_helper.dart';
 import 'core/service/service_locator.dart';
 import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
@@ -17,11 +17,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseFirestore.instance.settings=Settings(
-    persistenceEnabled: true,
-    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
+  FirebaseFirestore.instance.settings = Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
   );
-ErrorWidget.builder = (FlutterErrorDetails details) {
+
+  ErrorWidget.builder = (FlutterErrorDetails details) {
     return MaterialApp(
       home: Scaffold(
         body: Center(
@@ -36,10 +37,12 @@ ErrorWidget.builder = (FlutterErrorDetails details) {
 
   await sl<CacheHelper>().init();
   await EasyLocalization.ensureInitialized();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -50,9 +53,10 @@ ErrorWidget.builder = (FlutterErrorDetails details) {
   );
   runApp(
     EasyLocalization(
-      supportedLocales: [Locale('en')],
+      supportedLocales: [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
+      saveLocale: true,
       child: PlantHub(),
     ),
   );

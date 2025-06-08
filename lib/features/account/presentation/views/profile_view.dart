@@ -125,7 +125,7 @@ class _ProfileViewState extends State<ProfileView> {
   Future<void> _saveProfile() async {
     if (_nameController.text.isEmpty || _phoneController.text.isEmpty) {
       FlushbarHelper.createInformation(
-        message: AppStringMassage.fillRequiredFields,
+        message: AppStrings.fillRequiredFields,
         duration: const Duration(seconds: 3),
       ).show(context);
       return;
@@ -138,7 +138,7 @@ class _ProfileViewState extends State<ProfileView> {
       try {
         OperationController().showLoadingDialog(
           context,
-          AppStringMassage.savingProfile,
+          AppStrings.savingProfile,
         );
 
         final updatedProfile = currentProfile.copyWith(
@@ -154,7 +154,7 @@ class _ProfileViewState extends State<ProfileView> {
         Navigator.of(context, rootNavigator: true).pop();
 
         FlushbarHelper.createSuccess(
-          message: AppStringMassage.profileSaved,
+          message: AppStrings.profileSaved,
           duration: const Duration(seconds: 3),
         ).show(context);
 
@@ -162,13 +162,13 @@ class _ProfileViewState extends State<ProfileView> {
         Navigator.of(context, rootNavigator: true).pop();
 
         FlushbarHelper.createError(
-          message: '${AppStringMassage.profileSaveFailed}${e.toString()}',
+          message: '${AppStrings.profileSaveFailed}${e.toString()}',
           duration: const Duration(seconds: 5),
         ).show(context);
       }
     } else {
       FlushbarHelper.createError(
-        message: AppStringMassage.noProfileData,
+        message: AppStrings.noProfileData,
         duration: const Duration(seconds: 3),
       ).show(context);
     }

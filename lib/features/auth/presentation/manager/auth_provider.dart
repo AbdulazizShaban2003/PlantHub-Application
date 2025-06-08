@@ -245,10 +245,11 @@ Navigator.pop(context);
     }
   }
 
-  Future<void> signOut() async {
+  Future<void> signOut(BuildContext context) async {
     try {
       _setLoading(true);
       _setError(null);
+      operationController.showLoadingDialog(context, 'log out ...');
 
       final result = await _repository.signOut();
 

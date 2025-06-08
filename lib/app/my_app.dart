@@ -3,17 +3,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:path/path.dart';
+import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
+import 'package:plant_hub_app/features/account/presentation/views/profile_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
+import 'package:plant_hub_app/features/onBoarding/presentation/view/onBoarding_view.dart';
 import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';
+import '../core/provider/language_provider.dart';
+import '../core/provider/theme_provider.dart';
 import '../core/service/service_locator.dart';
 import '../core/utils/size_config.dart';
 import '../features/account/domain/repository/profile_repository.dart';
 import '../features/account/domain/repository/profile_repository_impl.dart';
 import '../features/account/presentation/manager/profile_provider.dart';
-import '../features/account/presentation/views/account_view.dart';
-import '../features/account/presentation/views/profile_view.dart';
+import '../features/account/presentation/views/plant_photography_guide_screen.dart';
 import '../features/articles/domain/repositories/plant_repo.dart';
 import '../features/articles/view_model.dart';
 import '../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -38,11 +43,16 @@ class PlantHub extends StatefulWidget {
 late final BookModel bookModel;
 final firebaseAuth = FirebaseAuth.instance;
 final firestore = FirebaseFirestore.instance;
+final themeProvider = Provider.of<ThemeProvider>(context as BuildContext);
+final languageProvider = Provider.of<LanguageProvider>(context as BuildContext);
 class _PlantHubState extends State<PlantHub> {
+
   @override
   Widget build(BuildContext context) {
+
     SizeConfig().init(context);
     return MultiBlocProvider(
+
       providers: [
         BlocProvider(
           create:
@@ -69,47 +79,62 @@ class _PlantHubState extends State<PlantHub> {
         ),
       ],
       child: MultiProvider(
-          providers: [
-            Provider(create: (_) => AuthRemoteDataSource()),
-            Provider(create: (_) => OperationController()),
-            Provider(create: (_) => PlantRepository()),
-            Provider<BookmarkService>(
-              create: (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
-            ),
-            Provider(
-              create: (context) => AuthRepositoryImpl(
-                remoteDataSource: context.read<AuthRemoteDataSource>(),
-              ),
-            ),
-            Provider<ProfileRepository>(
-              create: (_) => ProfileRepositoryImpl(
-                auth: firebaseAuth,
-                firestore: firestore,
-              ),
-            ),
-            ChangeNotifierProvider(
-              create: (context) => ProfileProvider(
-                context.read<ProfileRepository>(),
-              ),
-            ),
-            ChangeNotifierProvider(create: (_) => PlantViewModel()),
-            ChangeNotifierProvider(create: (_) => ChatProvider()),
-            ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
-            Provider(
-              create: (context) => AuthProviderManager(
-                repository: context.read<AuthRepositoryImpl>(), operationController: context.read<OperationController>(),
-              ),
-            ),
-          ],    child:  MaterialApp(
-          debugShowCheckedModeBanner: false,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.dark,
-          theme: AppThemes.darkTheme,
-          home: ProfileView(),
-    ))
-        );
+        providers: [
+          Provider(create: (_) => AuthRemoteDataSource()),
+          Provider(create: (_) => OperationController()),
+          Provider(create: (_) => PlantRepository()),
+          Provider<BookmarkService>(
+            create:
+                (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
+          ),
+          Provider(
+            create:
+                (context) => AuthRepositoryImpl(
+                  remoteDataSource: context.read<AuthRemoteDataSource>(),
+                ),
+          ),
+          Provider<ProfileRepository>(
+            create:
+                (_) => ProfileRepositoryImpl(
+                  auth: firebaseAuth,
+                  firestore: firestore,
+                ),
+          ),
+          ChangeNotifierProvider(
+            create:
+                (context) => ProfileProvider(context.read<ProfileRepository>()),
+          ),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => LanguageProvider()),
+          ChangeNotifierProvider(create: (_) => PlantViewModel()),
+          ChangeNotifierProvider(create: (_) => ChatProvider()),
+          ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
+          Provider(
+            create:
+                (context) => AuthProviderManager(
+                  repository: context.read<AuthRepositoryImpl>(),
+                  operationController: context.read<OperationController>(),
+                ),
+          ),
+        ],
+        child: Builder(
+          builder: (context) {
+            final themeProvider = Provider.of<ThemeProvider>(context);
+            final languageProvider = Provider.of<LanguageProvider>(context);
+            return MaterialApp(
+              title: 'Plant Hub',
+              debugShowCheckedModeBanner: false,
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: languageProvider.currentLocale,
+              theme: AppThemes.lightTheme,
+              darkTheme: AppThemes.darkTheme,
+              themeMode: themeProvider.themeMode,
+              home: SplashView(),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
