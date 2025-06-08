@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/function/plant_share.dart';
 import '../../../bookMark/data/models/datasource/bookmark_service.dart';
-import '../../../bookMark/presentation/widgets/bookmark_button.dart';
 import '../../data/models/plant_model.dart';
 import '../widgets/custom_no_plant_widget.dart';
 

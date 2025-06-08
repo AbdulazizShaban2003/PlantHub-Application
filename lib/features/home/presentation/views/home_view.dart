@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/theme/app_colors.dart';
@@ -11,6 +12,8 @@ import '../../../articles/view_model.dart';
 import '../../../chatAi/controller/chat_provider.dart';
 import '../widgets/hom_view_body.dart';
 class HomeView extends StatefulWidget {
+  const HomeView({super.key});
+
   @override
   _HomeViewState createState() => _HomeViewState();
 }
@@ -25,6 +28,7 @@ class _HomeViewState extends State<HomeView> {
   }
   List<Widget>Screens=[
     HomeViewBody(),
+    AccountView(),
 
   ];
   @override
@@ -42,10 +46,12 @@ class _HomeViewState extends State<HomeView> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(CupertinoIcons.home, AppKeyStringTr.home, 0),
-              _buildNavItem(CupertinoIcons.shield, AppKeyStringTr.diagnose, 1),
+              _buildNavItem(CupertinoIcons.person, AppKeyStringTr.account, 1),
+
               SizedBox(width: 40),
               _buildNavItem(CupertinoIcons.leaf_arrow_circlepath, AppKeyStringTr.myPlant, 2),
-              _buildNavItem(CupertinoIcons.person, AppKeyStringTr.account, 3),
+              _buildNavItem(CupertinoIcons.shield, AppKeyStringTr.diagnose, 3),
+
             ],
           ),
         ),

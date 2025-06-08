@@ -7,6 +7,8 @@ import 'package:path/path.dart';
 import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
 import 'package:plant_hub_app/features/account/presentation/views/profile_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
+import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
+import 'package:plant_hub_app/features/home/presentation/widgets/custom_explore_plant.dart';
 import 'package:plant_hub_app/features/onBoarding/presentation/view/onBoarding_view.dart';
 import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +34,7 @@ import '../features/booking/home/presentation/manger/featured_books_cubit/featur
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/controller/chat_provider.dart';
+import '../features/home/presentation/views/explore_plant_view.dart';
 
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key});
@@ -130,7 +133,7 @@ class _PlantHubState extends State<PlantHub> {
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: themeProvider.themeMode,
-              home: AccountView(),
+              home: HomeView(),
             );
           },
         ),

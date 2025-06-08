@@ -9,6 +9,8 @@ class PlantViewModel with ChangeNotifier {
   Plant? _selectedPlant;
   List<Plant> _allPlants = [];
   List<Plant> _filteredPlants = [];
+  List<Plant> _categoryPlants = [];
+
   bool _isLoading = false;
   String? _error;
   String _searchQuery = '';
@@ -18,6 +20,9 @@ class PlantViewModel with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   String get searchQuery => _searchQuery;
+  String? _selectedCategory;
+
+  String? get selectedCategory => _selectedCategory;
 
   final PlantRepository  _plantRepository= PlantRepository();
   PlantViewModel(){
@@ -52,7 +57,6 @@ class PlantViewModel with ChangeNotifier {
     try {
       _startLoading();
       final plants = await _plantRepository.getAllPlants();
-
       if (plants.isEmpty) {
         _setError('No plants are currently available');
         if (_allPlants.isEmpty) {
@@ -72,7 +76,30 @@ class PlantViewModel with ChangeNotifier {
       _stopLoading();
     }
   }
+  Future<void> fetchPlantsByCategory(String category) async {
+    try {
+      _startLoading();
+      _selectedCategory = category;
 
+      // استخدام الدالة المرنة للبحث
+      final plants = await _plantRepository.getPlantsByCategoryFlexible(category);
+
+      if (plants.isEmpty) {
+        _setError('No plants found in this category');
+        _categoryPlants = [];
+      } else {
+        _categoryPlants = plants;
+        _clearError();
+      }
+    } on FirebaseException catch (e) {
+      _setError(_translateFirebaseError(e));
+    } catch (e) {
+      _setError('Failed to load plants for this category');
+      debugPrint('Error fetching plants by category: $e');
+    } finally {
+      _stopLoading();
+    }
+  }
   void searchPlants(String query) {
     _searchQuery = query.trim().toLowerCase();
 
@@ -97,6 +124,12 @@ class PlantViewModel with ChangeNotifier {
     _selectedPlant = null;
     notifyListeners();
   }
+  void clearSelectedCategory() {
+    _selectedCategory = null;
+    _filteredPlants = _allPlants;
+    notifyListeners();
+  }
+
   void _startLoading() {
     _isLoading = true;
     _error = null;
@@ -127,7 +160,37 @@ class PlantViewModel with ChangeNotifier {
         return 'A system error occurred: ${e.message}';
     }
   }
+  List<Plant> getPlantsByCategory(String category) {
+    if (_allPlants.isEmpty) {
+      return [];
+    }
 
+    return _allPlants.where((plant) {
+      final plantCategory = plant.category.toLowerCase();
+      final searchCategory = category.toLowerCase();
+
+      return plantCategory == searchCategory ||
+          plantCategory.contains(searchCategory) ||
+          _matchCategoryKeywords(plantCategory, searchCategory);
+    }).toList();
+  }
+  bool _matchCategoryKeywords(String plantCategory, String searchCategory) {
+    final categoryMappings = {
+      'succulents': ['succulent', 'cacti', 'cactus'],
+      'flowering': ['flower', 'bloom', 'blossom'],
+      'foliage': ['leaf', 'leaves', 'foliage'],
+      'trees': ['tree', 'woody'],
+      'shrubs': ['shrub', 'bush', 'weed'],
+      'fruits': ['fruit', 'berry'],
+      'vegetables': ['vegetable', 'veggie'],
+      'herbs': ['herb', 'aromatic'],
+      'mushrooms': ['mushroom', 'fungi'],
+      'toxic': ['toxic', 'poisonous', 'dangerous'],
+    };
+
+    final keywords = categoryMappings[searchCategory] ?? [];
+    return keywords.any((keyword) => plantCategory.contains(keyword));
+  }
   Future<List<Plant>> getBookmarkedPlants(BuildContext context) async {
     final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
     final bookmarks = await bookmarkService.getUserBookmarks().first;

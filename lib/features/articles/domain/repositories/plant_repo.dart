@@ -8,6 +8,9 @@ class PlantRepository {
     FirebaseFirestore? firestore,
   })  : _plantsCollection = (firestore ?? FirebaseFirestore.instance).collection('Plants');
 
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final String _collection = 'Plants'; // تم تصحيح اسم المجموعة
+
   Future<List<Plant>> getAllPlants() async {
     try {
       final querySnapshot = await _plantsCollection.get();
@@ -27,6 +30,7 @@ class PlantRepository {
       );
     }
   }
+
   Future<Plant?> getPlantById(String id) async {
     try {
       if (id.isEmpty) {
@@ -50,6 +54,7 @@ class PlantRepository {
       );
     }
   }
+
   Future<List<Plant>> searchPlants(String query) async {
     try {
       final trimmedQuery = query.trim();
@@ -79,6 +84,7 @@ class PlantRepository {
       throw RepositoryException('خطأ غير متوقع أثناء البحث');
     }
   }
+
   Future<List<Map<String, dynamic>>> searchPlantsAsMaps(String query) async {
     try {
       final querySnapshot = await _plantsCollection
@@ -104,8 +110,84 @@ class PlantRepository {
     }
   }
 
+  // تم إصلاح هذه الدالة
+  Future<List<Plant>> getPlantsByCategory(String category) async {
+    try {
+      if (category.isEmpty) {
+        throw RepositoryException('Category cannot be empty');
+      }
 
+      // البحث في النباتات التي تحتوي على التصنيف المطلوب
+      final querySnapshot = await _plantsCollection
+          .where('category', isEqualTo: category)
+          .get();
 
+      // إذا لم نجد نتائج بالبحث المباشر، نبحث باستخدام contains
+      if (querySnapshot.docs.isEmpty) {
+        final allPlantsSnapshot = await _plantsCollection.get();
+        final filteredDocs = allPlantsSnapshot.docs.where((doc) {
+          final data = doc.data();
+          final plantCategory = data['category'] as String? ?? '';
+          return plantCategory.toLowerCase().contains(category.toLowerCase());
+        }).toList();
+
+        return filteredDocs.map((doc) => Plant.fromFirestore(doc)).toList();
+      }
+
+      return querySnapshot.docs
+          .map((doc) => Plant.fromFirestore(doc))
+          .toList();
+    } on FirebaseException catch (e) {
+      throw RepositoryException(
+        'Failed to fetch plants by category: $category',
+        code: e.code,
+        stackTrace: e.stackTrace,
+      );
+    } catch (e, stackTrace) {
+      throw RepositoryException(
+        'Unexpected error while fetching plants by category',
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  // دالة جديدة للبحث في التصنيفات بمرونة أكثر
+  Future<List<Plant>> getPlantsByCategoryFlexible(String category) async {
+    try {
+      final allPlants = await getAllPlants();
+
+      return allPlants.where((plant) {
+        final plantCategory = plant.category.toLowerCase();
+        final searchCategory = category.toLowerCase();
+
+        // البحث بطرق متعددة
+        return plantCategory == searchCategory ||
+            plantCategory.contains(searchCategory) ||
+            _matchCategoryKeywords(plantCategory, searchCategory);
+      }).toList();
+    } catch (e) {
+      throw RepositoryException('Failed to fetch plants by category: $category');
+    }
+  }
+
+  // دالة مساعدة لمطابقة الكلمات المفتاحية
+  bool _matchCategoryKeywords(String plantCategory, String searchCategory) {
+    final categoryMappings = {
+      'succulents': ['succulent', 'cacti', 'cactus'],
+      'flowering': ['flower', 'bloom', 'blossom'],
+      'foliage': ['leaf', 'leaves', 'foliage'],
+      'trees': ['tree', 'woody'],
+      'shrubs': ['shrub', 'bush', 'weed'],
+      'fruits': ['fruit', 'berry'],
+      'vegetables': ['vegetable', 'veggie'],
+      'herbs': ['herb', 'aromatic'],
+      'mushrooms': ['mushroom', 'fungi'],
+      'toxic': ['toxic', 'poisonous', 'dangerous'],
+    };
+
+    final keywords = categoryMappings[searchCategory] ?? [];
+    return keywords.any((keyword) => plantCategory.contains(keyword));
+  }
 }
 
 class RepositoryException implements Exception {
