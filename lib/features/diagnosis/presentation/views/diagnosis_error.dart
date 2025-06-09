@@ -1,11 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/core/utils/size_config.dart';
-import 'package:plant_hub_app/core/widgets/outlined_button_widget.dart';
 
-class ErrorScreen extends StatelessWidget {
-  const ErrorScreen({super.key});
+class DiagnosisErrorScreen extends StatelessWidget {
+  const DiagnosisErrorScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -18,18 +14,25 @@ class ErrorScreen extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () => Navigator.of(context).pop(),
                   child: const Icon(Icons.close, size: 24),
                 ),
               ),
             ),
-            SizedBox(
-                width: SizeConfig().width(0.8),
-                height: SizeConfig().height(0.4),
-
-                child: Image(image: AssetImage("assets/images/image_error.png"))),
 
             Expanded(
+              flex: 2,
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Image.asset(
+                  "assets/images/image_error.png",
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+
+            Expanded(
+              flex: 1,
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Column(
@@ -58,9 +61,23 @@ class ErrorScreen extends StatelessWidget {
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(
                 width: double.infinity,
-                child: OutlinedButtonWidget(
-                  nameButton: "Try Again",
-                  onPressed: () {},
+                child: ElevatedButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF00A67E),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                  ),
+                  child: Text(
+                    "Try Again",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ),
             ),
