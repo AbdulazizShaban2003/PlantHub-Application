@@ -39,7 +39,7 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
           SizedBox(width: SizeConfig().width(0.04)),
           BuildCircleIcon(
             onPressed: () {
-              Navigator.pushReplacement(context, RouteHelper.navigateTo(BookmarkView(plantProvider: plantProvider)));
+              Navigator.push(context, RouteHelper.navigateTo(BookmarkView(plantProvider: plantProvider)));
             },
             showBadge: false,
               iconData: CupertinoIcons.bookmark,

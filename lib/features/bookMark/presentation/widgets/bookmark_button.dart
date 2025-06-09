@@ -1,5 +1,10 @@
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../config/theme/app_colors.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/size_config.dart';
 import '../../data/datasource/bookmark_service.dart';
 
 class BookmarkButton extends StatelessWidget {
@@ -9,13 +14,14 @@ class BookmarkButton extends StatelessWidget {
   const BookmarkButton({
     super.key,
     required this.itemId,
-    this.size = 24,
-
+    this.size,
   });
 
   @override
   Widget build(BuildContext context) {
     final service = Provider.of<BookmarkService>(context, listen: false);
+    final iconSize = size ?? SizeConfig().responsiveFont(24);
+
     return StreamBuilder<bool>(
       stream: service.getBookmarkStatusStream(itemId),
       builder: (context, snapshot) {
@@ -23,63 +29,61 @@ class BookmarkButton extends StatelessWidget {
         final isLoading = snapshot.connectionState == ConnectionState.waiting;
 
         return IconButton(
+          constraints: BoxConstraints(),
+          padding: EdgeInsets.zero, 
           icon: isLoading
               ? SizedBox(
-            width: size,
-            height: size,
+            width: iconSize,
+            height: iconSize,
             child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: Colors.amber,
+              strokeWidth: SizeConfig().width(0.005),
+              color: ColorsManager.greenPrimaryColor,
             ),
           )
               : Icon(
             isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-            color: isBookmarked ? Colors.amber : Theme.of(context).primaryColor,
-            size: size,
+            color: isBookmarked ? ColorsManager.greenPrimaryColor : Theme.of(context).primaryColor,
+            size: iconSize,
           ),
           onPressed: isLoading ? null : () => _toggleBookmark(context, service, isBookmarked),
-          splashRadius: size,
+          splashRadius: iconSize * 0.6,
         );
       },
     );
   }
 
-  Future<void> _toggleBookmark(BuildContext context, BookmarkService service, bool isCurrentlyBookmarked) async {
+  Future<void> _toggleBookmark(
+      BuildContext context,
+      BookmarkService service,
+      bool isCurrentlyBookmarked
+      ) async {
     try {
       if (isCurrentlyBookmarked) {
         await service.removeBookmark(itemId);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تمت إزالة من المفضلة'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          FlushbarHelper.createSuccess(
+            message: AppStrings.removedFromBookmarks,
+            duration: Duration(seconds: 2),
+          ).show(context);
         }
       } else {
         await service.addBookmark(itemId);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('تمت الإضافة إلى المفضلة'),
-              duration: Duration(seconds: 1),
-            ),
-          );
+          FlushbarHelper.createSuccess(
+            message: AppStrings.addedToBookmarks,
+            duration: Duration(seconds: 2),
+          ).show(context);
         }
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(isCurrentlyBookmarked
-                ? 'فشل في إزالة من المفضلة'
-                : 'فشل في الإضافة إلى المفضلة'),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 2),
-          ),
-        );
+        FlushbarHelper.createError(
+          message: isCurrentlyBookmarked
+              ? AppStrings.removeBookmarkFailed
+              : AppStrings.addBookmarkFailed,
+          duration: Duration(seconds: 2),
+        ).show(context);
       }
-      debugPrint('Error toggling bookmark: $e');
     }
   }
 }

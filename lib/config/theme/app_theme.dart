@@ -232,7 +232,7 @@ class AppThemes {
         fontSize: 20,
         fontWeight: FontWeight.bold,
       ),
-      bodyLarge: TextStyle(color: Color(0xDDFFFFFF),fontWeight: FontWeight.bold),
+      bodyLarge: TextStyle(color: Color(0xDDFFFFFF),fontWeight: FontWeight.bold,fontSize: 20),
       bodyMedium: TextStyle(color: Color(0xDDFFFFFF) ,fontWeight: FontWeight.bold , fontSize: 16),
       bodySmall: TextStyle(
         color: Color(0xFFFFFFFF),
