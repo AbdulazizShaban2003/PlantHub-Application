@@ -27,7 +27,7 @@ class HeaderEmailProfileWidget extends StatelessWidget {
           keyboardType: TextInputType.emailAddress,
           prefixIcon: Icon(Icons.email_outlined,
               size: 18,
-              color: Theme.of(context).iconTheme.color),
+              color: Theme.of(context).primaryColor),
           read: true,
         ),
       ],

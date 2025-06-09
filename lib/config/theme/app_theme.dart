@@ -7,15 +7,6 @@ class AppThemes {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
     primaryColor: Color(0xDD000000),
-    datePickerTheme: DatePickerThemeData(
-      backgroundColor: Colors.white,
-      headerBackgroundColor: Colors.green[800],
-      headerForegroundColor: Colors.white,
-      todayBorder: BorderSide(color: Colors.green),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: Colors.grey.shade200,
@@ -27,6 +18,7 @@ class AppThemes {
       color: Colors.grey.shade400,
       fontSize: 13,
     ),
+
       contentPadding: EdgeInsets.symmetric(
         vertical: SizeConfig().height(0.0012),
         horizontal: SizeConfig().width(0.01),

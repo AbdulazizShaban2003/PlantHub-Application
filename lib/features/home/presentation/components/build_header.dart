@@ -16,7 +16,7 @@ class BuildHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(header, style: Theme.of(context).textTheme.bodyMedium),
+        Text(header, style: Theme.of(context).textTheme.bodySmall),
         InkWell(
           onTap: () {
             Navigator.push(context, RouteHelper.navigateTo( PopularArticlesView()));
@@ -25,7 +25,7 @@ class BuildHeader extends StatelessWidget {
             children: [
               Text(
                 AppKeyStringTr.viewAll,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                style: Theme.of(context).textTheme.labelMedium!.copyWith(
                   color: ColorsManager.greenPrimaryColor,
                 ),
               ),

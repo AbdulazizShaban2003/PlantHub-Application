@@ -1,134 +1,365 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
+import '../../data/disease_info.dart';
+import '../../doamin/service.dart';
 
-class DiagnosisScreen extends StatefulWidget {
-  final String imagePath;
-  final dynamic apiResponse;
-
-  const DiagnosisScreen({
-    Key? key,
-    required this.imagePath,
-    required this.apiResponse,
-  }) : super(key: key);
+class DiseaseScreen extends StatefulWidget {
+  const DiseaseScreen({Key? key}) : super(key: key);
 
   @override
-  _DiagnosisScreenState createState() => _DiagnosisScreenState();
+  _DiseaseScreenState createState() => _DiseaseScreenState();
 }
 
-class _DiagnosisScreenState extends State<DiagnosisScreen> {
-  late Map<String, dynamic> diagnosisData;
-  List<DiseaseInfo> diseases = [];
+class _DiseaseScreenState extends State<DiseaseScreen> {
+  List<DiseaseModel> diseases = [];
+  List<DiseaseModel> filteredDiseases = [];
+  bool isLoading = true;
+  String searchQuery = '';
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _processDiagnosisData();
+    _loadDiseases();
   }
 
-  void _processDiagnosisData() {
-    // Process API response to extract disease information
-    if (widget.apiResponse is Map<String, dynamic>) {
-      diagnosisData = widget.apiResponse as Map<String, dynamic>;
-    } else {
-      diagnosisData = {'result': widget.apiResponse.toString()};
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadDiseases() async {
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      final loadedDiseases = await DiseaseService.getAllDiseases();
+
+      setState(() {
+        diseases = loadedDiseases;
+        filteredDiseases = loadedDiseases;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      _showErrorSnackBar('Error loading diseases: $e');
     }
-
-    // Extract diseases from response
-    _extractDiseases();
   }
 
-  void _extractDiseases() {
-    diseases.clear();
-
-    // Check if response contains specific disease information
-    if (diagnosisData.containsKey('diseases')) {
-      List<dynamic> diseaseList = diagnosisData['diseases'];
-      for (var disease in diseaseList) {
-        diseases.add(DiseaseInfo.fromJson(disease));
+  void _searchDiseases(String query) {
+    setState(() {
+      searchQuery = query;
+      if (query.isEmpty) {
+        filteredDiseases = diseases;
+      } else {
+        filteredDiseases = diseases
+            .where((disease) =>
+        disease.name.toLowerCase().contains(query.toLowerCase()) ||
+            disease.description.toLowerCase().contains(query.toLowerCase()))
+            .toList();
       }
-    } else if (diagnosisData.containsKey('predictions')) {
-      List<dynamic> predictions = diagnosisData['predictions'];
-      for (var prediction in predictions) {
-        diseases.add(DiseaseInfo.fromPrediction(prediction));
-      }
-    } else {
-      // Create default disease info from result
-      String result = diagnosisData['result']?.toString() ?? 'Unknown disease detected';
-      diseases.add(DiseaseInfo(
-        name: _extractDiseaseName(result),
-        description: _getDescriptionForDisease(result),
-        confidence: _extractConfidence(result),
-        category: _categorizeDisease(result),
-        isHighlighted: true,
-      ));
-    }
-
-    // Sort by confidence if available
-    diseases.sort((a, b) => (b.confidence ?? 0.0).compareTo(a.confidence ?? 0.0));
+    });
   }
 
-  String _extractDiseaseName(String result) {
-    // Extract disease name from result string
-    if (result.toLowerCase().contains('blight')) return 'Blight Disease';
-    if (result.toLowerCase().contains('rust')) return 'Rust Disease';
-    if (result.toLowerCase().contains('spot')) return 'Leaf Spot Disease';
-    if (result.toLowerCase().contains('mildew')) return 'Mildew Disease';
-    if (result.toLowerCase().contains('fungal')) return 'Fungal Disease';
-    if (result.toLowerCase().contains('bacterial')) return 'Bacterial Disease';
-    if (result.toLowerCase().contains('viral')) return 'Viral Disease';
-    return 'Plant Disease Detected';
+  Future<void> _refreshDiseases() async {
+    await _loadDiseases();
   }
 
-  String _getDescriptionForDisease(String result) {
-    String diseaseName = _extractDiseaseName(result).toLowerCase();
-
-    if (diseaseName.contains('blight')) {
-      return 'Blight diseases cause rapid browning and death of plant tissues. Common in humid conditions.';
-    } else if (diseaseName.contains('rust')) {
-      return 'Rust diseases appear as orange or reddish spots on leaves, caused by fungal infections.';
-    } else if (diseaseName.contains('spot')) {
-      return 'Leaf spot diseases cause circular or irregular spots on leaves, often with distinct borders.';
-    } else if (diseaseName.contains('mildew')) {
-      return 'Mildew appears as white powdery growth on plant surfaces, thriving in humid conditions.';
-    } else if (diseaseName.contains('fungal')) {
-      return 'Fungal diseases are among the most common plant diseases, causing various symptoms.';
-    } else if (diseaseName.contains('bacterial')) {
-      return 'Bacterial diseases often cause water-soaked lesions and can spread rapidly in warm, moist conditions.';
-    } else if (diseaseName.contains('viral')) {
-      return 'Viral diseases cause mosaic patterns, stunting, and distorted growth in plants.';
-    }
-
-    return 'A plant disease has been detected. Consult with experts for proper treatment.';
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 4),
+      ),
+    );
   }
 
-  double? _extractConfidence(String result) {
-    // Try to extract confidence percentage from result
-    RegExp regex = RegExp(r'(\d+(?:\.\d+)?)%');
-    Match? match = regex.firstMatch(result);
-    if (match != null) {
-      return double.tryParse(match.group(1)!);
-    }
-    return null;
+  void _navigateToDiseaseDetail(DiseaseModel disease) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DiseaseDetailScreen(disease: disease),
+      ),
+    );
   }
 
-  String _categorizeDisease(String result) {
-    if (result.toLowerCase().contains('fungal') || result.toLowerCase().contains('fungi')) {
-      return 'Fungi';
-    } else if (result.toLowerCase().contains('bacterial') || result.toLowerCase().contains('bacteria')) {
-      return 'Bacteria';
-    } else if (result.toLowerCase().contains('viral') || result.toLowerCase().contains('virus')) {
-      return 'Virus';
-    } else if (result.toLowerCase().contains('abiotic') || result.toLowerCase().contains('environmental')) {
-      return 'Abiotic';
-    }
-    return 'Unknown';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          'Plant Diseases',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh, color: Colors.black),
+            onPressed: _refreshDiseases,
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Search Bar
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextField(
+              controller: _searchController,
+              onChanged: _searchDiseases,
+              decoration: InputDecoration(
+                hintText: 'Search diseases...',
+                prefixIcon: Icon(Icons.search, color: Colors.grey),
+                suffixIcon: searchQuery.isNotEmpty
+                    ? IconButton(
+                  icon: Icon(Icons.clear, color: Colors.grey),
+                  onPressed: () {
+                    _searchController.clear();
+                    _searchDiseases('');
+                  },
+                )
+                    : null,
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+          ),
+
+          // Disease Count
+          if (!isLoading) ...[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                children: [
+                  Text(
+                    '${filteredDiseases.length} diseases found',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+          ],
+
+          // Disease List
+          Expanded(
+            child: isLoading
+                ? Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF00A67E),
+              ),
+            )
+                : filteredDiseases.isEmpty
+                ? _buildEmptyState()
+                : RefreshIndicator(
+              onRefresh: _refreshDiseases,
+              color: Color(0xFF00A67E),
+              child: ListView.separated(
+                padding: EdgeInsets.all(16),
+                itemCount: filteredDiseases.length,
+                separatorBuilder: (context, index) => SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final disease = filteredDiseases[index];
+                  return _buildDiseaseCard(disease);
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
-  void _navigateToChat(String diseaseName) {
-    // Navigate to chat with disease-specific information
-    // Implementation depends on your chat system
-    print('Navigate to chat for: $diseaseName');
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.search_off,
+            size: 64,
+            color: Colors.grey.shade400,
+          ),
+          SizedBox(height: 16),
+          Text(
+            searchQuery.isEmpty ? 'No diseases found' : 'No results for "$searchQuery"',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey.shade600,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          SizedBox(height: 8),
+          Text(
+            searchQuery.isEmpty
+                ? 'Try refreshing the page'
+                : 'Try a different search term',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey.shade500,
+            ),
+          ),
+          if (searchQuery.isEmpty) ...[
+            SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _refreshDiseases,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF00A67E),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                'Refresh',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
+
+  Widget _buildDiseaseCard(DiseaseModel disease) {
+    return InkWell(
+      onTap: () => _navigateToDiseaseDetail(disease),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            // Disease Image
+            ClipRRect(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                bottomLeft: Radius.circular(12),
+              ),
+              child: Container(
+                width: 100,
+                height: 100,
+                child: disease.image.isNotEmpty
+                    ? Image.network(
+                  disease.image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      _buildImagePlaceholder(),
+                )
+                    : _buildImagePlaceholder(),
+              ),
+            ),
+
+            // Disease Info
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      disease.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      disease.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade700,
+                        height: 1.4,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.photo_library,
+                          size: 16,
+                          color: Colors.grey.shade500,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          '${disease.images.length} images',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey.shade500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            // Arrow Icon
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Icon(
+                Icons.chevron_right,
+                color: Colors.grey.shade400,
+                size: 24,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImagePlaceholder() {
+    return Container(
+      color: Colors.grey.shade200,
+      child: Icon(
+        Icons.local_florist,
+        color: Colors.grey.shade400,
+        size: 40,
+      ),
+    );
+  }
+}
+
+// Disease Detail Screen
+class DiseaseDetailScreen extends StatelessWidget {
+  final DiseaseModel disease;
+
+  const DiseaseDetailScreen({
+    Key? key,
+    required this.disease,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +373,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Diagnosis Results',
+          disease.name,
           style: TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
@@ -151,222 +382,138 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Plant image with problem indicators
-              Container(
-                width: double.infinity,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  image: DecorationImage(
-                    image: FileImage(File(widget.imagePath)),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: Stack(
-                  children: _buildProblemIndicators(),
-                ),
-              ),
-
-              SizedBox(height: 24),
-
-              if (diagnosisData.isNotEmpty) ...[
-                Container(
-                  padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Analysis Result:',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        diagnosisData.toString(),
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade700),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 16),
-              ],
-
-
-              SizedBox(height: 24),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  List<Widget> _buildProblemIndicators() {
-    // Build red circles to highlight problem areas
-    return [
-      Positioned(
-        top: 40,
-        right: 80,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.red, width: 2),
-          ),
-        ),
-      ),
-      Positioned(
-        top: 100,
-        right: 50,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.red, width: 2),
-          ),
-        ),
-      ),
-      Positioned(
-        top: 150,
-        right: 120,
-        child: Container(
-          width: 30,
-          height: 30,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: Colors.red, width: 2),
-          ),
-        ),
-      ),
-    ];
-  }
-
-  Widget _buildDiseaseCard(DiseaseInfo disease) {
-    return GestureDetector(
-      onTap: () => _navigateToChat(disease.name),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: Colors.grey.shade200),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Disease category icon
+            // Main Disease Image
             Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  bottomLeft: Radius.circular(8),
-                ),
-                color: _getCategoryColor(disease.category),
-              ),
-              child: Icon(
-                _getCategoryIcon(disease.category),
-                color: Colors.white,
-                size: 32,
-              ),
+              width: double.infinity,
+              height: 250,
+              child: disease.image.isNotEmpty
+                  ? Image.network(
+                disease.image,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    _buildImagePlaceholder(),
+              )
+                  : _buildImagePlaceholder(),
             ),
 
-            // Disease info
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Disease Name
+                  Text(
+                    disease.name,
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+
+                  // Description Section
+                  _buildSection(
+                    title: 'Description',
+                    content: disease.description,
+                    icon: Icons.description,
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Treatment Section
+                  _buildSection(
+                    title: 'Treatment',
+                    content: disease.treatment,
+                    icon: Icons.healing,
+                  ),
+
+                  SizedBox(height: 24),
+
+                  // Additional Images Section
+                  if (disease.images.isNotEmpty) ...[
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Expanded(
-                          child: Text(
-                            disease.name,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                            ),
+                        Icon(
+                          Icons.photo_library,
+                          color: Color(0xFF00A67E),
+                          size: 24,
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          'Additional Images',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
                           ),
                         ),
-                        if (disease.isHighlighted) ...[
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.red.shade100,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              'Most Likely',
-                              style: TextStyle(
-                                color: Colors.red,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ] else if (disease.confidence != null) ...[
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.blue.shade100,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '${disease.confidence!.toStringAsFixed(1)}%',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      disease.description,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey.shade700,
+                    SizedBox(height: 12),
+                    SizedBox(
+                      height: 120,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: disease.images.length,
+                        separatorBuilder: (context, index) => SizedBox(width: 12),
+                        itemBuilder: (context, index) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Container(
+                              width: 120,
+                              height: 120,
+                              child: Image.network(
+                                disease.images[index],
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    _buildImagePlaceholder(),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
                     ),
+                    SizedBox(height: 24),
                   ],
-                ),
-              ),
-            ),
 
-            // Arrow icon
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+                  // Ask Expert Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        // Navigate to expert consultation
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Expert consultation feature coming soon!'),
+                            backgroundColor: Color(0xFF00A67E),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF00A67E),
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      child: Text(
+                        'Ask Expert',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 20),
+                ],
               ),
             ),
           ],
@@ -375,69 +522,62 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
     );
   }
 
-  Color _getCategoryColor(String category) {
-    switch (category.toLowerCase()) {
-      case 'fungi':
-        return Colors.orange;
-      case 'bacteria':
-        return Colors.red;
-      case 'virus':
-        return Colors.purple;
-      case 'abiotic':
-        return Colors.brown;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  IconData _getCategoryIcon(String category) {
-    switch (category.toLowerCase()) {
-      case 'fungi':
-        return Icons.eco;
-      case 'bacteria':
-        return Icons.bug_report;
-      case 'virus':
-        return Icons.warning;
-      case 'abiotic':
-        return Icons.wb_sunny;
-      default:
-        return Icons.local_florist;
-    }
-  }
-}
-
-class DiseaseInfo {
-  final String name;
-  final String description;
-  final String category;
-  final double? confidence;
-  final bool isHighlighted;
-
-  DiseaseInfo({
-    required this.name,
-    required this.description,
-    required this.category,
-    this.confidence,
-    this.isHighlighted = false,
-  });
-
-  factory DiseaseInfo.fromJson(Map<String, dynamic> json) {
-    return DiseaseInfo(
-      name: json['name'] ?? 'Unknown Disease',
-      description: json['description'] ?? 'No description available',
-      category: json['category'] ?? 'Unknown',
-      confidence: json['confidence']?.toDouble(),
-      isHighlighted: json['isHighlighted'] ?? false,
+  Widget _buildSection({
+    required String title,
+    required String content,
+    required IconData icon,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: Color(0xFF00A67E),
+              size: 24,
+            ),
+            SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Text(
+            content,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+              height: 1.6,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  factory DiseaseInfo.fromPrediction(Map<String, dynamic> prediction) {
-    return DiseaseInfo(
-      name: prediction['class'] ?? prediction['label'] ?? 'Disease Detected',
-      description: prediction['description'] ?? 'Disease detected in plant',
-      category: prediction['category'] ?? 'General',
-      confidence: prediction['confidence']?.toDouble() ?? prediction['score']?.toDouble(),
-      isHighlighted: prediction['confidence'] != null && prediction['confidence'] > 0.8,
+  Widget _buildImagePlaceholder() {
+    return Container(
+      color: Colors.grey.shade200,
+      child: Icon(
+        Icons.local_florist,
+        color: Colors.grey.shade400,
+        size: 40,
+      ),
     );
   }
 }

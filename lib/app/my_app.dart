@@ -8,7 +8,6 @@ import 'package:path/path.dart';
 import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
 import 'package:plant_hub_app/features/account/presentation/views/profile_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
-import 'package:plant_hub_app/features/diagnosis/presentation/views/camara_screen.dart';
 import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
 import 'package:plant_hub_app/features/home/presentation/widgets/custom_explore_plant.dart';
 import 'package:plant_hub_app/features/onBoarding/presentation/view/onBoarding_view.dart';
@@ -36,7 +35,7 @@ import '../features/booking/home/presentation/manger/featured_books_cubit/featur
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/controller/chat_provider.dart';
-import '../features/diagnosis/presentation/views/test_image.dart';
+import '../features/diagnosis/presentation/views/diagnosis_screen.dart';
 import '../features/home/presentation/views/explore_plant_view.dart';
 
 class PlantHub extends StatefulWidget {
@@ -133,8 +132,8 @@ class _PlantHubState extends State<PlantHub> {
               locale: Locale('en'),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.dark,
-              home: CameraScreen(cameras: widget.cameras)
+              themeMode: ThemeMode.light,
+              home: DiseaseScreen()
             );
           },
         ),

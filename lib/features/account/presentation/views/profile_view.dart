@@ -92,22 +92,36 @@ class _ProfileViewState extends State<ProfileView> {
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              onPrimary:  ColorsManager.blackColor,
+              surface: Color(0xFFF5F5F5),
+
+            ),
+            datePickerTheme: DatePickerThemeData(
+              backgroundColor: Colors.white,
+              headerBackgroundColor: Colors.white,
+              headerForegroundColor: Colors.black,
+              dayStyle: TextStyle(color: Colors.black),
+              weekdayStyle: TextStyle(color: Colors.black),
+              todayBorder: BorderSide(color: Colors.blue),
+
+            ),
             textTheme: Theme.of(context).textTheme.copyWith(
               labelLarge: TextStyle(
                 fontSize: 16,
+                fontFamily: 'Roboto',
               ),
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 minimumSize: Size(64, 50),
                 padding: EdgeInsets.symmetric(horizontal: 12),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
             ),
           ),
           child: MediaQuery(
             data: MediaQuery.of(context).copyWith(
-              textScaleFactor: 0.85,
+              textScaleFactor: 1.0, // القيمة الافتراضية
             ),
             child: child!,
           ),
@@ -116,12 +130,9 @@ class _ProfileViewState extends State<ProfileView> {
     );
 
     if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
+      setState(() => _selectedDate = picked);
     }
   }
-
   Future<void> _saveProfile() async {
     if (_nameController.text.isEmpty || _phoneController.text.isEmpty) {
       FlushbarHelper.createInformation(
@@ -192,9 +203,8 @@ class _ProfileViewState extends State<ProfileView> {
               AppKeyStringTr.myProfile,
               style: Theme.of(context).textTheme.bodyLarge,
             ),
-            centerTitle: true,
             leading: IconButton(
-              icon: Icon(Icons.close, color: Theme.of(context).iconTheme.color),
+              icon: Icon(Icons.close, color: Theme.of(context).primaryColor),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -239,7 +249,7 @@ class _ProfileViewState extends State<ProfileView> {
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: SizedBox(
-                          width: SizeConfig().width(0.25),
+                          width: SizeConfig().width(0.3),
                           height: SizeConfig().height(0.01),
                           child: CountryCodePicker(
                             dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -362,13 +372,13 @@ class _ProfileViewState extends State<ProfileView> {
                               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 color: _selectedDate == null
                                     ? ColorsManager.greyColor
-                                    : ColorsManager.whiteColor,
+                                    :Theme.of(context).primaryColor ,
                               ),
                             ),
                             Icon(
                               Icons.calendar_today,
                               size: 20,
-                              color: ColorsManager.greyColor,
+                              color: Theme.of(context).primaryColor,
                             ),
                           ],
                         ),

@@ -26,7 +26,7 @@ class HeaderFullNameProfileWidget extends StatelessWidget {
           keyboardType: TextInputType.name,
           prefixIcon: Icon(Icons.person,
               size: 18,
-              color: Theme.of(context).iconTheme.color),
+              color: Theme.of(context).primaryColor),
         ),
       ],
     );
