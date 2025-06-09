@@ -110,19 +110,16 @@ class PlantRepository {
     }
   }
 
-  // تم إصلاح هذه الدالة
   Future<List<Plant>> getPlantsByCategory(String category) async {
     try {
       if (category.isEmpty) {
         throw RepositoryException('Category cannot be empty');
       }
 
-      // البحث في النباتات التي تحتوي على التصنيف المطلوب
       final querySnapshot = await _plantsCollection
           .where('category', isEqualTo: category)
           .get();
 
-      // إذا لم نجد نتائج بالبحث المباشر، نبحث باستخدام contains
       if (querySnapshot.docs.isEmpty) {
         final allPlantsSnapshot = await _plantsCollection.get();
         final filteredDocs = allPlantsSnapshot.docs.where((doc) {

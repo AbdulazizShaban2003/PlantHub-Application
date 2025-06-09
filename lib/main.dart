@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,7 +22,8 @@ void main() async {
       persistenceEnabled: true,
       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
   );
-
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return MaterialApp(
       home: Scaffold(
@@ -57,7 +59,7 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       saveLocale: true,
-      child: PlantHub(),
+      child: PlantHub(camera: firstCamera),
     ),
   );
 }

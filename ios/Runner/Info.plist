@@ -6,6 +6,8 @@
 		<string>$(DEVELOPMENT_LANGUAGE)</string>
 		<key>CFBundleDisplayName</key>
 		<string>Plant Hub App</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+        <string>نحتاج الوصول إلى الصور</string>
 		<key>GIDClientID</key>
         <string>[439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj.apps.googleusercontent.com]</string>
         <!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
