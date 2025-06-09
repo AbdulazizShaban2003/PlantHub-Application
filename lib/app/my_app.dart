@@ -133,7 +133,7 @@ class _PlantHubState extends State<PlantHub> {
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.light,
-              home: DiseaseScreen()
+              home: SplashView()
             );
           },
         ),

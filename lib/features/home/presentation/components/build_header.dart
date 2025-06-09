@@ -7,9 +7,10 @@ import '../../../../core/utils/size_config.dart';
 import '../../../articles/presentation/views/article_plant_view.dart';
 
 class BuildHeader extends StatelessWidget {
-  const BuildHeader({super.key, required this.header});
+  const BuildHeader({super.key, required this.header, required this.onTab});
 
   final String header;
+  final VoidCallback onTab;
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +19,7 @@ class BuildHeader extends StatelessWidget {
       children: [
         Text(header, style: Theme.of(context).textTheme.bodySmall),
         InkWell(
-          onTap: () {
-            Navigator.push(context, RouteHelper.navigateTo( PopularArticlesView()));
-          },
+          onTap:onTab,
           child: Row(
             children: [
               Text(

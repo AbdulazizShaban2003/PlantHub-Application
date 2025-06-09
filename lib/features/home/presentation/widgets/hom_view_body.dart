@@ -6,6 +6,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../articles/view_model.dart';
+import '../components/build_header.dart';
 import '../views/category_plant_view.dart';
 import 'custom_app_bar_home_view.dart';
 import 'custom_ask_expert.dart';
@@ -61,8 +62,9 @@ class HomeViewBody extends StatelessWidget {
                   SizedBox(height: SizeConfig().height(0.025)),
                   CustomExplorBook(),
                   SizedBox(height: SizeConfig().height(0.03)),
+                  BuildHeader(header: "Explore Plants", onTab: () {  },),
                   SizedBox(
-                    height: 900,
+                    height: 600,
                     child: Padding(
                       padding: const EdgeInsets.all(13.0),
                       child: GridView.count(

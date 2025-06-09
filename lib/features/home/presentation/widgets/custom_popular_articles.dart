@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/features/articles/presentation/views/article_plant_view.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
@@ -24,7 +25,7 @@ class CustomPopularArticles extends StatelessWidget {
     });
     return Column(
       children: [
-        BuildHeader(header: AppKeyStringTr.popularArticles),
+        BuildHeader(header: AppKeyStringTr.popularArticles, onTab: () {Navigator.push(context, RouteHelper.navigateTo(const PopularArticlesView()));  },),
         SizedBox(height: SizeConfig().height(0.035)),
         SizedBox(
           height: SizeConfig().width(0.65),
