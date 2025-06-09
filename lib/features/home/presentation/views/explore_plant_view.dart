@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../articles/data/models/plant_model.dart';
 import '../../../articles/view_model.dart';
 import '../../controller/home_controller.dart';
-import '../widgets/category_plant_view.dart';
+import 'category_plant_view.dart';
 
 class ExplorePlantView extends StatefulWidget {
   const ExplorePlantView({super.key});

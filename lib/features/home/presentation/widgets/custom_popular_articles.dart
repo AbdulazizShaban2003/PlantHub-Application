@@ -36,11 +36,11 @@ class CustomPopularArticles extends StatelessWidget {
 
   Widget _buildContent(PlantViewModel plantProvider, BuildContext context) {
     if (plantProvider.isLoading && plantProvider.displayedPlants.isEmpty) {
-      return _buildShimmerEffect();
+      return _buildShimmerEffect(context);
     }
 
     if (plantProvider.displayedPlants.isEmpty) {
-      return Center(child: Text('no_articles_available'.tr()));
+      return Center(child: Text('No articles available'.tr()));
     }
 
     return ListView.separated(
@@ -93,11 +93,13 @@ class CustomPopularArticles extends StatelessWidget {
     );
   }
 
-  Widget _buildShimmerEffect() {
+  Widget _buildShimmerEffect(BuildContext context) {
+    final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
+
     return ListView.separated(
       shrinkWrap: true,
       scrollDirection: Axis.horizontal,
-      itemCount: 3, // عدد العناصر الوهمية
+      itemCount: plantProvider.displayedPlants.length,
       separatorBuilder: (context, index) => SizedBox(width: SizeConfig().width(0.03)),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(

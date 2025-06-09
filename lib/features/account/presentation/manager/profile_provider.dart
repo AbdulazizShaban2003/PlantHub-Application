@@ -1,4 +1,3 @@
-// features/profile/presentation/providers/profile_provider.dart
 import 'package:flutter/material.dart';
 
 import '../../data/profile_model.dart';
@@ -25,7 +24,6 @@ class ProfileProvider with ChangeNotifier {
       _profile = await _repository.getProfile();
       _profileImagePath = await _repository.getProfileImage();
     } catch (e) {
-      // Handle error
       rethrow;
     } finally {
       _isLoading = false;
@@ -41,7 +39,6 @@ class ProfileProvider with ChangeNotifier {
       await _repository.updateProfile(updatedProfile);
       _profile = updatedProfile;
     } catch (e) {
-      // Handle error
       rethrow;
     } finally {
       _isLoading = false;
@@ -55,7 +52,6 @@ class ProfileProvider with ChangeNotifier {
       _profileImagePath = imagePath;
       notifyListeners();
     } catch (e) {
-      // Handle error
       rethrow;
     }
   }

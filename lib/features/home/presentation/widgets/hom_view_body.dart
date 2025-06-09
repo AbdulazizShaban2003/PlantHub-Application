@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
+import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../articles/view_model.dart';
-import 'category_plant_view.dart';
+import '../views/category_plant_view.dart';
 import 'custom_app_bar_home_view.dart';
 import 'custom_ask_expert.dart';
 import 'custom_explore_book.dart';
@@ -17,8 +19,11 @@ class HomeViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
+    final provider = context.watch<ProfileProvider>();
+
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      provider.loadProfile();
       if (plantProvider.allPlants.isEmpty && !plantProvider.isLoading) {
         plantProvider.fetchAllPlants();
       }
@@ -32,78 +37,85 @@ class HomeViewBody extends StatelessWidget {
             ),
           ];
         },
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                TextFormField(
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(CupertinoIcons.search),
-                    hintText: AppKeyStringTr.searchPlant,
-                  ),
-                ),
-                SizedBox(height: SizeConfig().height(0.02)),
-                CustomPopularArticles(),
-                CustomAskExpert(),
-                SizedBox(height: SizeConfig().height(0.025)),
-                CustomExplorBook(),
-                SizedBox(height: SizeConfig().height(0.03)),
-                SizedBox(
-                  height: 900,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: GridView.count(
-                      physics: NeverScrollableScrollPhysics(),
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      children: [
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Succulents\n& Cacti',
-                          imagePath: 'assets/images/categoies/succulents Cacti.png',
-                          category: 'succulents',
-                        ),
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Flowering\nPlants',
-                          imagePath: 'assets/images/categoies/flowers.png',
-                          category: 'flowering',
-                        ),
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Trees',
-                          imagePath: 'assets/images/categoies/trees.png',
-                          category: 'trees',
-                        ),
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Fruits',
-                          imagePath: 'assets/images/categoies/fruits.png',
-                          category: 'fruits',
-                        ),
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Vegetables',
-                          imagePath: 'assets/images/vegetables.png',
-                          category: 'vegetables',
-                        ),
-                        _buildCategoryCard(
-                          context: context,
-                          title: 'Herbs',
-                          imagePath: 'assets/images/categoies/herbs.png',
-                          category: 'herbs',
-                        ),
-                      ],
+        body: RefreshIndicator(
+          onRefresh: () async {
+            await plantProvider.fetchAllPlants();
+            await provider.loadProfile();
+
+          },
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Column(
+                children: [
+                  TextFormField(
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(CupertinoIcons.search),
+                      hintText: AppKeyStringTr.searchPlant,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: SizeConfig().height(0.02)),
+                  CustomPopularArticles(),
+                  CustomAskExpert(),
+                  SizedBox(height: SizeConfig().height(0.025)),
+                  CustomExplorBook(),
+                  SizedBox(height: SizeConfig().height(0.03)),
+                  SizedBox(
+                    height: 900,
+                    child: Padding(
+                      padding: const EdgeInsets.all(13.0),
+                      child: GridView.count(
+                        physics: NeverScrollableScrollPhysics(),
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        children: [
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Succulents\n& Cacti',
+                            imagePath: 'assets/images/categoies/succulents Cacti.png',
+                            category: 'succulents',
+                          ),
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Flowering\nPlants',
+                            imagePath: 'assets/images/categoies/flowers.png',
+                            category: 'flowering',
+                          ),
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Trees',
+                            imagePath: 'assets/images/categoies/trees.png',
+                            category: 'trees',
+                          ),
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Fruits',
+                            imagePath: 'assets/images/categoies/fruits.png',
+                            category: 'fruits',
+                          ),
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Vegetables',
+                            imagePath: 'assets/images/categoies/vegetables.png',
+                            category: 'vegetables',
+                          ),
+                          _buildCategoryCard(
+                            context: context,
+                            title: 'Herbs',
+                            imagePath: 'assets/images/categoies/herbs.png',
+                            category: 'herbs',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      ),
+    ))
     );
   }
 }
@@ -124,7 +136,7 @@ Widget _buildCategoryCard({
     },
     child: Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -137,25 +149,19 @@ Widget _buildCategoryCard({
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(height: 10,),
           Image.asset(
             imagePath,
             height: 60,
-            width: 60,
+            width: 65,
             fit: BoxFit.cover,
-            errorBuilder: (context, error, stackTrace) {
-              return Icon(
-                Icons.local_florist,
-                size: 60,
-                color: Colors.green[300],
-              );
-            },
           ),
           const SizedBox(height: 8),
           Text(
             title,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 14,
+              fontSize: 13,
               color: Colors.black,
               fontWeight: FontWeight.w500,
             ),
