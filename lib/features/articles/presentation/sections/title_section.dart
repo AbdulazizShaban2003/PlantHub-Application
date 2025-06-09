@@ -16,12 +16,12 @@ class SectionTitle extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: ColorsManager.greenPrimaryColor),
-           SizedBox(width: SizeConfig().width(0.02)),
+           SizedBox(width: SizeConfig().width(0.03)),
           Text(
             title,
             style: Theme.of(
               context,
-            ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

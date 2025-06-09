@@ -17,84 +17,77 @@ class OverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: SizeConfig().height(0.015)),
-          Text(
-            AppKeyStringTr.prayerPlant,
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
-           SizedBox(height: SizeConfig().height(0.015)),
-          CustomPrayerPlant(plant: plant),
-           SizedBox(height: SizeConfig().height(0.015)),
-          SectionTitle(title: AppKeyStringTr.photoGallery, icon: Icons.image),
-          ImageGallery(images: plant.listImage),
-          SectionTitle(title: AppKeyStringTr.description, icon: Icons.description),
-          Text(
-            plant.description,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-
-          SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
-           SizedBox(height: SizeConfig().height(0.015)),
-          Text(
-            AppKeyStringTr.nativeDistribution,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: SizeConfig().height(0.015)),
+            Text(
+              AppKeyStringTr.prayerPlant,
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
-          ),
-         SizedBox(height:  SizeConfig().height(0.015),),
-
-          Text(
-            plant.distribution.native,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
+             SizedBox(height: SizeConfig().height(0.015)),
+            CustomPrayerPlant(plant: plant),
+             SizedBox(height: SizeConfig().height(0.015)),
+            SectionTitle(title: AppKeyStringTr.photoGallery, icon: Icons.image),
+            ImageGallery(images: plant.listImage),
+            SectionTitle(title: AppKeyStringTr.description, icon: Icons.description),
+            Text(
+              plant.description,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
-          ),
 
-          SizedBox(height: SizeConfig().height(0.015)),
-
-          SizedBox(height: SizeConfig().height(0.015)),
-          Text(
-            AppKeyStringTr.currentDistribution,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.bold,
+            SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text(
+                  AppKeyStringTr.nativeDistribution,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                  SizedBox(width: SizeConfig().width(0.05)),
+                Expanded(
+                  child: Text(
+                    plant.distribution.native,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-           SizedBox(height: SizeConfig().height(0.015)),
-          AspectRatio(
-            aspectRatio: 1.5,
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 32,
-                mainAxisSpacing: 16,
-                childAspectRatio: 1,
+            SizedBox(height: SizeConfig().height(0.01)),
+            Text(
+              AppKeyStringTr.currentDistribution,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
               ),
-              itemBuilder: (context, index) {
-                final distribution = plant.distribution;
+            ),
+             SizedBox(height: SizeConfig().height(0.02)),
+            Wrap(
+              spacing: 32,
+              runSpacing: 16,
+              children: plant.distribution.current.map((item) {
                 return Text(
-                  "${distribution.current[index]} ,",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  "$item,",
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 );
-              },
-              itemCount: plant.distribution.current.length,
+              }).toList(),
             ),
-          ),
+               SizedBox(height: SizeConfig().height(0.015)),
+            SectionTitle(title: AppKeyStringTr.askPlantExpert, icon: Icons.help_outline),
              SizedBox(height: SizeConfig().height(0.015)),
-          SectionTitle(title: AppKeyStringTr.askPlantExpert, icon: Icons.help_outline),
-           SizedBox(height: SizeConfig().height(0.015)),
-          const CustomAskExpert(),
-           SizedBox(height: SizeConfig().height(0.015)),
-          Divider(),
-          SizedBox(height:SizeConfig().height(0.015)),
-        ],
+            const CustomAskExpert(),
+             SizedBox(height: SizeConfig().height(0.015)),
+            Divider(),
+            SizedBox(height:SizeConfig().height(0.015)),
+          ],
+        ),
       ),
     );
   }

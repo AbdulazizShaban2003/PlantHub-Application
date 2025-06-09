@@ -42,23 +42,26 @@ class _PlantDetailsContentState extends State<PlantDetailsContent> {
     return Column(
       children: [
         PlantImage(imageUrl: widget.plant.image),
-        TabBarComponent(
-          tabs: _tabs,
-          selectedIndex: _selectedTabIndex,
-          onTabSelected: (index) {
-            setState(() => _selectedTabIndex = index);
-            _pageController.animateToPage(
-              index,
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
+        Padding(
+          padding: const EdgeInsets.all(5),
+          child: TabBarComponent(
+            tabs: _tabs,
+            selectedIndex: _selectedTabIndex,
+            onTabSelected: (index) {
+              setState(() => _selectedTabIndex = index);
+              _pageController.animateToPage(
+                index,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            },
+          ),
         ),
 
         Expanded(
           child: PageView(
-            physics: NeverScrollableScrollPhysics(),
             controller: _pageController,
+            physics: NeverScrollableScrollPhysics(),
             onPageChanged: (index) => setState(() => _selectedTabIndex = index),
             children: [
               OverviewTab(plant: widget.plant),

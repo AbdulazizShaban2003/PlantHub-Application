@@ -24,7 +24,7 @@ class CareItem extends StatelessWidget {
           title,
           style: Theme.of(
             context,
-          ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold,color: ColorsManager.blackColor),
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold,color: ColorsManager.blackColor,fontSize: SizeConfig().responsiveFont(15)),
         ),
         subtitle: Padding(
           padding:  EdgeInsets.only(top: SizeConfig().height(0.01)),

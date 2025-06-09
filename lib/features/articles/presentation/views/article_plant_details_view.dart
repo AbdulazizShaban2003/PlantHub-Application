@@ -1,8 +1,9 @@
-import 'dart:io';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../config/theme/app_colors.dart';
 import '../../../../core/function/plant_share.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../bookMark/presentation/widgets/bookmark_button.dart';
 import '../../data/models/plant_model.dart';
 import '../../view_model.dart';
@@ -43,7 +44,7 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(viewModel.error!),
-              backgroundColor: Colors.red,
+              backgroundColor: ColorsManager.redColor,
             ),
           );
         }
@@ -57,16 +58,25 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
       builder: (context, viewModel, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(viewModel.selectedPlant?.name ?? 'Plant Details'),
+            title: Text(viewModel.selectedPlant?.name ?? AppStrings.plantDetailsTitle,style: Theme.of(context).textTheme.bodyLarge,),
             centerTitle: true,
+            iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             actions: [
-
-              IconButton(onPressed: (){
-                sharePlantDetails(plant:viewModel.selectedPlant, context: context);
-
-              }, icon: Icon(Icons.share)),
-              BookmarkButton(itemId: viewModel.displayedPlants.isNotEmpty ? viewModel.displayedPlants.first.id : widget.plantId),
-
+              IconButton(
+                onPressed: () {
+                  sharePlantDetails(
+                      plant: viewModel.selectedPlant,
+                      context: context
+                  );
+                },
+                icon: const Icon(Icons.share),
+                tooltip: AppStrings.shareTooltip,
+              ),
+              BookmarkButton(
+                  itemId: viewModel.displayedPlants.isNotEmpty
+                      ? viewModel.displayedPlants.first.id
+                      : widget.plantId
+              ),
             ],
           ),
           body: _buildBody(viewModel),
@@ -81,40 +91,14 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
     }
 
     if (viewModel.error != null && viewModel.selectedPlant == null) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(
-              viewModel.error!,
-              textAlign: TextAlign.center,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: Colors.red),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loadPlantData,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
+      return ErrorView(
+        error: viewModel.error!,
+        onRetry: _loadPlantData,
       );
     }
 
     if (viewModel.selectedPlant == null) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.image, size: 48),
-            SizedBox(height: 16),
-            Text('Plant not found'),
-          ],
-        ),
-      );
+      return const PlantNotFoundView();
     }
 
     return PlantDetailsContent(plant: viewModel.selectedPlant!);
@@ -129,12 +113,14 @@ class PlantDetailsScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(plant.name), centerTitle: true),
+      appBar: AppBar(
+          title: Text(plant.name),
+          centerTitle: true
+      ),
       body: PlantDetailsContent(plant: plant),
     );
   }
 }
-
 
 class ErrorView extends StatelessWidget {
   final String error;
@@ -153,12 +139,16 @@ class ErrorView extends StatelessWidget {
           Text(
             error,
             textAlign: TextAlign.center,
-            style: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: Colors.red),
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge
+                ?.copyWith(color: Colors.red),
           ),
           const SizedBox(height: 20),
-          ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+          ElevatedButton(
+            onPressed: onRetry,
+            child: Text(AppStrings.retryButton),
+          ),
         ],
       ),
     );
@@ -176,7 +166,7 @@ class PlantNotFoundView extends StatelessWidget {
         children: [
           Icon(Icons.image, size: 48),
           SizedBox(height: 16),
-          Text('Plant not found'),
+          Text(AppStrings.plantNotFound),
         ],
       ),
     );
@@ -187,7 +177,11 @@ class EmptyStateView extends StatelessWidget {
   final IconData icon;
   final String message;
 
-  const EmptyStateView({super.key, required this.icon, required this.message});
+  const EmptyStateView({
+    super.key,
+    required this.icon,
+    required this.message
+  });
 
   @override
   Widget build(BuildContext context) {

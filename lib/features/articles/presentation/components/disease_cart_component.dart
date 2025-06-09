@@ -15,6 +15,8 @@ class DiseaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: 0,
+      color: ColorsManager.whiteColor,
       margin:  EdgeInsets.only(bottom: SizeConfig().height(0.02)),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -23,13 +25,13 @@ class DiseaseCard extends StatelessWidget {
           children: [
             Text(
               AppKeyStringTr.name,
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: ColorsManager.blackColor,
               ),
             ),
             SizedBox(height: SizeConfig().height(0.015)),
-            Text(disease.name, style:Theme.of(context).textTheme.bodyLarge?.copyWith(
+            Text(disease.name, style:Theme.of(context).textTheme.bodySmall?.copyWith(
               color: ColorsManager.blackColor,
               fontSize: SizeConfig().responsiveFont(14),
             )),

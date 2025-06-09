@@ -12,14 +12,14 @@ import '../../../bookMark/data/models/datasource/bookmark_service.dart';
 import '../../data/models/plant_model.dart';
 import '../widgets/custom_no_plant_widget.dart';
 
-class PlantsPage extends StatefulWidget {
-  const PlantsPage({super.key});
+class PopularArticlesView extends StatefulWidget {
+  const PopularArticlesView({super.key});
 
   @override
-  State<PlantsPage> createState() => _PlantsPageState();
+  State<PopularArticlesView> createState() => _PopularArticlesViewState();
 }
 
-class _PlantsPageState extends State<PlantsPage> {
+class _PopularArticlesViewState extends State<PopularArticlesView> {
   bool? _isBookmarked;
   @override
   Widget build(BuildContext context) {
@@ -40,7 +40,6 @@ class _PlantsPageState extends State<PlantsPage> {
                 .backgroundColor,
             title: Text(AppKeyStringTr.popularArticles,style:Theme.of(context).textTheme.headlineMedium),
             centerTitle: true,
-            floating: true,
             iconTheme: Theme.of(context).iconTheme
           ),
           SliverPadding(
@@ -51,6 +50,7 @@ class _PlantsPageState extends State<PlantsPage> {
                     horizontal: SizeConfig().width(0.04),
                     vertical: SizeConfig().height(0.03)),
                 child: TextFormField(
+                  style: TextStyle(fontSize: SizeConfig().responsiveFont(13)),
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.search),
                     hintText: AppKeyStringTr.searchArticles,
@@ -249,11 +249,11 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
             child: Row(
               children: [
                 Icon(
-                  isBookmarked ? Icons.bookmark_remove : Icons.bookmark_add,
-                  size: 20,
+                  isBookmarked ? Icons.bookmark : Icons.bookmark_border_outlined,
+                  size: 18,
                 ),
                 const SizedBox(width: 8),
-                Text(isBookmarked ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'),
+                Text(isBookmarked ? 'remove bookmark' : 'add to bookmarks'),
               ],
             ),
           ),

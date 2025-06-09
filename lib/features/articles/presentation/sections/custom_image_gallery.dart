@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 import '../../../../core/cache/cache_network_image.dart';
 import '../../../../core/function/image_show_dialog.dart';
+import '../../../../core/utils/app_strings.dart';
 
 class ImageGallery extends StatelessWidget {
   final List<String> images;
@@ -11,7 +12,7 @@ class ImageGallery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (images.isEmpty) {
-      return const Center(child: Text('No images available'));
+      return  Center(child: Text(AppStrings.noImageAvil));
     }
 
     return SizedBox(
@@ -24,7 +25,7 @@ class ImageGallery extends StatelessWidget {
           if (imageUrl.isEmpty) return const SizedBox();
 
           return Padding(
-            key: ValueKey(imageUrl), // Unique key for each item
+            key: ValueKey(imageUrl),
             padding: EdgeInsets.only(right: SizeConfig().width(0.02)),
             child: GestureDetector(
               onTap: () => showFullScreenImage(context: context, imageUrl: imageUrl, heightSize: 0.3),

@@ -17,7 +17,7 @@ class TabBarComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final fontSize = SizeConfig().responsiveFont(13);
-    final horizontalPadding = SizeConfig().width(0.01);
+    final horizontalPadding = SizeConfig().width(0.008);
 
     return SizedBox(
       height: SizeConfig().height(0.05),
@@ -42,8 +42,13 @@ class TabBarComponent extends StatelessWidget {
           decoration: BoxDecoration(
             color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.whiteColor,
             borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.greyColor.withOpacity(0.2),
+              width: 1.5,
+            ),
           ),
-          padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.1), vertical: SizeConfig().height(0.01)),
+
+          padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.08), vertical: SizeConfig().height(0.01)),
           child: Text(
             tab,
             style: TextStyle(

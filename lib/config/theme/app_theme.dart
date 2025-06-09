@@ -6,7 +6,7 @@ import 'app_colors.dart';
 class AppThemes {
   static final lightTheme = ThemeData(
     brightness: Brightness.light,
-    primaryColor: Color(0xFF4CAF50),
+    primaryColor: Color(0xDD000000),
     datePickerTheme: DatePickerThemeData(
       backgroundColor: Colors.white,
       headerBackgroundColor: Colors.green[800],
@@ -58,6 +58,7 @@ class AppThemes {
         minimumSize: const Size(double.infinity, 50),
       ),
     ),
+
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: ColorsManager.blackColor,
@@ -101,8 +102,7 @@ class AppThemes {
         fontWeight: FontWeight.bold,
       ),
       bodyLarge: TextStyle(color: Color(0xDD000000),
-        fontWeight: FontWeight.bold,
-      fontSize: 20),
+        fontWeight: FontWeight.bold, fontSize: 20),
       bodyMedium: TextStyle(color: Color(0xDD000000),fontWeight: FontWeight.bold,fontSize: 16),
       bodySmall: TextStyle(color:  Colors.black,fontWeight: FontWeight.w600),
       labelLarge: TextStyle(
@@ -119,7 +119,7 @@ class AppThemes {
       ),
         titleSmall:TextStyle(color:  Colors.grey),
     ),
-    iconTheme: IconThemeData(color: Color(0xFF121212), size: 30),
+    iconTheme: IconThemeData(color: Color(0xFFFFFFFF), size: 20),
     colorScheme: ColorScheme.light(
       primary:  ColorsManager.greenPrimaryColor,
       secondary: Color(0xFF121212),
@@ -135,7 +135,7 @@ class AppThemes {
   );
   static final darkTheme = ThemeData(
     brightness: Brightness.dark,
-    primaryColor: Color(0xFF388E3C),
+    primaryColor: ColorsManager.whiteColor,
 
 
     inputDecorationTheme: InputDecorationTheme(
@@ -237,6 +237,7 @@ class AppThemes {
       bodySmall: TextStyle(
         color: Color(0xFFFFFFFF),
         fontWeight: FontWeight.bold,
+        fontSize: 14,
       ),
       labelLarge: TextStyle(
         color: Color(0xFFFFFFFF),

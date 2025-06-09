@@ -39,8 +39,7 @@ import '../features/chatAi/controller/chat_provider.dart';
 import '../features/home/presentation/views/explore_plant_view.dart';
 
 class PlantHub extends StatefulWidget {
-  const PlantHub({super.key, required this.camera});
-  final CameraDescription camera;
+  const PlantHub({super.key});
 
   @override
   State<PlantHub> createState() => _PlantHubState();
@@ -132,11 +131,11 @@ class _PlantHubState extends State<PlantHub> {
               debugShowCheckedModeBanner: false,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
-              locale: languageProvider.currentLocale,
+              locale: Locale('en'),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.light,
-              home: CameraScreen(camera: widget.camera),
+              home: SplashView()
             );
           },
         ),

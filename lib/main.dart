@@ -59,7 +59,7 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: Locale('en'),
       saveLocale: true,
-      child: PlantHub(camera: firstCamera),
+      child: PlantHub(),
     ),
   );
 }

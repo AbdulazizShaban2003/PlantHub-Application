@@ -100,6 +100,18 @@ class AppKeyStringTr {
   static String searchCountry = "Search Country..";
 }
 class AppStrings{
+  static const String plantDetailsTitle = 'Plant Details';
+  static const String plantNotFound = 'Plant not found';
+  static const String retryButton = 'Retry';
+  static const String shareTooltip = 'Share plant details';
+  static const String plantDetails = 'Plant Details';
+  static const String retry = 'Retry';
+  static const String noImageAvil ='No images available';
+  static const String errorOccurred = 'An error occurred';
+  static const String noPlantsFound = 'No plants found';
+  static const String noDataAvailable = 'No data available';
+  static const String share = 'Share';
+  static const String bookmark = 'Bookmark';
   static const String fillRequiredFields = "Please fill all required fields";
   static const String savingProfile = "Saving profile...";
   static const String profileSaved = "Profile saved successfully";

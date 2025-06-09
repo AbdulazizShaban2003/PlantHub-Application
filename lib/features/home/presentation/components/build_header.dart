@@ -19,7 +19,7 @@ class BuildHeader extends StatelessWidget {
         Text(header, style: Theme.of(context).textTheme.bodyMedium),
         InkWell(
           onTap: () {
-            Navigator.push(context, RouteHelper.navigateTo( PlantsPage()));
+            Navigator.push(context, RouteHelper.navigateTo( PopularArticlesView()));
           },
           child: Row(
             children: [
