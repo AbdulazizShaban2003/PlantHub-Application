@@ -11,15 +11,15 @@ class BuildCircleIcon extends StatelessWidget {
     return  Stack(
       children: [
         Container(
-          width: 30,
-          height: 30,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: Colors.grey.shade300),
           ),
           child: IconButton(
             onPressed: onPressed,
-            icon: Icon(iconData,size: 15,),
+            icon: Icon(iconData,size: 20,),
             splashRadius: 18,
           ),
         ),

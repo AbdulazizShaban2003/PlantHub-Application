@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/articles/data/models/plant_model.dart';
 import 'package:provider/provider.dart';
-import '../bookMark/data/models/datasource/bookmark_service.dart';
+import '../bookMark/data/datasource/bookmark_service.dart';
 import 'domain/repositories/plant_repo.dart';
 
 class PlantViewModel with ChangeNotifier {
@@ -191,22 +191,19 @@ class PlantViewModel with ChangeNotifier {
     final keywords = categoryMappings[searchCategory] ?? [];
     return keywords.any((keyword) => plantCategory.contains(keyword));
   }
-  Future<List<Plant>> getBookmarkedPlants(BuildContext context) async {
+  Stream<List<Plant>> getBookmarkedPlantsStream(BuildContext context) {
     final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
-    final bookmarks = await bookmarkService.getUserBookmarks().first;
 
-    return allPlants.where((plant) {
-      return bookmarks.any((bookmark) => bookmark.itemId == plant.id);
-    }).toList();
+    return bookmarkService.bookmarksStream.asyncMap((bookmarks) {
+      final bookmarkedIds = bookmarks.map((b) => b.itemId).toSet();
+      return allPlants.where((plant) => bookmarkedIds.contains(plant.id)).toList();
+    });
   }
 
-  Stream<List<Plant>> getBookmarkedPlantsStream(BuildContext context) {
-    final bookmarkService = Provider.of<BookmarkService>(context, listen: true);
-
-    return bookmarkService.getUserBookmarks().asyncMap((bookmarks) {
-      return allPlants.where((plant) {
-        return bookmarks.any((bookmark) => bookmark.itemId == plant.id);
-      }).toList();
-    });
+  Future<List<Plant>> getBookmarkedPlants(BuildContext context) async {
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+    final bookmarks = await bookmarkService.bookmarksStream.first;
+    final bookmarkedIds = bookmarks.map((b) => b.itemId).toSet();
+    return allPlants.where((plant) => bookmarkedIds.contains(plant.id)).toList();
   }
 }

@@ -11,13 +11,20 @@ class Bookmark {
     required this.timestamp,
   });
 
-
-  factory Bookmark.fromMap(String id, Map<String, dynamic> map) {
+  factory Bookmark.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return Bookmark(
-      id: id,
-      itemId: map['itemId'],
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
+      id: doc.id,
+      itemId: data['itemId'],
+      timestamp: (data['timestamp'] as Timestamp).toDate(),
     );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'itemId': itemId,
+      'timestamp': timestamp,
+    };
   }
 
   @override

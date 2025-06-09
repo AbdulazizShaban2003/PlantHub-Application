@@ -30,6 +30,8 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
           AppKeyStringTr.nameApp,
           style:Theme.of(context).textTheme.bodyLarge
         ),
+
+        iconTheme: IconThemeData(color: Colors.black),
         actions: [
           BuildCircleIcon(
             showBadge: true, iconData: CupertinoIcons.bell, onPressed: () {  },
@@ -37,13 +39,14 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
           SizedBox(width: SizeConfig().width(0.04)),
           BuildCircleIcon(
             onPressed: () {
-              Navigator.push(context, RouteHelper.navigateTo(BookmarkView(plantProvider: plantProvider )));
+              Navigator.pushReplacement(context, RouteHelper.navigateTo(BookmarkView(plantProvider: plantProvider)));
             },
             showBadge: false,
               iconData: CupertinoIcons.bookmark,
-
           ),
           SizedBox(width: SizeConfig().width(0.02)),
+
+
         ],
         leading: Padding(
           padding:  EdgeInsets.only(left: SizeConfig().width(0.04)),

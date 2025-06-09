@@ -59,7 +59,10 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
       builder: (context, viewModel, _) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(viewModel.selectedPlant?.name ?? AppStrings.plantDetailsTitle,style: Theme.of(context).textTheme.bodyLarge,),
+            title: Text(
+              viewModel.selectedPlant?.name ?? AppStrings.plantDetailsTitle,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
             centerTitle: true,
             iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
             actions: [
@@ -73,11 +76,8 @@ class _PlantDetailsBodyState extends State<_PlantDetailsBody> {
                 icon: const Icon(Icons.share),
                 tooltip: AppStrings.shareTooltip,
               ),
-              BookmarkButton(
-                  itemId: viewModel.displayedPlants.isNotEmpty
-                      ? viewModel.displayedPlants.first.id
-                      : widget.plantId
-              ),
+              // استخدام الـ plantId المرسل بدلاً من محاولة الحصول عليه من displayedPlants
+              BookmarkButton(itemId: widget.plantId),
             ],
           ),
           body: _buildBody(viewModel),
@@ -135,8 +135,8 @@ class ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-           Icon(Icons.error_outline, size: 48, color: ColorsManager.redColor),
-           SizedBox(height: SizeConfig().height(0.16)),
+          Icon(Icons.error_outline, size: 48, color: ColorsManager.redColor),
+          SizedBox(height: SizeConfig().height(0.16)),
           Text(
             error,
             textAlign: TextAlign.center,
@@ -145,8 +145,8 @@ class ErrorView extends StatelessWidget {
                 .bodyLarge
                 ?.copyWith(color: ColorsManager.redColor),
           ),
-           SizedBox(height: SizeConfig().height(0.2)),
-           ElevatedButton(
+          SizedBox(height: SizeConfig().height(0.2)),
+          ElevatedButton(
             onPressed: onRetry,
             child: Text(AppStrings.retryButton),
           ),
@@ -191,7 +191,7 @@ class EmptyStateView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 48),
-           SizedBox(height: SizeConfig().height(0.016)),
+          SizedBox(height: SizeConfig().height(0.016)),
           Text(message),
         ],
       ),

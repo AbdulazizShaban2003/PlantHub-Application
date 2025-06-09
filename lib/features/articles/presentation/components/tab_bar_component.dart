@@ -48,7 +48,7 @@ class TabBarComponent extends StatelessWidget {
             ),
           ),
 
-          padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.08), vertical: SizeConfig().height(0.01)),
+          padding:  EdgeInsets.symmetric(horizontal: SizeConfig().width(0.08), vertical: SizeConfig().height(0.009)),
           child: Text(
             tab,
             style: TextStyle(

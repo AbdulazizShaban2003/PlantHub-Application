@@ -29,7 +29,7 @@ import '../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../features/auth/domain/repositories/auth_repository_impl.dart';
 import '../features/auth/presentation/controller/operation_controller.dart';
 import '../features/auth/presentation/manager/password_visibility_provider.dart';
-import '../features/bookMark/data/models/datasource/bookmark_service.dart';
+import '../features/bookMark/data/datasource/bookmark_service.dart';
 import '../features/booking/home/data/models/book_model/book_model.dart';
 import '../features/booking/home/data/repos/home_repo_impl.dart';
 import '../features/booking/home/presentation/manger/featured_books_cubit/featured_books_cubit.dart';
@@ -89,10 +89,8 @@ class _PlantHubState extends State<PlantHub> {
           Provider(create: (_) => OperationController()),
           Provider(create: (_) => PlantRepository()),
           Provider<BookmarkService>(
-            create:
-                (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
-          ),
-          Provider(
+            create: (_) => BookmarkService(FirebaseAuth.instance.currentUser?.uid),
+          ),          Provider(
             create:
                 (context) => AuthRepositoryImpl(
                   remoteDataSource: context.read<AuthRemoteDataSource>(),

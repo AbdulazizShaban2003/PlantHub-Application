@@ -8,7 +8,7 @@ import 'package:plant_hub_app/features/articles/view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/function/plant_share.dart';
-import '../../../bookMark/data/models/datasource/bookmark_service.dart';
+import '../../../bookMark/data/datasource/bookmark_service.dart';
 import '../../data/models/plant_model.dart';
 import '../widgets/custom_no_plant_widget.dart';
 
@@ -20,7 +20,6 @@ class PopularArticlesView extends StatefulWidget {
 }
 
 class _PopularArticlesViewState extends State<PopularArticlesView> {
-  bool? _isBookmarked;
   @override
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
@@ -34,13 +33,10 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            backgroundColor: Theme
-                .of(context)
-                .appBarTheme
-                .backgroundColor,
-            title: Text(AppKeyStringTr.popularArticles,style:Theme.of(context).textTheme.headlineMedium),
-            centerTitle: true,
-            iconTheme: Theme.of(context).iconTheme
+              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+              title: Text(AppKeyStringTr.popularArticles, style: Theme.of(context).textTheme.headlineMedium),
+              centerTitle: true,
+              iconTheme: Theme.of(context).iconTheme
           ),
           SliverPadding(
             padding: const EdgeInsets.all(5),
@@ -208,7 +204,6 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
                           ),
                           const Spacer(),
                           _buildArticleMenu(context, article),
-
                         ],
                       )
                     ],
@@ -225,9 +220,10 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
 }
 
 Widget _buildArticleMenu(BuildContext context, Plant article) {
-  return FutureBuilder<bool>(
-    future: Provider.of<BookmarkService>(context, listen: false)
-        .isItemBookmarked(article.id),
+  final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+
+  return StreamBuilder<bool>(
+    stream: bookmarkService.getBookmarkStatusStream(article.id),
     builder: (context, snapshot) {
       final isBookmarked = snapshot.data ?? false;
       return PopupMenuButton<String>(
@@ -253,7 +249,7 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
                   size: 18,
                 ),
                 const SizedBox(width: 8),
-                Text(isBookmarked ? 'remove bookmark' : 'add to bookmarks'),
+                Text(isBookmarked ? 'إزالة من المفضلة' : 'إضافة للمفضلة'),
               ],
             ),
           ),
@@ -270,17 +266,21 @@ Future<void> _handleMenuSelection(
   if (value == 'share') {
     sharePlantDetails(plant: article, context: context);
   } else if (value == 'bookmark') {
-    final isBookmarked = await bookmarkService.isItemBookmarked(article.id);
+    final isBookmarked = await bookmarkService.isBookmarked(article.id);
     if (isBookmarked) {
-      await bookmarkService.removeBookmarkByItemId(article.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تمت إزالة من المفضلة')),
-      );
+      await bookmarkService.removeBookmark(article.id);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تمت إزالة من المفضلة')),
+        );
+      }
     } else {
       await bookmarkService.addBookmark(article.id);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('تمت الإضافة إلى المفضلة')),
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('تمت الإضافة إلى المفضلة')),
+        );
+      }
     }
   }
 }
