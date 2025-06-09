@@ -1,7 +1,10 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/function/flush_bar_fun.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
+import 'package:plant_hub_app/features/auth/presentation/widgets/trem_agree_widget.dart';
 import 'package:provider/provider.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -40,101 +43,112 @@ class _SignUpViewState extends State<SignUpView> {
 
   @override
   Widget build(BuildContext context) {
-    final authViewModel = Provider.of<AuthProviderManager>(context, listen: true);
+    final authViewModel = Provider.of<AuthProviderManager>(
+      context,
+      listen: true,
+    );
 
     return Scaffold(
-      body: authViewModel.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-        padding: const EdgeInsets.all(20),
-        child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(height: SizeConfig().height(0.045)),
-                InkWell(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(
-                    context.locale.languageCode == 'en'
-                        ? Icons.arrow_back
-                        : Icons.arrow_forward,
+      body:
+          authViewModel.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : Padding(
+                padding: const EdgeInsets.all(20),
+                child: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: SizeConfig().height(0.045)),
+                        InkWell(
+                          onTap: () => Navigator.pop(context),
+                          child: Icon(
+                            context.locale.languageCode == 'en'
+                                ? Icons.arrow_back
+                                : Icons.arrow_forward,
+                          ),
+                        ),
+                        SizedBox(height: SizeConfig().height(0.045)),
+                        Text(
+                          AppStrings.joinPlantHub,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.012)),
+                        Text(
+                          AppStrings.createAccount,
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.035)),
+                        InputUsernameTextField(
+                          usernameController: usernameController,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.02)),
+                        CustomEmailWidget(
+                          context: context,
+                          validatorController: validatorController,
+                          emailController: emailController,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.02)),
+                        CustomPasswordWidget(
+                          validatorController: validatorController,
+                          passwordController: passwordController,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.02)),
+                        CustomConfirmPassword(
+                          context: context,
+                          validatorController: validatorController,
+                          passwordController: passwordController,
+                          confirmPasswordController: confirmPasswordController,
+                        ),
+
+                        SizedBox(height: SizeConfig().height(0.08)),
+
+                        OutlinedButtonWidget(
+                          nameButton: AppKeyStringTr.signUp,
+                          onPressed: () async {
+                            if (formKey.currentState!.validate()) {
+                              if (passwordController.text !=
+                                  confirmPasswordController.text) {
+                                FlushbarHelper.showError(
+                                  context: context,
+                                  message: AppStrings.passwordsNotMatch,
+                                );
+                                return;
+                              }
+
+                              await authViewModel.signUp(
+                                name: usernameController.text.trim(),
+                                email: emailController.text.trim(),
+                                password: passwordController.text.trim(),
+                                context: context,
+                              );
+
+                              if (authViewModel.user == null &&
+                                  authViewModel.isEmailVerified) {
+                                FlushbarHelper.showSuccess(
+                                  context: context,
+                                  message: AppStrings.verificationEmailSent,
+                                );
+                                 Navigator.pushAndRemoveUntil(
+                                  context,
+                                  RouteHelper.navigateTo(LoginView()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              }
+                            }
+                          },
+                          foregroundColor: ColorsManager.whiteColor,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.03)),
+                      ],
+                    ),
                   ),
                 ),
-                SizedBox(height: SizeConfig().height(0.045)),
-                Text(
-                  AppStrings.joinPlantHub,
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                SizedBox(height: SizeConfig().height(0.01)),
-                Text(
-                  AppStrings.createAccount,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                SizedBox(height: SizeConfig().height(0.035)),
-                InputUsernameTextField(
-                  usernameController: usernameController,
-                ),
-                SizedBox(height: SizeConfig().height(0.02)),
-                CustomEmailWidget(
-                  context: context,
-                  validatorController: validatorController,
-                  emailController: emailController,
-                ),
-                SizedBox(height: SizeConfig().height(0.02)),
-                CustomPasswordWidget(
-                  validatorController: validatorController,
-                  passwordController: passwordController,
-                ),
-                SizedBox(height: SizeConfig().height(0.02)),
-                CustomConfirmPassword(
-                  context: context,
-                  validatorController: validatorController,
-                  passwordController: passwordController,
-                  confirmPasswordController: confirmPasswordController,
-                ),
-                SizedBox(height: SizeConfig().height(0.08)),
-                OutlinedButtonWidget(
-                  nameButton: AppKeyStringTr.signUp,
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      if (passwordController.text !=
-                          confirmPasswordController.text) {
-                        FlushbarHelper.showError(
-                          context: context,
-                          message: AppStrings.passwordsNotMatch,
-                        );
-                        return;
-                      }
-
-                      await authViewModel.signUp(
-                        name: usernameController.text.trim(),
-                        email: emailController.text.trim(),
-                        password: passwordController.text.trim(),
-                        context: context,
-                      );
-                      Future.delayed(Duration(seconds: 2),(){
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          RouteHelper.navigateTo(HomeView()),
-                              (Route<dynamic> route) => false,
-                        );
-                      });
-
-                    }
-                  },
-                  foregroundColor:
-                  Theme.of(context).colorScheme.onSecondary,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                ),
-                SizedBox(height: SizeConfig().height(0.03)),
-              ],
-            ),
-          ),
-        ),
-      ),
+              ),
     );
   }
 }

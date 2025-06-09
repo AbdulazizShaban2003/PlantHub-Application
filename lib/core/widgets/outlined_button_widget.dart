@@ -7,7 +7,7 @@ class OutlinedButtonWidget extends StatelessWidget {
   });
 
   final String nameButton;
-  final VoidCallback onPressed;
+  final VoidCallback ? onPressed;
   Color? foregroundColor;
   Color ?backgroundColor;
   TextStyle? style;

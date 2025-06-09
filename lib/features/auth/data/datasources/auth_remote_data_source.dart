@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../models/user_model.dart';
 
 class AuthRemoteDataSource {
@@ -43,7 +44,7 @@ class AuthRemoteDataSource {
       try {
         await user.getIdToken(true);
       } catch (e) {
-        debugPrint('Token refresh error: $e');
+        debugPrint('${AppStrings.tokenRefreshError}$e');
       }
     });
   }
@@ -65,7 +66,7 @@ class AuthRemoteDataSource {
         .get();
 
     if (!userDoc.exists) {
-      throw Exception('User data not found');
+      throw Exception(AppStrings.userDataNotFound);
     }
 
     return UserModel.fromMap(userDoc.data()!, userDoc.id);
@@ -74,6 +75,7 @@ class AuthRemoteDataSource {
   Future<void> sendPasswordResetEmail(String email) async {
     await _auth.sendPasswordResetEmail(email: email);
   }
+
   Future<void> sendEmailVerification() async {
     await _auth.currentUser?.sendEmailVerification();
   }
@@ -82,10 +84,11 @@ class AuthRemoteDataSource {
     await _auth.currentUser?.reload();
     return _auth.currentUser?.emailVerified ?? false;
   }
+
   Future<UserModel> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
-      throw Exception('Google sign in was cancelled');
+      throw Exception(AppStrings.googleSignInCancelled);
     }
 
     final GoogleSignInAuthentication googleAuth =
@@ -102,7 +105,7 @@ class AuthRemoteDataSource {
     if (isNewUser) {
       final user = UserModel(
         id: userCredential.user!.uid,
-        name: userCredential.user!.displayName ?? 'No Name',
+        name: userCredential.user!.displayName ?? AppStrings.noName,
         email: userCredential.user!.email ?? '',
       );
 
@@ -119,7 +122,7 @@ class AuthRemoteDataSource {
           .get();
 
       if (!userDoc.exists) {
-        throw Exception('User data not found');
+        throw Exception(AppStrings.userDataNotFound);
       }
 
       return UserModel.fromMap(userDoc.data()!, userDoc.id);

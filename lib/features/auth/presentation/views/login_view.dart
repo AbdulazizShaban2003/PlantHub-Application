@@ -5,6 +5,7 @@ import 'package:plant_hub_app/features/home/presentation/views/home_view.dart';
 import 'package:provider/provider.dart';
 import '../../../../config/routes/route_helper.dart';
 import '../../../../config/theme/app_colors.dart';
+import '../../../../core/function/flush_bar_fun.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../../../core/utils/size_config.dart';
@@ -24,7 +25,6 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
-  bool _rememberMe = false;
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
@@ -75,42 +75,24 @@ class _LoginViewState extends State<LoginView> {
                 passwordController: passwordController,
               ),
               SizedBox(height: SizeConfig().height(0.015)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: _rememberMe,
-                        onChanged: (value) {
-                          setState(() {
-                            _rememberMe = value!;
-                          });
-                        },
+              Align(
+                alignment: Alignment.centerRight,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      RouteHelper.navigateTo(
+                        ForgetPasswordView(),
                       ),
-                      Text(
-                        AppKeyStringTr.rememberMe,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        RouteHelper.navigateTo(
-                          ForgetPasswordView(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      AppKeyStringTr.forgetPassword,
-                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                        color: ColorsManager.greenPrimaryColor,
-                      ),
+                    );
+                  },
+                  child: Text(
+                    AppKeyStringTr.forgetPassword,
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                      color: ColorsManager.greenPrimaryColor,
                     ),
                   ),
-                ],
+                ),
               ),
               SizedBox(height: SizeConfig().height(0.03)),
               OutlinedButtonWidget(
@@ -122,6 +104,7 @@ class _LoginViewState extends State<LoginView> {
                       password: passwordController.text.trim(),
                       context: context,
                     );
+
                     if (authViewModel.user != null && authViewModel.isEmailVerified) {
                       Navigator.pushAndRemoveUntil(
                         context,
@@ -131,7 +114,7 @@ class _LoginViewState extends State<LoginView> {
                     }
                   }
                 },
-                foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                foregroundColor: ColorsManager.whiteColor,
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               SizedBox(height: SizeConfig().height(0.04)),
@@ -140,7 +123,7 @@ class _LoginViewState extends State<LoginView> {
                   const Expanded(child: Divider()),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(AppKeyStringTr.or),
+                    child: Text(AppKeyStringTr.or,style: TextStyle(fontSize: SizeConfig().responsiveFont(13))),
                   ),
                   const Expanded(child: Divider()),
                 ],
@@ -152,7 +135,11 @@ class _LoginViewState extends State<LoginView> {
                 onPressed: () async {
                   await authViewModel.signInWithGoogle(context);
                   if (authViewModel.user != null) {
-                    Navigator.pushAndRemoveUntil(
+                    FlushbarHelper.showSuccess(
+                      context: context,
+                      message: AppStrings.verificationEmailSent,
+                    );
+                   await Navigator.pushAndRemoveUntil(
                       context,
                       RouteHelper.navigateTo(HomeView()),
                           (Route<dynamic> route) => false,
@@ -188,7 +175,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                 ],
               ),
-              SizedBox(height: SizeConfig().height(0.015)),
+              SizedBox(height: SizeConfig().height(0.01)),
             ],
           ),
         ),

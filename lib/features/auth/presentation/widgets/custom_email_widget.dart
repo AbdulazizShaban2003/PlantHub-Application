@@ -22,7 +22,7 @@ class CustomEmailWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppKeyStringTr.email, style: Theme.of(context).textTheme.bodyMedium),
+        Text(AppKeyStringTr.email, style: Theme.of(context).textTheme.bodySmall),
         SizedBox(height: SizeConfig().height(0.006)),
         BuildTextField(
           keyboardType: TextInputType.emailAddress,

@@ -1,9 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
-import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
@@ -63,7 +61,7 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
     return Center(
       child: Lottie.asset(
         AssetsManager.forgetPasswordImage,
-        height: SizeConfig().height(0.15),
+        height: SizeConfig().height(0.2),
       ),
     );
   }
@@ -74,12 +72,12 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
       children: [
         Text(
           AppKeyStringTr.titleForgetPassword,
-          style: Theme.of(context).textTheme.bodyLarge,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         SizedBox(height: SizeConfig().height(0.02)),
         Text(
           AppKeyStringTr.subtitleForgetPassword,
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(
             fontSize: SizeConfig().responsiveFont(13),
           ),
         ),
@@ -112,16 +110,16 @@ class _ForgetPasswordViewState extends State<ForgetPasswordView> {
                 SizedBox(height: SizeConfig().height(0.05)),
                 Text(
                   AppKeyStringTr.yourRegisteredEmail,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
-                SizedBox(height: SizeConfig().height(0.05)),
+                SizedBox(height: SizeConfig().height(0.03)),
                 BuildTextField(
                   validator: _validatorController.emailValid,
                   prefixIcon: const Icon(Icons.email_outlined, size: 16),
                   hintText: AppKeyStringTr.email,
                   controller: _emailControllerRestPassword,
                 ),
-                SizedBox(height: SizeConfig().height(0.1)),
+                SizedBox(height: SizeConfig().height(0.15)),
                 OutlinedButtonWidget(
                   nameButton: AppKeyStringTr.sendLink,
                   onPressed: () => _handlePasswordReset(context),

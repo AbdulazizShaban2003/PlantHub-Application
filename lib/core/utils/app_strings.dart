@@ -202,6 +202,25 @@ class AppStrings{
   static const String unexpectedCheckVerificationError = 'An unexpected error occurred while checking verification status';
   static const String unexpectedGoogleSignInError = 'An unexpected error occurred during Google sign in';
   static const String unexpectedSignOutError = 'An unexpected error occurred during sign out';
+  // Auth Remote Data Source Strings
+  static const String userDataNotFound = 'User data not found';
+  static const String googleSignInCancelled = 'Google sign in was cancelled';
+  static const String tokenRefreshError = 'Token refresh error: ';
+  static const String noName = 'No Name';
+
+  // Firebase Auth Error Messages (common ones)
+  static const String emailAlreadyInUse = 'The email address is already in use';
+  static const String operationNotAllowed = 'Operation not allowed';
+  static const String weakPassword = 'The password is too weak';
+  static const String userDisabled = 'The user account has been disabled';
+  static const String userNotFound = 'No user found for this email';
+  static const String wrongPassword = 'Wrong password provided';
+  static const String tooManyRequests = 'Too many requests. Try again later';
+  static const String accountExistsWithDifferentCredential =
+      'Account already exists with a different credential';
+  static const String requiresRecentLogin =
+      'This operation requires recent authentication. Log in again';
+
 }
 class RegxStrings {
   // Regular expressions

@@ -132,8 +132,8 @@ class _PlantHubState extends State<PlantHub> {
               locale: languageProvider.currentLocale,
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: themeProvider.themeMode,
-              home: HomeView(),
+              themeMode: ThemeMode.light,
+              home: AccountView(),
             );
           },
         ),

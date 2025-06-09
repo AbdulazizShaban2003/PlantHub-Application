@@ -92,7 +92,7 @@ class AppThemes {
       ),
       headlineMedium: TextStyle(
         color: Color(0xDD000000),
-        fontSize: 25,
+        fontSize: 22,
         fontWeight: FontWeight.bold,
       ),
       headlineSmall: TextStyle(
@@ -103,7 +103,7 @@ class AppThemes {
       bodyLarge: TextStyle(color: Color(0xDD000000),
         fontWeight: FontWeight.bold,
       fontSize: 20),
-      bodyMedium: TextStyle(color: Color(0xDD000000),fontWeight: FontWeight.bold),
+      bodyMedium: TextStyle(color: Color(0xDD000000),fontWeight: FontWeight.bold,fontSize: 16),
       bodySmall: TextStyle(color:  Colors.black,fontWeight: FontWeight.w600),
       labelLarge: TextStyle(
         color: Color(0xFFFFFFFF),
@@ -111,6 +111,10 @@ class AppThemes {
       ),
       labelSmall: TextStyle(
         color: Color(0xFFFFFFFF),
+        fontWeight: FontWeight.bold,
+      ),
+      labelMedium: TextStyle(
+        color: Color(0xDD000000),
         fontWeight: FontWeight.bold,
       ),
         titleSmall:TextStyle(color:  Colors.grey),
@@ -137,7 +141,7 @@ class AppThemes {
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(
         color: Colors.grey.shade400,
-        fontSize: 13,
+        fontSize: 10,
       ),
       filled: true,
       fillColor: Colors.white10.withOpacity(0.1),

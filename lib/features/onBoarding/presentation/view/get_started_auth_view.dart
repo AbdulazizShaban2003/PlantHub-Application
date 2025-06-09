@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/asstes_manager.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:plant_hub_app/features/auth/presentation/views/sign_up_view.dart';
@@ -29,7 +30,10 @@ class GetStartedScreen extends StatelessWidget {
           image: DecorationImage(
             image: AssetImage(AssetsManager.backgroundGetStarted),
             fit: BoxFit.cover,
+            filterQuality: FilterQuality.low,
+            repeat: ImageRepeat.noRepeat,
           ),
+
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.055)),
@@ -69,7 +73,7 @@ class GetStartedScreen extends StatelessWidget {
               SizedBox(height: SizeConfig().height(0.02)),
               OutlinedButtonWidget(
                 foregroundColor: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                backgroundColor: ColorsManager.whiteColor,
                 nameButton: AppKeyStringTr.login,
                 onPressed: () {
                   Navigator.pushReplacement(
@@ -81,7 +85,9 @@ class GetStartedScreen extends StatelessWidget {
               const Spacer(),
               Text(
                 AppKeyStringTr.privacyPolicyTermsOfService,
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                  color: ColorsManager.whiteColor
+                ),
               ),
               SizedBox(height: SizeConfig().height(0.03)),
             ],

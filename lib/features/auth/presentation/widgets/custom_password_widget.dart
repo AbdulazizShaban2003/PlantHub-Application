@@ -26,7 +26,7 @@ class CustomPasswordWidget extends StatelessWidget {
       children: [
         Text(
           AppKeyStringTr.password,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
         SizedBox(height: SizeConfig().height(0.006)),
         BuildTextField(

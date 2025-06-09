@@ -24,7 +24,7 @@ class CustomConfirmPassword extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppKeyStringTr.confirmPassword, style: Theme.of(context).textTheme.bodyMedium),
+        Text(AppKeyStringTr.confirmPassword, style: Theme.of(context).textTheme.bodySmall),
         SizedBox(height: SizeConfig().height(0.006)),
          BuildTextField(
            obscureText: true,

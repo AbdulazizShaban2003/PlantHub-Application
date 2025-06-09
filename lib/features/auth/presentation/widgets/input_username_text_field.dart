@@ -12,8 +12,9 @@ final TextEditingController usernameController;
       children: [
         Text(
             AppKeyStringTr.username,
+          style: Theme.of(context).textTheme.bodySmall,
         ),
-        SizedBox(height: SizeConfig().height(0.02)),
+        SizedBox(height: SizeConfig().height(0.01)),
         BuildTextField(
           keyboardType: TextInputType.text,
           hintText:  AppKeyStringTr.username,

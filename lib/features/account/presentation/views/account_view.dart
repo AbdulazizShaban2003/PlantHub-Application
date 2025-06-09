@@ -3,6 +3,7 @@ import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/core/provider/language_provider.dart';
 import 'package:plant_hub_app/features/account/presentation/views/privacy_policy_screen.dart';
 import 'package:plant_hub_app/features/account/presentation/views/support_us_screen.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:restart_app/restart_app.dart';
@@ -147,8 +148,11 @@ class _AccountViewState extends State<AccountView> {
                                   TextButton(
                                     onPressed: () async{
                                       await authViewModel.signOut(context);
-                                      Restart.restartApp();
-
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        RouteHelper.navigateTo(LoginView()),
+                                            (Route<dynamic> route) => false,
+                                      );
                                     },
                                     style: TextButton.styleFrom(foregroundColor: Colors.red),
                                     child: Text(tr('log out')),
