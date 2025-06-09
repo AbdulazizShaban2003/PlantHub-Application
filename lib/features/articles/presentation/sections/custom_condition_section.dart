@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 
 class ConditionCard extends StatelessWidget {
@@ -19,6 +20,7 @@ class ConditionCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Card(
+        color: ColorsManager.whiteColor,
         margin:  EdgeInsets.symmetric(
           vertical: SizeConfig().height(0.01),
           horizontal: SizeConfig().width(0.02),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../../../config/theme/app_colors.dart';
 import '../../../../core/function/plant_share.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/size_config.dart';
 import '../../../bookMark/presentation/widgets/bookmark_button.dart';
 import '../../data/models/plant_model.dart';
 import '../../view_model.dart';
@@ -134,18 +135,18 @@ class ErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.error_outline, size: 48, color: Colors.red),
-          const SizedBox(height: 16),
+           Icon(Icons.error_outline, size: 48, color: ColorsManager.redColor),
+           SizedBox(height: SizeConfig().height(0.16)),
           Text(
             error,
             textAlign: TextAlign.center,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge
-                ?.copyWith(color: Colors.red),
+                ?.copyWith(color: ColorsManager.redColor),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
+           SizedBox(height: SizeConfig().height(0.2)),
+           ElevatedButton(
             onPressed: onRetry,
             child: Text(AppStrings.retryButton),
           ),
@@ -160,12 +161,12 @@ class PlantNotFoundView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return  Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(Icons.image, size: 48),
-          SizedBox(height: 16),
+          SizedBox(height: SizeConfig().height(0.016)),
           Text(AppStrings.plantNotFound),
         ],
       ),
@@ -190,7 +191,7 @@ class EmptyStateView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 48),
-          const SizedBox(height: 16),
+           SizedBox(height: SizeConfig().height(0.016)),
           Text(message),
         ],
       ),

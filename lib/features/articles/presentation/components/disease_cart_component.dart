@@ -15,7 +15,6 @@ class DiseaseCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
       color: ColorsManager.whiteColor,
       margin:  EdgeInsets.only(bottom: SizeConfig().height(0.02)),
       child: Padding(

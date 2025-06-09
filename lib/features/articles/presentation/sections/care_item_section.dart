@@ -17,6 +17,7 @@ class CareItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: ColorsManager.whiteColor,
       margin:  EdgeInsets.only(bottom: SizeConfig().height(0.015)),
       child: ListTile(
         leading: Icon(icon, color: ColorsManager.greenPrimaryColor),
