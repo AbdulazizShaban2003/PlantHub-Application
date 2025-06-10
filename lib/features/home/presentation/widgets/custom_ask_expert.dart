@@ -11,7 +11,7 @@ class CustomAskExpert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig().height(0.17),
+      height: SizeConfig().height(0.2),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -35,12 +35,14 @@ class CustomAskExpert extends StatelessWidget {
                   Text(
                     AppKeyStringTr.subtitleAskPlantExpert,
                     style: Theme.of(context).textTheme.titleSmall!.copyWith(
-                      fontSize: SizeConfig().responsiveFont(10),
+                      fontSize: SizeConfig().responsiveFont(12),
                     ),
                   ),
+                  Spacer(),
                   OutlinedButtonWidget(
                     style: Theme.of(context).textTheme.labelSmall,
                     nameButton: AppKeyStringTr.askPlantExpert,
+
                     onPressed: () {
                       Navigator.push(
                         context,
