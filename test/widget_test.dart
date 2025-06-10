@@ -11,7 +11,7 @@ import 'package:plant_hub_app/app/my_app.dart';
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(const PlantHub());
+    await tester.pumpWidget(const PlantHub(cameras: [],));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

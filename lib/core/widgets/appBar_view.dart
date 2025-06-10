@@ -14,12 +14,12 @@ class CustomAppBarView extends StatelessWidget {
       },
       child: Container(
         width: SizeConfig().width(0.1),
-        height: SizeConfig().height(0.055),
+        height: SizeConfig().height(0.045),
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
             borderRadius: BorderRadius.circular(10)
         ),
-        child: Icon(CupertinoIcons.back,color: Theme.of(context).colorScheme.onSecondary),
+        child: Icon(CupertinoIcons.back,color: Theme.of(context).colorScheme.onSecondary,size: 15,),
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
+import '../../../../core/utils/size_config.dart';
+import '../controller/full_Image_controller.dart';
 
 class Messages extends StatelessWidget {
   final bool isUser;
@@ -23,53 +26,62 @@ class Messages extends StatelessWidget {
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.75,
+        constraints: BoxConstraints(maxWidth: SizeConfig().width(0.75)),
+        padding: EdgeInsets.all(SizeConfig().width(0.03)),
+        margin: EdgeInsets.symmetric(
+          vertical: SizeConfig().height(0.005),
+          horizontal: SizeConfig().width(0.02),
         ),
-        padding: const EdgeInsets.all(12),
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
-          color: isUser ? const Color(0xff3AAE72) : Colors.white,
+          color:
+              isUser
+                  ? ColorsManager.greenPrimaryColor
+                  : ColorsManager.whiteColor,
           borderRadius: BorderRadius.only(
-            topLeft: const Radius.circular(20),
-            topRight: const Radius.circular(20),
-            bottomLeft: isUser ? const Radius.circular(20) : const Radius.circular(4),
-            bottomRight: isUser ? const Radius.circular(4) : const Radius.circular(20),
+            topLeft: Radius.circular(SizeConfig().width(0.05)),
+            topRight: Radius.circular(SizeConfig().width(0.05)),
+            bottomLeft:
+                isUser
+                    ? Radius.circular(SizeConfig().width(0.05))
+                    : Radius.circular(SizeConfig().width(0.01)),
+            bottomRight:
+                isUser
+                    ? Radius.circular(SizeConfig().width(0.01))
+                    : Radius.circular(SizeConfig().width(0.05)),
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+              color: ColorsManager.blackColor.withOpacity(0.1),
+              blurRadius: SizeConfig().width(0.02),
+              offset: Offset(0, SizeConfig().height(0.0025)),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image section - smaller size
             if (image != null) ...[
               GestureDetector(
-                onTap: () => _showFullImage(context, image!),
+                onTap: () => showFullImage(context, image!),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
                   child: Container(
-                    constraints: const BoxConstraints(
-                      maxHeight: 120, // Smaller height
-                      maxWidth: 120,  // Smaller width
+                    constraints: BoxConstraints(
+                      maxHeight: SizeConfig().height(0.15),
+                      maxWidth: SizeConfig().width(0.3),
                     ),
                     child: Image.file(
                       image!,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) {
                         return Container(
-                          height: 80,
-                          width: 80,
-                          color: Colors.grey.shade300,
-                          child: const Icon(
+                          height: SizeConfig().height(0.1),
+                          width: SizeConfig().width(0.2),
+                          color: ColorsManager.greyColor.shade300,
+                          child: Icon(
                             Icons.broken_image,
-                            color: Colors.grey,
-                            size: 30,
+                            color: ColorsManager.greyColor,
+                            size: SizeConfig().responsiveFont(20),
                           ),
                         );
                       },
@@ -77,33 +89,37 @@ class Messages extends StatelessWidget {
                   ),
                 ),
               ),
-              if (message.isNotEmpty) const SizedBox(height: 8),
+              if (message.isNotEmpty)
+                SizedBox(height: SizeConfig().height(0.01)),
             ],
-
-            // Message content section
             if (isTyping)
-              const SpinKitThreeBounce(
-                color: Colors.grey,
-                size: 20.0,
+              SpinKitThreeBounce(
+                color: ColorsManager.greyColor,
+                size: SizeConfig().responsiveFont(20),
               )
             else if (message.isNotEmpty)
               SelectableText(
                 message,
                 style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black87,
-                  fontSize: 14,
+                  color:
+                      isUser
+                          ? ColorsManager.whiteColor
+                          : ColorsManager.blackColor,
+                  fontSize: SizeConfig().responsiveFont(14),
                   height: 1.4,
                 ),
               ),
 
-            // Date section
             if (!isTyping) ...[
-              const SizedBox(height: 4),
+              SizedBox(height: SizeConfig().height(0.005)),
               Text(
                 date,
                 style: TextStyle(
-                  color: isUser ? Colors.white70 : Colors.grey.shade600,
-                  fontSize: 11,
+                  color:
+                      isUser
+                          ? ColorsManager.white70Color
+                          : ColorsManager.greyColor.shade600,
+                  fontSize: SizeConfig().responsiveFont(11),
                 ),
               ),
             ],
@@ -113,36 +129,4 @@ class Messages extends StatelessWidget {
     );
   }
 
-  void _showFullImage(BuildContext context, File imageFile) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        child: Stack(
-          children: [
-            Center(
-              child: InteractiveViewer(
-                child: Image.file(
-                  imageFile,
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 40,
-              right: 20,
-              child: IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 30,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

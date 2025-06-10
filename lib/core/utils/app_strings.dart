@@ -180,6 +180,24 @@ class AppStrings{
   static const String unexpectedError = 'An unexpected error occurred';
   static const String accountCreationFailed = 'Failed to create account: ';
   static const String loggingIn = 'Log in...';
+  static const String apiKey = "AIzaSyCpmd8S2iciacCZUBsSj9spvxEESoLVirc";
+  static const String defaultImageQuestion = "What do you see in this image?";
+  static const String defaultGreeting = "Hello";
+  static const String emptyResponse = "I couldn't process your request. Please try again.";
+  static const String networkError = 'No internet connection, please check your network';
+  static const String apiLimitError = 'API limit exceeded, please try again later';
+  static const String micPermissionDenied = 'Microphone permission denied, enable it in settings';
+  static const String unknownError = 'An unexpected error occurred, please try again';
+  static const String speechNotAvailable = 'Speech recognition is not available on this device';
+  static const String permissionDenied = 'Microphone permission denied';
+  static const String serviceNotReady = 'Speech recognition service is not ready';
+  static const String speechUnknownError = 'Unknown error in speech recognition';
+  static const String imagePickError = 'Failed to pick image. Please try again.';
+  static const String enUsLocale = 'en-US';
+  static const String imageSaved = 'Image saved locally with ID: ';
+  static const String messagesCleared = 'All messages and images cleared successfully';
+  static const String imageDeleted = 'Deleted local image for message: ';
+  static const String speechStatus = 'Speech status: ';
   static const String loginSuccess = 'Logged in successfully!';
   static const String verifyEmailFirst = 'Please verify your email first. Verification email sent.';
   static const String loginFailed = 'Login failed';
@@ -225,13 +243,10 @@ class AppStrings{
   static const String unexpectedCheckVerificationError = 'An unexpected error occurred while checking verification status';
   static const String unexpectedGoogleSignInError = 'An unexpected error occurred during Google sign in';
   static const String unexpectedSignOutError = 'An unexpected error occurred during sign out';
-  // Auth Remote Data Source Strings
   static const String userDataNotFound = 'User data not found';
   static const String googleSignInCancelled = 'Google sign in was cancelled';
   static const String tokenRefreshError = 'Token refresh error: ';
   static const String noName = 'No Name';
-
-  // Firebase Auth Error Messages (common ones)
   static const String emailAlreadyInUse = 'The email address is already in use';
   static const String operationNotAllowed = 'Operation not allowed';
   static const String weakPassword = 'The password is too weak';
@@ -243,7 +258,12 @@ class AppStrings{
       'Account already exists with a different credential';
   static const String requiresRecentLogin =
       'This operation requires recent authentication. Log in again';
-
+  static const String noAuthUser = 'No authenticated user';
+  static const String successStorage =' successfully are storage';
+  static const String pleaseWait = "Please wait...";
+  static const String listening = "Listening... Release to send";
+  static const String askMe = "Ask Me";
+static const String message = "Messages";
 }
 class RegxStrings {
   // Regular expressions

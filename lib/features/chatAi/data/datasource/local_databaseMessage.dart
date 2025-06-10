@@ -79,7 +79,6 @@ class LocalDatabaseMessage {
     try {
       final db = await database;
 
-      // First get the image path to delete the actual file
       final imagePath = await getImagePath(messageId);
       if (imagePath != null) {
         final file = File(imagePath);
@@ -89,7 +88,6 @@ class LocalDatabaseMessage {
         }
       }
 
-      // Then delete from database
       final deletedRows = await db.delete(
         _tableName,
         where: 'messageId = ?',
@@ -102,15 +100,12 @@ class LocalDatabaseMessage {
     }
   }
 
-  // Clear all images
   static Future<void> clearAllImages() async {
     try {
       final db = await database;
 
-      // Get all image paths first
       final result = await db.query(_tableName);
 
-      // Delete all image files
       for (var row in result) {
         final imagePath = row['imagePath'] as String;
         final file = File(imagePath);
@@ -120,7 +115,6 @@ class LocalDatabaseMessage {
         }
       }
 
-      // Clear database
       final deletedRows = await db.delete(_tableName);
       print('Cleared $deletedRows image records from database');
 
@@ -128,8 +122,6 @@ class LocalDatabaseMessage {
       print('Error clearing all images: $e');
     }
   }
-
-  // Get all images (for debugging)
   static Future<List<Map<String, dynamic>>> getAllImages() async {
     try {
       final db = await database;

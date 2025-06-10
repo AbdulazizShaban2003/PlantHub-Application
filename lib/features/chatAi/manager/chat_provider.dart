@@ -3,15 +3,17 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plant_hub_app/core/cache/local_databaseMessage.dart';
+import 'package:plant_hub_app/features/chatAi/data/datasource/local_databaseMessage.dart';
 import 'package:speech_to_text/speech_recognition_error.dart' as stt;
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:permission_handler/permission_handler.dart';
-import '../../../core/service/firebase_service._message.dart';
+import '../../../core/errors/error_message.dart';
+import '../data/datasource/firebase_service._message.dart';
+import '../../../core/utils/app_strings.dart';
 import '../data/model/message_model.dart';
 
 class ChatProvider with ChangeNotifier {
-  static const apiKey = "AIzaSyCpmd8S2iciacCZUBsSj9spvxEESoLVirc";
+  static const apiKey = AppStrings.apiKey;
   final model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
 
   final TextEditingController userMessage = TextEditingController();
@@ -30,14 +32,6 @@ class ChatProvider with ChangeNotifier {
   Map<String, dynamic>? _userStats;
   Map<String, dynamic>? get userStats => _userStats;
 
-  final Map<String, String> errorMessages = {
-    'NETWORK_ERROR': 'No internet connection, please check your network',
-    'API_LIMIT_ERROR': 'API limit exceeded, please try again later',
-    'MIC_PERMISSION_DENIED': 'Microphone permission denied, enable it in settings',
-    'UNKNOWN_ERROR': 'An unexpected error occurred, please try again',
-    'speech_not_available': 'Speech recognition is not available on this device',
-    'permission_denied': 'Microphone permission denied',
-  };
 
   ChatProvider() {
     initSpeech();
@@ -48,8 +42,6 @@ class ChatProvider with ChangeNotifier {
   Future<void> loadMessages() async {
     try {
       final firebaseMessages = await FirebaseServiceMessage.getMessages();
-
-      // Load images for messages that have them
       for (var message in firebaseMessages) {
         if (message.hasImage && message.imageId != null) {
           final imagePath = await LocalDatabaseMessage.getImagePath(message.id);
@@ -78,7 +70,6 @@ class ChatProvider with ChangeNotifier {
 
   Future<void> clearAllMessages() async {
     try {
-      // First, delete all local images before clearing messages
       for (var message in messages) {
         if (message.hasImage && message.id.isNotEmpty) {
           try {
@@ -90,15 +81,9 @@ class ChatProvider with ChangeNotifier {
         }
       }
 
-      // Clear Firebase messages
       await FirebaseServiceMessage.clearAllMessages();
-
-      // Clear local messages list
       messages.clear();
-
-      // Reload user stats
       await loadUserStats();
-
       notifyListeners();
 
       print('All messages and images cleared successfully');
@@ -134,7 +119,6 @@ class ChatProvider with ChangeNotifier {
     FirebaseServiceMessage.saveMessage(errorMessage);
     notifyListeners();
   }
-
   void handleSpeechError(stt.SpeechRecognitionError error) {
     String message;
     switch (error.errorMsg) {
@@ -152,7 +136,6 @@ class ChatProvider with ChangeNotifier {
     }
     showSnackBar(message);
   }
-
   void initBotResponse() {
     botResponseController?.close();
     botResponseController = StreamController<String>();
@@ -178,15 +161,12 @@ class ChatProvider with ChangeNotifier {
   Future<void> _handleSpeechEnd() async {
     if (isListening) {
       await stopListening();
-
-      // Send message automatically when speech is done
       if (userMessage.text.trim().isNotEmpty) {
         await Future.delayed(const Duration(milliseconds: 300));
         await sendMessage();
       }
     }
   }
-
   Future<bool> checkMicrophonePermission() async {
     final status = await Permission.microphone.status;
     if (status.isDenied) {
@@ -195,7 +175,6 @@ class ChatProvider with ChangeNotifier {
     }
     return status.isGranted;
   }
-
   Future<void> startListening() async {
     if (!await checkMicrophonePermission()) {
       showSnackBar(errorMessages['permission_denied']!);
@@ -221,20 +200,15 @@ class ChatProvider with ChangeNotifier {
         userMessage.clear();
         notifyListeners();
 
-        // Cancel any existing timer
         _speechTimer?.cancel();
 
-        // Start listening
         speech.listen(
           onResult: (result) {
             lastWords = result.recognizedWords;
             userMessage.text = lastWords;
             notifyListeners();
-
-            // Reset timer on each result
             _speechTimer?.cancel();
             _speechTimer = Timer(const Duration(seconds: 2), () {
-              // Auto-stop after 2 seconds of silence
               if (isListening && userMessage.text.trim().isNotEmpty) {
                 _handleSpeechEnd();
               }
@@ -242,12 +216,10 @@ class ChatProvider with ChangeNotifier {
           },
           localeId: 'en-US',
           listenFor: const Duration(seconds: 30),
-          pauseFor: const Duration(seconds: 2), // Shorter pause detection
+          pauseFor: const Duration(seconds: 2),
           cancelOnError: true,
           partialResults: true,
         );
-
-        // Auto-stop after maximum time
         Timer(const Duration(seconds: 30), () {
           if (isListening) {
             _handleSpeechEnd();
@@ -295,25 +267,20 @@ class ChatProvider with ChangeNotifier {
     userMessage.clear();
     await _sendMessageInternal(message: message);
   }
-
-  // Send image directly without dialog
   Future<void> sendImageDirectly(File imageFile) async {
     if (isLoading) return;
 
     await _sendMessageInternal(
-      message: "What do you see in this image?", // Default question
+      message: "What do you see in this image?",
       imageFile: imageFile,
     );
   }
-
-  // Internal method to handle actual message sending
   Future<void> _sendMessageInternal({
     required String message,
     File? imageFile,
   }) async {
     initBotResponse();
 
-    // Create user message with unique ID
     final userMsg = Message(
       id: '${DateTime.now().millisecondsSinceEpoch}_${DateTime.now().microsecond}',
       isUser: true,
@@ -323,56 +290,44 @@ class ChatProvider with ChangeNotifier {
       imageFile: imageFile,
     );
 
-    // Save image locally if provided
     if (imageFile != null) {
       try {
         final imageId = await LocalDatabaseMessage.saveImage(userMsg.id, imageFile.path);
         print('Image saved locally with ID: $imageId for message: ${userMsg.id}');
 
-        // Update message with imageId
         final updatedMsg = userMsg.copyWith(imageId: imageId);
 
-        // Add updated message to list
         messages.add(updatedMsg);
         notifyListeners();
 
-        // Save to Firebase with imageId
         await FirebaseServiceMessage.saveMessage(updatedMsg);
 
       } catch (e) {
         print('Error saving image locally: $e');
-        // Still add message without image if image save fails
         messages.add(userMsg);
         notifyListeners();
         await FirebaseServiceMessage.saveMessage(userMsg);
       }
     } else {
-      // Add message to list and notify (no image)
       messages.add(userMsg);
       notifyListeners();
-      // Save to Firebase
       await FirebaseServiceMessage.saveMessage(userMsg);
     }
 
-    // Start loading for bot response
     isLoading = true;
     notifyListeners();
 
     try {
       final List<Content> content = [];
-
-      // Add image content first if provided
       if (imageFile != null) {
         final bytes = await imageFile.readAsBytes();
         content.add(Content.data('image/jpeg', bytes));
       }
 
-      // Add text content
       if (message.isNotEmpty) {
         content.add(Content.text(message));
       }
 
-      // If no content, add a default message
       if (content.isEmpty) {
         content.add(Content.text("Hello"));
       }
@@ -380,14 +335,12 @@ class ChatProvider with ChangeNotifier {
       final response = await model.generateContent(content);
       final botMessage = response.text ?? "I couldn't process your request. Please try again.";
 
-      // Stream the response character by character
       for (var char in botMessage.characters) {
         streamedText += char;
         botResponseController?.add(streamedText);
         await Future.delayed(const Duration(milliseconds: 20));
       }
 
-      // Add the complete bot message with unique ID
       final botMsg = Message(
         id: '${DateTime.now().millisecondsSinceEpoch}_bot_${DateTime.now().microsecond}',
         isUser: false,
@@ -398,7 +351,6 @@ class ChatProvider with ChangeNotifier {
       messages.add(botMsg);
       await FirebaseServiceMessage.saveMessage(botMsg);
 
-      // Update user stats
       await loadUserStats();
 
     } catch (e) {
@@ -424,7 +376,6 @@ class ChatProvider with ChangeNotifier {
 
       final imageFile = File(pickedFile.path);
 
-      // Send image directly without dialog
       await sendImageDirectly(imageFile);
 
     } catch (e) {
@@ -433,30 +384,21 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  // Delete single message
   Future<void> deleteMessage(String messageId) async {
     try {
-      // Find the message
       final messageIndex = messages.indexWhere((msg) => msg.id == messageId);
       if (messageIndex == -1) return;
 
       final message = messages[messageIndex];
 
-      // Delete local image if exists
       if (message.hasImage) {
         await LocalDatabaseMessage.deleteImage(messageId);
         print('Deleted local image for message: $messageId');
       }
 
-      // Delete from Firebase
       await FirebaseServiceMessage.deleteMessage(messageId);
-
-      // Remove from local list
       messages.removeAt(messageIndex);
-
-      // Update user stats
       await loadUserStats();
-
       notifyListeners();
 
     } catch (e) {

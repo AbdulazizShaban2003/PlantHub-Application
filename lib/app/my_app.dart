@@ -34,7 +34,7 @@ import '../features/booking/home/data/repos/home_repo_impl.dart';
 import '../features/booking/home/presentation/manger/featured_books_cubit/featured_books_cubit.dart';
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
-import '../features/chatAi/controller/chat_provider.dart';
+import '../features/chatAi/manager/chat_provider.dart';
 import '../features/diagnosis/presentation/views/diagnosis_screen.dart';
 import '../features/home/presentation/views/explore_plant_view.dart';
 
@@ -132,7 +132,7 @@ class _PlantHubState extends State<PlantHub> {
               locale: Locale('en'),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.dark,
+              themeMode: ThemeMode.light,
               home: SplashView()
             );
           },
