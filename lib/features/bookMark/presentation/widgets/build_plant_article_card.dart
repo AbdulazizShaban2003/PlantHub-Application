@@ -11,7 +11,6 @@ import 'bookmark_button.dart';
 Widget buildPlantCard(Plant plant, BuildContext context) {
   return Container(
     height: SizeConfig().height(0.4),
-    margin: EdgeInsets.only(bottom: SizeConfig().height(0.02)),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
     ),

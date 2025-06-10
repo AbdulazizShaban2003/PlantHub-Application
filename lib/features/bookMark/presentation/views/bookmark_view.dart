@@ -29,7 +29,7 @@ class _BookmarkViewState extends State<BookmarkView> {
     return RefreshIndicator(
       onRefresh: _refreshData,
       child: ListView.builder(
-        padding: EdgeInsets.all(SizeConfig().width(0.6)),
+        padding: EdgeInsets.all(SizeConfig().width(0.06)),
         itemCount: bookmarkedPlants.length,
         itemBuilder: (context, index) {
           final plant = bookmarkedPlants[index];
