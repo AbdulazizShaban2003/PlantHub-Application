@@ -46,7 +46,7 @@ class _MessageInputState extends State<MessageInput> {
                       provider.sendMessage();
                     }
                   },
-                  style: TextStyle(fontSize: SizeConfig().responsiveFont(14),color: Theme.of(context).primaryColor),
+                  style: TextStyle(fontSize: SizeConfig().responsiveFont(14),color: ColorsManager.blackColor.withOpacity(0.8),fontWeight: FontWeight.w200),
                   controller: provider.userMessage,
                   enabled: !provider.isLoading,
                   decoration: InputDecoration(

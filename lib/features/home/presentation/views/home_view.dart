@@ -10,6 +10,7 @@ import '../../../../core/utils/size_config.dart';
 import '../../../articles/domain/repositories/plant_repo.dart';
 import '../../../articles/view_model.dart';
 import '../widgets/hom_view_body.dart';
+
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
@@ -25,42 +26,55 @@ class _HomeViewState extends State<HomeView> {
       _selectedIndex = index;
     });
   }
-  List<Widget>Screens=[
-    HomeViewBody(),
-    AccountView(),
 
+  List<Widget> screens = [
+    const HomeViewBody(),
+    const Placeholder(),
+    const Placeholder(),
+    const AccountView(),
   ];
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    SizeConfig().init(context);
+
+    return Scaffold(
       extendBody: true,
-
-      body: Center(child: Screens[_selectedIndex]),
+      body: Center(child: screens[_selectedIndex]),
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 8.0,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        shape: const CircularNotchedRectangle(),
+        notchMargin: SizeConfig().width(0.02),
         child: SizedBox(
-          height: SizeConfig().height(0.1),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(CupertinoIcons.home, AppKeyStringTr.home, 0),
-              _buildNavItem(CupertinoIcons.person, AppKeyStringTr.account, 1),
+          height: SizeConfig().height(0.08),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig().width(0.05)),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildNavItem(CupertinoIcons.home, AppKeyStringTr.home, 0),
+                _buildNavItem(CupertinoIcons.shield, AppKeyStringTr.diagnose, 1),
+                 SizedBox(width: SizeConfig().width(0.02)),
+                _buildNavItem(CupertinoIcons.leaf_arrow_circlepath, AppKeyStringTr.myPlant, 2),
+                _buildNavItem(CupertinoIcons.person, AppKeyStringTr.account, 3),
 
-              SizedBox(width: 40),
-              _buildNavItem(CupertinoIcons.leaf_arrow_circlepath, AppKeyStringTr.myPlant, 2),
-              _buildNavItem(CupertinoIcons.shield, AppKeyStringTr.diagnose, 3),
-
-            ],
+              ],
+            ),
           ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-
         onPressed: () {},
         backgroundColor: ColorsManager.greenPrimaryColor,
-        shape: CircleBorder(),
-        child: Icon(CupertinoIcons.camera),
+        elevation: 4,
+        shape: const CircleBorder(),
+        child: Icon(
+          CupertinoIcons.camera,
+          color: ColorsManager.whiteColor,
+          size: SizeConfig().responsiveFont(30),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -71,12 +85,18 @@ class _HomeViewState extends State<HomeView> {
       onTap: () => _onItemTapped(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.greyColor),
+          Icon(
+            icon,
+            color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.greyColor,
+            size: SizeConfig().responsiveFont(28),
+          ),
+          SizedBox(height: SizeConfig().height(0.005)),
           Text(
             label,
             style: TextStyle(
-              fontSize: 10,
+              fontSize: SizeConfig().responsiveFont(10),
               color: isSelected ? ColorsManager.greenPrimaryColor : ColorsManager.greyColor,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),

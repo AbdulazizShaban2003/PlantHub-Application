@@ -64,14 +64,15 @@ class HomeViewBody extends StatelessWidget {
                   SizedBox(height: SizeConfig().height(0.03)),
                   BuildHeader(header: "Explore Plants", onTab: () {  },),
                   SizedBox(
-                    height: 600,
+                    height: SizeConfig().height(0.8),
                     child: Padding(
-                      padding: const EdgeInsets.all(13.0),
+                      padding: EdgeInsets.all(SizeConfig().width(0.03)),
                       child: GridView.count(
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         crossAxisCount: 2,
-                        mainAxisSpacing: 16,
-                        crossAxisSpacing: 16,
+                        mainAxisSpacing: SizeConfig().height(0.02),
+                        crossAxisSpacing: SizeConfig().width(0.04),
+                        childAspectRatio: 0.9,
                         children: [
                           _buildCategoryCard(
                             context: context,
@@ -112,7 +113,8 @@ class HomeViewBody extends StatelessWidget {
                         ],
                       ),
                     ),
-                  ),
+                  ),         
+                  SizedBox(height: SizeConfig().height(0.07),)
                 ],
               ),
             ),
@@ -162,9 +164,9 @@ Widget _buildCategoryCard({
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 13,
-              color: Colors.black,
+              color: Theme.of(context).primaryColor,
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -47,60 +47,70 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
           style: Theme.of(context).textTheme.headlineSmall,
         ),
         elevation: 0,
+        iconTheme: IconThemeData(
+          color: Theme.of(context).primaryColor
+        ),
       ),
-      body: plantProvider.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
-        onRefresh: () async {
-          await plantProvider.fetchAllPlants();
-          await plantProvider.fetchPlantsByCategory(widget.category);
-        },
-        child: categoryPlants.isEmpty
-            ? ListView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.6,
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 100,),
-                    Icon(
-                      Icons.search_off,
-                      size: 64,
-                      color: Colors.grey[400],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'No ${_getCategoryTitle(widget.category)} found',
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Try refreshing or check back later',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+      body: Column(
+        children: [
+          Divider(),
+          plantProvider.isLoading
+              ? Expanded(child: const Center(child: CircularProgressIndicator()))
+              : Expanded(
+                child: RefreshIndicator(
+                            onRefresh: () async {
+                await plantProvider.fetchAllPlants();
+                await plantProvider.fetchPlantsByCategory(widget.category);
+                            },
+                            child: categoryPlants.isEmpty
+                  ? ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: 100,),
+                          Icon(
+                            Icons.search_off,
+                            size: 64,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'No ${_getCategoryTitle(widget.category)} found',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Try refreshing or check back later',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+                            )
+                  : ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: categoryPlants.length,
+                itemBuilder: (context, index) {
+                  final plant = categoryPlants[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: _buildPlantCard(context, plant,index),
+                  );
+                },
+                            ),
+                          ),
               ),
-            ),
-          ],
-        )
-            : ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: categoryPlants.length,
-          itemBuilder: (context, index) {
-            final plant = categoryPlants[index];
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildPlantCard(context, plant,index),
-            );
-          },
-        ),
+        ],
       ),
     );
   }
