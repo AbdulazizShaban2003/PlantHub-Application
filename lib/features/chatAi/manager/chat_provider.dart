@@ -241,12 +241,10 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  // Manual stop for button release
   Future<void> manualStopListening() async {
     if (isListening) {
       await stopListening();
 
-      // Send message if there's text
       if (userMessage.text.trim().isNotEmpty) {
         await Future.delayed(const Duration(milliseconds: 200));
         await sendMessage();
@@ -257,8 +255,6 @@ class ChatProvider with ChangeNotifier {
   void showSnackBar(String message) {
     debugPrint(message);
   }
-
-  // Regular text message sending
   Future<void> sendMessage() async {
     if (isLoading) return;
     final message = userMessage.text.trim();
