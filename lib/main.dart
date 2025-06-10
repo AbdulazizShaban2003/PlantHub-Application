@@ -21,7 +21,7 @@ void main() async {
       persistenceEnabled: true,
       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED
   );
-  final cameras = await availableCameras();
+   final cameras = await availableCameras();
   final firstCamera = cameras.first;
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return MaterialApp(

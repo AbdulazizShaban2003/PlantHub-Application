@@ -5,25 +5,22 @@ flutter_native_splash:
   image: "assets/images/native_splash_icon.png"
   image_dark: "assets/images/native_splash_icon.png"
 
+  branding: "assets/images/app_name_dark.png"
+  branding_dark: "assets/images/app_name_dark.png"
+  branding_mode: bottom
+  branding_bottom_padding: 20
+
   android_gravity: center
   android_12:
     image: "assets/images/native_splash_icon.png"
     color: "#FFFFFF"
     icon_background_color: "#FFFFFF"
     icon_background_color_dark: "#000000"
-    image_dark: "assets/images/native_splash_icon.png"
 
   ios_content_mode: scaleAspectFit
-
-  branding: "assets/images/app_name_dark.png"
-  branding_dark: "assets/images/app_name_dark.png"
-  branding_mode: bottom
-  branding_bottom_padding: 50
 
   android: true
   ios: true
   web: false
-
   fullscreen: true
-
-  android_screen_orientation: sensorPortrait
+  android_screen_orientation: portrait
