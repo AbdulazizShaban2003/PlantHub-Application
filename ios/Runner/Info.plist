@@ -7,51 +7,51 @@
 		<key>CFBundleDisplayName</key>
 		<string>Plant Hub App</string>
 		<key>NSPhotoLibraryUsageDescription</key>
-        <string>نحتاج الوصول إلى الصور</string>
+		<string>نحتاج الوصول إلى الصور</string>
 		<key>GIDClientID</key>
-        <string>[439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj.apps.googleusercontent.com]</string>
-        <!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
-        <!-- Google Sign-in Section -->
-        <key>CFBundleURLTypes</key>
-        <array>
-        	<dict>
-        		<key>CFBundleTypeRole</key>
-        		<string>Editor</string>
-        		<key>CFBundleURLSchemes</key>
-        		<array>
-        			<!-- TODO Replace this value: -->
-        			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-        			<string>om.googleusercontent.apps.439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj</string>
-        		</array>
-        	</dict>
-        </array>
-        <!-- End of the Google Sign-in Section -->
+		<string>[439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj.apps.googleusercontent.com]</string>
+		<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
+		<!-- Google Sign-in Section -->
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<!-- TODO Replace this value: -->
+					<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
+					<string>om.googleusercontent.apps.439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj</string>
+				</array>
+			</dict>
+		</array>
+		<!-- End of the Google Sign-in Section -->
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleURLTypes</key>
-        <array>
-          <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-        	<!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
-            <string>[Your project PRODUCT_BUNDLE_IDENTIFIER value]</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-              <!-- Your app title -->
-              <string>example</string>
-            </array>
-          </dict>
-        </array>
+		<array>
+			<dict>
+				<key>CFBundleTypeRole</key>
+				<string>Editor</string>
+				<key>CFBundleURLName</key>
+				<!-- You can find it on /ios/project.pbxproj - 'PRODUCT_BUNDLE_IDENTIFIER' -->
+				<string>[Your project PRODUCT_BUNDLE_IDENTIFIER value]</string>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<!-- Your app title -->
+					<string>example</string>
+				</array>
+			</dict>
+		</array>
 		<key>CFBundleIdentifier</key>
 		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 		<key>CFBundleInfoDictionaryVersion</key>
 		<string>6.0</string>
 		<key>CFBundleName</key>
 		<key>NSSpeechRecognitionUsageDescription</key>
-        <string>Needed for converting speech to text</string>
-        <key>NSMicrophoneUsageDescription</key>
-        <string>Needed for converting speech to text also</string>
+		<string>Needed for converting speech to text</string>
+		<key>NSMicrophoneUsageDescription</key>
+		<string>Needed for converting speech to text also</string>
 		<string>PlantHub</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
@@ -90,6 +90,8 @@
 			<string>ar</string>
 		</array>
 		<key>UIStatusBarHidden</key>
+		<true/>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
 		<false/>
 	</dict>
 </plist>
