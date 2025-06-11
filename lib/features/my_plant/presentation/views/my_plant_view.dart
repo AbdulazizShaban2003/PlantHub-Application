@@ -180,7 +180,7 @@ class _MyPlantViewState extends State<MyPlantView>
           ? Padding(
         padding: const EdgeInsets.only(bottom: 80.0),
         child: FloatingActionButton(
-          heroTag: 'plants_fab', // Tag فريد
+          heroTag: 'plants_fab',
           onPressed: () {
             Navigator.push(
               context,
