@@ -14,7 +14,6 @@ class NotificationsScreen extends StatefulWidget {
 }
 
 class _NotificationsScreenState extends State<NotificationsScreen> {
-  final DatabaseHelper _databaseHelper = DatabaseHelper();
   bool _isLoading = true;
   List<NotificationModel> _notifications = [];
   Map<String, Plant> _plantsMap = {};
@@ -22,7 +21,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    // Use post-frame callback to avoid setState during build
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _loadNotifications();
@@ -36,14 +34,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     setState(() => _isLoading = true);
 
     try {
-      // Load notifications using post-frame callback to avoid setState during build
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (!mounted) return;
 
         final notificationProvider = context.read<NotificationProvider>();
         await notificationProvider.loadNotifications();
 
-        // Load plants to map plant IDs to plant objects
         final plantProvider = context.read<PlantProvider>();
         if (plantProvider.plants.isEmpty) {
           await plantProvider.loadPlants();
@@ -131,7 +127,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       );
     }
 
-    // Group notifications by date
     final Map<String, List<NotificationModel>> groupedNotifications = {};
     for (final notification in _notifications) {
       final String dateKey = _getDateKey(notification.scheduledTime);
@@ -277,8 +272,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ],
                 ),
               ),
-
-              // Status indicator
               Column(
                 children: [
                   Icon(
@@ -390,7 +383,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       return Colors.grey;
     }
   }
-
   IconData _getActionTypeIcon(String actionTypeName) {
     try {
       final actionType = ActionType.values.firstWhere(
