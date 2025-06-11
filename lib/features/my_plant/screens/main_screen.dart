@@ -6,7 +6,8 @@ import '../models/notification_model.dart';
 import '../services/database_helper.dart';
 import 'add_plant_screen.dart';
 import 'edit_plant_screen.dart';
-import 'plant_detail_screen.dart'; // Import the new screen
+import 'plant_detail_screen.dart';
+import 'notifications_screen.dart'; // Import the notifications screen
 import '../services/notification_service.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,14 +19,101 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [
+    const PlantsTab(),
+    const NotificationsScreen(),
+  ];
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<PlantProvider>().loadPlants();
+      context.read<NotificationProvider>().loadNotifications();
     });
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        items: [
+          const BottomNavigationBarItem(
+            icon: Icon(Icons.eco),
+            label: 'Plants',
+          ),
+          BottomNavigationBarItem(
+            icon: Stack(
+              children: [
+                const Icon(Icons.notifications),
+                Consumer<NotificationProvider>(
+                  builder: (context, provider, child) {
+                    final unreadCount = provider.unreadCount;
+                    if (unreadCount > 0) {
+                      return Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 12,
+                            minHeight: 12,
+                          ),
+                          child: Text(
+                            unreadCount > 9 ? '9+' : '$unreadCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 8,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ],
+            ),
+            label: 'Notifications',
+          ),
+        ],
+      ),
+      floatingActionButton: _selectedIndex == 0
+          ? FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AddPlantScreen()),
+          ).then((_) {
+            // Refresh data when returning from add plant screen
+            context.read<PlantProvider>().loadPlants();
+          });
+        },
+        backgroundColor: Colors.green,
+        child: const Icon(Icons.add, color: Colors.white),
+      )
+          : null,
+    );
+  }
+}
+
+class PlantsTab extends StatelessWidget {
+  const PlantsTab({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,13 +131,78 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              final notificationService = NotificationService();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('🧪 Test notification scheduled for 5 seconds!'),
-                  duration: Duration(seconds: 2),
-                ),
-              );
+              try {
+                print('Test notification button pressed');
+                final notificationService = NotificationService();
+
+                // Show loading indicator
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Row(
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                        SizedBox(width: 16),
+                        Text('Scheduling test notification...'),
+                      ],
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+
+                await notificationService.scheduleTestNotification();
+
+                // Hide loading and show success
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: Colors.white),
+                        SizedBox(width: 8),
+                        Text('🧪 Test notification scheduled for 5 seconds!'),
+                      ],
+                    ),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 3),
+                  ),
+                );
+
+              } catch (e) {
+                print('Error in test notification: $e');
+
+                // Hide loading and show error
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        const Icon(Icons.error, color: Colors.white),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text('Error: ${e.toString()}'),
+                        ),
+                      ],
+                    ),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 5),
+                    action: SnackBarAction(
+                      label: 'Settings',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        // You can add code here to open app settings
+                        print('Open notification settings');
+                      },
+                    ),
+                  ),
+                );
+              }
             },
             icon: const Icon(Icons.notifications_active),
             tooltip: 'Test Notifications',
@@ -91,25 +244,18 @@ class _HomeScreenState extends State<HomeScreen> {
             return const EmptyPlantsWidget();
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: plantProvider.plants.length,
-            itemBuilder: (context, index) {
-              final plant = plantProvider.plants[index];
-              return PlantCard(plant: plant);
-            },
+          return RefreshIndicator(
+            onRefresh: () => plantProvider.loadPlants(),
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: plantProvider.plants.length,
+              itemBuilder: (context, index) {
+                final plant = plantProvider.plants[index];
+                return PlantCard(plant: plant);
+              },
+            ),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddPlantScreen()),
-          );
-        },
-        backgroundColor: Colors.green,
-        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -191,7 +337,10 @@ class PlantCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => PlantDetailScreen(plant: plant),
           ),
-        );
+        ).then((_) {
+          // Refresh data when returning from detail screen
+          context.read<PlantProvider>().loadPlants();
+        });
       },
       child: Card(
         margin: const EdgeInsets.only(bottom: 16),
@@ -302,7 +451,10 @@ class PlantCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => PlantDetailScreen(plant: plant),
                   ),
-                );
+                ).then((_) {
+                  // Refresh data when returning from detail screen
+                  context.read<PlantProvider>().loadPlants();
+                });
               },
             ),
             ListTile(
@@ -315,7 +467,10 @@ class PlantCard extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => EditPlantScreen(plant: plant),
                   ),
-                );
+                ).then((_) {
+                  // Refresh data when returning from edit screen
+                  context.read<PlantProvider>().loadPlants();
+                });
               },
             ),
             ListTile(
