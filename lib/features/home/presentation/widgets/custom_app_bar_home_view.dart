@@ -10,6 +10,8 @@ import '../../../../core/utils/size_config.dart';
 import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../account/presentation/views/profile_view.dart';
 import '../../../articles/view_model.dart';
+import '../../../my_plant/providers/plant_provider.dart';
+import '../views/notifications_screen.dart';
 import '../components/build_circle_icon.dart';
 
 class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidget  {
@@ -33,8 +35,47 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
 
         iconTheme: IconThemeData(color: Colors.black),
         actions: [
-          BuildCircleIcon(
-            showBadge: true, iconData: CupertinoIcons.bell, onPressed: () {  },
+          Stack(
+            children: [
+              BuildCircleIcon(
+                iconData: CupertinoIcons.bell, onPressed: () {
+                Navigator.push(context, RouteHelper.navigateTo(NotificationsScreen()));
+              },
+                showBadge: false,
+              ),
+              Consumer<NotificationProvider>(
+                builder: (context, provider, child) {
+                  final unreadCount = provider.unreadCount;
+                  if (unreadCount > 0) {
+                    return Positioned(
+                      right: 0,
+                      top: 0,
+                      child: Container(
+                        padding: EdgeInsets.all(SizeConfig().width(0.007)),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(
+                              SizeConfig().width(0.04)
+                          ),
+                        ),
+                        constraints: BoxConstraints(
+                          minWidth: SizeConfig().width(0.03),
+                        ),
+                        child: Text(
+                          unreadCount > 9 ? '9+' : '$unreadCount',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: SizeConfig().responsiveFont(6),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
+              ),
+            ],
           ),
           SizedBox(width: SizeConfig().width(0.04)),
           BuildCircleIcon(
