@@ -39,11 +39,11 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
 
   Future<void> _loadPlantData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       // Load all images for this plant
       final List<String> images = await _databaseHelper.getPlantImages(widget.plant.id);
-      
+
       // Load notifications for this plant
       final List<NotificationModel> allNotifications = await _notificationService.getUserNotifications();
       final List<NotificationModel> plantNotifications = allNotifications
@@ -70,17 +70,17 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
           SliverToBoxAdapter(
             child: _isLoading
                 ? const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(50),
-                      child: CircularProgressIndicator(),
-                    ),
-                  )
+              child: Padding(
+                padding: EdgeInsets.all(50),
+                child: CircularProgressIndicator(),
+              ),
+            )
                 : Column(
-                    children: [
-                      _buildPlantInfo(),
-                      _buildTabSection(),
-                    ],
-                  ),
+              children: [
+                _buildPlantInfo(),
+                _buildTabSection(),
+              ],
+            ),
           ),
         ],
       ),
@@ -166,34 +166,34 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
           decoration: BoxDecoration(
             image: File(imagePath).existsSync()
                 ? DecorationImage(
-                    image: FileImage(File(imagePath)),
-                    fit: BoxFit.cover,
-                  )
+              image: FileImage(File(imagePath)),
+              fit: BoxFit.cover,
+            )
                 : null,
           ),
           child: !File(imagePath).existsSync()
               ? Container(
-                  color: Colors.green.withOpacity(0.1),
-                  child: const Center(
-                    child: Icon(
-                      Icons.broken_image,
-                      size: 80,
-                      color: Colors.grey,
-                    ),
-                  ),
-                )
+            color: Colors.green.withOpacity(0.1),
+            child: const Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 80,
+                color: Colors.grey,
+              ),
+            ),
+          )
               : Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withOpacity(0.3),
-                      ],
-                    ),
-                  ),
-                ),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.transparent,
+                  Colors.black.withOpacity(0.3),
+                ],
+              ),
+            ),
+          ),
         );
       },
     );
@@ -262,32 +262,32 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
       children: widget.plant.actions
           .where((action) => action.isEnabled)
           .map((action) => Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: action.type.color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: action.type.color.withOpacity(0.3)),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      action.type.icon,
-                      size: 16,
-                      color: action.type.color,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      action.type.displayName,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: action.type.color,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ))
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: action.type.color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: action.type.color.withOpacity(0.3)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              action.type.icon,
+              size: 16,
+              color: action.type.color,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              action.type.displayName,
+              style: TextStyle(
+                fontSize: 12,
+                color: action.type.color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ))
           .toList(),
     );
   }
@@ -328,7 +328,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
 
   Widget _buildCareScheduleTab() {
     final enabledActions = widget.plant.actions.where((action) => action.isEnabled).toList();
-    
+
     if (enabledActions.isEmpty) {
       return const Center(
         child: Column(
@@ -377,14 +377,14 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
             ),
             subtitle: action.reminder != null
                 ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Next: ${_formatDateTime(action.reminder!.time)}'),
-                      Text('Repeat: ${action.reminder!.repeat.displayName}'),
-                      if (action.reminder!.tasks.isNotEmpty)
-                        Text('Tasks: ${action.reminder!.tasks.join(', ')}'),
-                    ],
-                  )
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Next: ${_formatDateTime(action.reminder!.time)}'),
+                Text('Repeat: ${action.reminder!.repeat.displayName}'),
+                if (action.reminder!.tasks.isNotEmpty)
+                  Text('Tasks: ${action.reminder!.tasks.join(', ')}'),
+              ],
+            )
                 : const Text('No reminder set'),
             trailing: action.reminder != null
                 ? Icon(Icons.notifications_active, color: action.type.color)
@@ -512,17 +512,17 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
                 borderRadius: BorderRadius.circular(12),
                 child: File(imagePath).existsSync()
                     ? Image.file(
-                        File(imagePath),
-                        fit: BoxFit.cover,
-                      )
+                  File(imagePath),
+                  fit: BoxFit.cover,
+                )
                     : Container(
-                        color: Colors.grey[200],
-                        child: const Icon(
-                          Icons.broken_image,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                      ),
+                  color: Colors.grey[200],
+                  child: const Icon(
+                    Icons.broken_image,
+                    size: 40,
+                    color: Colors.grey,
+                  ),
+                ),
               ),
             ),
           ),
@@ -608,7 +608,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
   Color _getActionTypeColor(String actionTypeName) {
     try {
       final actionType = ActionType.values.firstWhere(
-        (type) => type.name == actionTypeName,
+            (type) => type.name == actionTypeName,
       );
       return actionType.color;
     } catch (e) {
@@ -619,7 +619,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
   IconData _getActionTypeIcon(String actionTypeName) {
     try {
       final actionType = ActionType.values.firstWhere(
-        (type) => type.name == actionTypeName,
+            (type) => type.name == actionTypeName,
       );
       return actionType.icon;
     } catch (e) {
@@ -630,7 +630,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return 'Today';
     } else if (difference == 1) {
@@ -649,7 +649,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = dateTime.difference(now);
-    
+
     if (difference.isNegative) {
       // Past date
       final pastDifference = now.difference(dateTime);
@@ -695,7 +695,12 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
             onPressed: () {
               Navigator.pop(context); // Close dialog
               Navigator.pop(context); // Go back to home
-              context.read<PlantProvider>().deletePlant(widget.plant.id);
+              // Use a post-frame callback to ensure context is still valid
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.read<PlantProvider>().deletePlant(widget.plant.id);
+                }
+              });
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),

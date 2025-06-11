@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class NotificationModel {
@@ -292,13 +294,12 @@ class PlantAction {
   }
 }
 
+// Updated ActionType enum with only 4 main actions
 enum ActionType {
   watering,
   fertilizing,
   misting,
-  pruning,
-  note,
-  photo,
+  harvesting, // Changed from pruning to harvesting
 }
 
 extension ActionTypeExtension on ActionType {
@@ -310,29 +311,21 @@ extension ActionTypeExtension on ActionType {
         return 'Fertilizing';
       case ActionType.misting:
         return 'Misting';
-      case ActionType.pruning:
-        return 'Pruning';
-      case ActionType.note:
-        return 'Note';
-      case ActionType.photo:
-        return 'Photo';
+      case ActionType.harvesting:
+        return 'Harvesting';
     }
   }
 
   Color get color {
     switch (this) {
       case ActionType.watering:
-        return Colors.blue;
+        return const Color(0xFF2196F3); // Blue
       case ActionType.fertilizing:
-        return Colors.red;
+        return const Color(0xFFE91E63); // Pink
       case ActionType.misting:
-        return Colors.purple;
-      case ActionType.pruning:
-        return Colors.orange;
-      case ActionType.note:
-        return Colors.indigo;
-      case ActionType.photo:
-        return Colors.green;
+        return const Color(0xFF9C27B0); // Purple
+      case ActionType.harvesting:
+        return const Color(0xFFFF9800); // Orange
     }
   }
 
@@ -344,12 +337,8 @@ extension ActionTypeExtension on ActionType {
         return Icons.eco;
       case ActionType.misting:
         return Icons.cloud;
-      case ActionType.pruning:
-        return Icons.content_cut;
-      case ActionType.note:
-        return Icons.note;
-      case ActionType.photo:
-        return Icons.photo_camera;
+      case ActionType.harvesting:
+        return Icons.agriculture;
     }
   }
 }

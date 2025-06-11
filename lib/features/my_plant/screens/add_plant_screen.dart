@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/notification_model.dart';
 import '../providers/plant_provider.dart';
+import 'set_reminder_screen.dart';
 
 class AddPlantScreen extends StatefulWidget {
   const AddPlantScreen({super.key});
@@ -28,7 +29,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize all actions as disabled
+    // Initialize only the 4 main actions
     for (final actionType in ActionType.values) {
       _selectedActions[actionType] = false;
       _actionReminders[actionType] = null;
@@ -277,7 +278,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Add Action',
+              'Care Actions',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
@@ -334,14 +335,47 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     );
   }
 
+  // Show image source selection (Camera or Gallery)
+  Future<void> _showImageSourceSelection(Function(ImageSource) onSourceSelected) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  Navigator.pop(context);
+                  onSourceSelected(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Gallery'),
+                onTap: () {
+                  Navigator.pop(context);
+                  onSourceSelected(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _pickMainImage() async {
-    final plantProvider = context.read<PlantProvider>();
-    final XFile? image = await plantProvider.pickImage(ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _mainImage = image;
-      });
-    }
+    await _showImageSourceSelection((source) async {
+      final plantProvider = context.read<PlantProvider>();
+      final XFile? image = await plantProvider.pickImage(source);
+      if (image != null) {
+        setState(() {
+          _mainImage = image;
+        });
+      }
+    });
   }
 
   Future<void> _pickAdditionalImages() async {
@@ -359,11 +393,13 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   }
 
   Future<void> _setReminder(ActionType actionType) async {
-    final result = await showDialog<Reminder>(
-      context: context,
-      builder: (context) => ReminderDialog(
-        actionType: actionType,
-        existingReminder: _actionReminders[actionType],
+    final result = await Navigator.push<Reminder>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SetReminderScreen(
+          actionType: actionType,
+          existingReminder: _actionReminders[actionType],
+        ),
       ),
     );
 
@@ -411,205 +447,19 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     );
 
     if (plantProvider.error != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: ${plantProvider.error}')),
-      );
-      return;
-    }
-
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Plant added successfully!')),
-    );
-  }
-}
-
-class ReminderDialog extends StatefulWidget {
-  final ActionType actionType;
-  final Reminder? existingReminder;
-
-  const ReminderDialog({
-    super.key,
-    required this.actionType,
-    this.existingReminder,
-  });
-
-  @override
-  State<ReminderDialog> createState() => _ReminderDialogState();
-}
-
-class _ReminderDialogState extends State<ReminderDialog> {
-  final _remindMeToController = TextEditingController();
-  final List<String> _tasks = [];
-  DateTime _selectedDateTime = DateTime.now().add(const Duration(hours: 1));
-  RepeatType _selectedRepeat = RepeatType.daily;
-  final _uuid = const Uuid();
-  final _taskController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.existingReminder != null) {
-      _selectedDateTime = widget.existingReminder!.time;
-      _selectedRepeat = widget.existingReminder!.repeat;
-      _remindMeToController.text = widget.existingReminder!.remindMeTo;
-      _tasks.addAll(widget.existingReminder!.tasks);
-    } else {
-      // Add default task
-      final defaultTask = '${widget.actionType.displayName} your plant';
-      _remindMeToController.text = defaultTask;
-      _tasks.add(defaultTask);
-    }
-  }
-
-  @override
-  void dispose() {
-    _remindMeToController.dispose();
-    _taskController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Set ${widget.actionType.displayName} Reminder'),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Tasks:', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            // Display current tasks
-            ..._tasks.map((task) => ListTile(
-              dense: true,
-              title: Text(task),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () {
-                  setState(() {
-                    _tasks.remove(task);
-                  });
-                },
-              ),
-            )),
-            // Add new task
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _taskController,
-                    decoration: const InputDecoration(
-                      hintText: 'Add new task',
-                      isDense: true,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.add_circle, color: Colors.green),
-                  onPressed: () {
-                    if (_taskController.text.trim().isNotEmpty) {
-                      setState(() {
-                        _tasks.add(_taskController.text.trim());
-                        _taskController.clear();
-                      });
-                    }
-                  },
-                ),
-              ],
-            ),
-            const Divider(),
-            const SizedBox(height: 16),
-            ListTile(
-              title: const Text('Date & Time'),
-              subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: _selectDateTime,
-            ),
-            const SizedBox(height: 16),
-            DropdownButtonFormField<RepeatType>(
-              value: _selectedRepeat,
-              decoration: const InputDecoration(
-                labelText: 'Repeat',
-                border: OutlineInputBorder(),
-              ),
-              items: RepeatType.values.map((repeat) {
-                return DropdownMenuItem(
-                  value: repeat,
-                  child: Text(repeat.displayName),
-                );
-              }).toList(),
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    _selectedRepeat = value;
-                  });
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: _saveReminder,
-          child: const Text('Save'),
-        ),
-      ],
-    );
-  }
-
-  Future<void> _selectDateTime() async {
-    final DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: _selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-
-    if (date != null) {
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
-      );
-
-      if (time != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
-        });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: ${plantProvider.error}')),
+        );
       }
-    }
-  }
-
-  void _saveReminder() {
-    if (_tasks.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one task')),
-      );
       return;
     }
 
-    // Use first task as main reminder text
-    final mainTask = _tasks.first;
-
-    final reminder = Reminder(
-      id: widget.existingReminder?.id ?? _uuid.v4(),
-      time: _selectedDateTime,
-      repeat: _selectedRepeat,
-      remindMeTo: mainTask,
-      tasks: _tasks,
-      isActive: true,
-    );
-
-    Navigator.pop(context, reminder);
+    if (mounted) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Plant added successfully!')),
+      );
+    }
   }
 }

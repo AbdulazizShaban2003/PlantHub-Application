@@ -304,19 +304,22 @@ class NotificationProvider with ChangeNotifier {
   int get unreadCount => _notifications.where((n) => !n.isRead).length;
 
   Future<void> loadNotifications() async {
-    _setLoading(true);
-    _clearError();
+    // Use post-frame callback to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _setLoading(true);
+      _clearError();
 
-    try {
-      print('📥 Loading notifications...');
-      _notifications = await _notificationService.getUserNotifications();
-      print('✅ Loaded ${_notifications.length} notifications');
-    } catch (e) {
-      print('❌ Error loading notifications: $e');
-      _error = 'Failed to load notifications: ${e.toString()}';
-    } finally {
-      _setLoading(false);
-    }
+      try {
+        print('📥 Loading notifications...');
+        _notifications = await _notificationService.getUserNotifications();
+        print('✅ Loaded ${_notifications.length} notifications');
+      } catch (e) {
+        print('❌ Error loading notifications: $e');
+        _error = 'Failed to load notifications: ${e.toString()}';
+      } finally {
+        _setLoading(false);
+      }
+    });
   }
 
   Future<void> markAsRead(String notificationId) async {

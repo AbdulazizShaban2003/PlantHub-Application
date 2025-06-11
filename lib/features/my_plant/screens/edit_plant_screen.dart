@@ -46,7 +46,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
       final existingAction = widget.plant.actions
           .where((action) => action.type == actionType)
           .firstOrNull;
-      
+
       if (existingAction != null) {
         _selectedActions[actionType] = existingAction.isEnabled;
         _actionReminders[actionType] = existingAction.reminder;
@@ -199,28 +199,28 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
             ),
             child: _newMainImage != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(8),
-                    child: Image.file(
-                      File(_newMainImage!.path),
-                      fit: BoxFit.cover,
-                    ),
-                  )
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(_newMainImage!.path),
+                fit: BoxFit.cover,
+              ),
+            )
                 : widget.plant.mainImagePath.isNotEmpty && File(widget.plant.mainImagePath).existsSync()
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.file(
-                          File(widget.plant.mainImagePath),
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_a_photo, size: 48, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text('Tap to change main image'),
-                        ],
-                      ),
+                ? ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Image.file(
+                File(widget.plant.mainImagePath),
+                fit: BoxFit.cover,
+              ),
+            )
+                : const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add_a_photo, size: 48, color: Colors.grey),
+                SizedBox(height: 8),
+                Text('Tap to change main image'),
+              ],
+            ),
           ),
         ),
       ],
@@ -277,41 +277,41 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               }),
               // Show new additional images
               ..._newAdditionalImages.map((image) => Container(
-                    width: 100,
-                    margin: const EdgeInsets.only(right: 8),
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.file(
-                            File(image.path),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                        Positioned(
-                          top: 4,
-                          right: 4,
-                          child: GestureDetector(
-                            onTap: () => _removeNewAdditionalImage(image),
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                width: 100,
+                margin: const EdgeInsets.only(right: 8),
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.file(
+                        File(image.path),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  )),
+                    Positioned(
+                      top: 4,
+                      right: 4,
+                      child: GestureDetector(
+                        onTap: () => _removeNewAdditionalImage(image),
+                        child: Container(
+                          padding: const EdgeInsets.all(2),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.close,
+                            size: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )),
             ],
           ),
         ),
@@ -340,7 +340,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildActionTile(ActionType actionType) {
     final bool isSelected = _selectedActions[actionType] ?? false;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
@@ -376,9 +376,9 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
         onTap: isSelected ? () => _setReminder(actionType) : null,
         subtitle: isSelected && _actionReminders[actionType] != null
             ? Text(
-                'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
-                style: const TextStyle(fontSize: 12, color: Colors.green),
-              )
+          'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
+          style: const TextStyle(fontSize: 12, color: Colors.green),
+        )
             : null,
       ),
     );
@@ -430,7 +430,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     }
 
     final plantProvider = context.read<PlantProvider>();
-    
+
     try {
       // Handle new main image
       String mainImagePath = widget.plant.mainImagePath;
@@ -472,20 +472,26 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
       await plantProvider.updatePlant(updatedPlant);
 
       if (plantProvider.error != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${plantProvider.error}')),
-        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Error: ${plantProvider.error}')),
+          );
+        }
         return;
       }
 
-      Navigator.pop(context);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Plant updated successfully!')),
-      );
+      if (mounted) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Plant updated successfully!')),
+        );
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating plant: $e')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating plant: $e')),
+        );
+      }
     }
   }
 }
@@ -666,7 +672,7 @@ class _ReminderDialogState extends State<ReminderDialog> {
 
     // Use first task as main reminder text
     final mainTask = _tasks.first;
-    
+
     final reminder = Reminder(
       id: widget.existingReminder?.id ?? _uuid.v4(),
       time: _selectedDateTime,

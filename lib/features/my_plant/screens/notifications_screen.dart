@@ -22,36 +22,51 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    _loadNotifications();
+    // Use post-frame callback to avoid setState during build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _loadNotifications();
+      }
+    });
   }
 
   Future<void> _loadNotifications() async {
+    if (!mounted) return;
+
     setState(() => _isLoading = true);
-    
+
     try {
-      // Load notifications
-      final notificationProvider = context.read<NotificationProvider>();
-      await notificationProvider.loadNotifications();
-      
-      // Load plants to map plant IDs to plant objects
-      final plantProvider = context.read<PlantProvider>();
-      if (plantProvider.plants.isEmpty) {
-        await plantProvider.loadPlants();
-      }
-      
-      final Map<String, Plant> plantsMap = {};
-      for (final plant in plantProvider.plants) {
-        plantsMap[plant.id] = plant;
-      }
-      
-      setState(() {
-        _notifications = notificationProvider.notifications;
-        _plantsMap = plantsMap;
-        _isLoading = false;
+      // Load notifications using post-frame callback to avoid setState during build
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!mounted) return;
+
+        final notificationProvider = context.read<NotificationProvider>();
+        await notificationProvider.loadNotifications();
+
+        // Load plants to map plant IDs to plant objects
+        final plantProvider = context.read<PlantProvider>();
+        if (plantProvider.plants.isEmpty) {
+          await plantProvider.loadPlants();
+        }
+
+        final Map<String, Plant> plantsMap = {};
+        for (final plant in plantProvider.plants) {
+          plantsMap[plant.id] = plant;
+        }
+
+        if (mounted) {
+          setState(() {
+            _notifications = notificationProvider.notifications;
+            _plantsMap = plantsMap;
+            _isLoading = false;
+          });
+        }
       });
     } catch (e) {
       print('Error loading notifications: $e');
-      setState(() => _isLoading = false);
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -144,7 +159,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         itemBuilder: (context, index) {
           final dateKey = sortedDateKeys[index];
           final notificationsForDate = groupedNotifications[dateKey]!;
-          
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -159,8 +174,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                 ),
               ),
-              ...notificationsForDate.map((notification) => 
-                _buildNotificationCard(notification)
+              ...notificationsForDate.map((notification) =>
+                  _buildNotificationCard(notification)
               ),
             ],
           );
@@ -173,7 +188,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final Plant? plant = _plantsMap[notification.plantId];
     final Color actionColor = _getActionTypeColor(notification.actionType);
     final IconData actionIcon = _getActionTypeIcon(notification.actionType);
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       color: notification.isRead ? null : Colors.green.shade50,
@@ -199,8 +214,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 ),
               ),
               const SizedBox(width: 12),
-              
-              // Notification content
+
+              // Notification content - Fixed overflow
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -211,6 +226,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
                         fontSize: 16,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -219,24 +236,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         color: Colors.grey[700],
                         fontSize: 14,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                     const SizedBox(height: 8),
-                    Row(
+                    // Fixed overflow in time row
+                    Wrap(
+                      spacing: 12,
                       children: [
-                        Icon(
-                          Icons.access_time,
-                          size: 12,
-                          color: Colors.grey[500],
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.access_time,
+                              size: 12,
+                              color: Colors.grey[500],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              _formatTime(notification.scheduledTime),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          _formatTime(notification.scheduledTime),
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                        const SizedBox(width: 12),
                         if (plant != null)
                           Text(
                             plant.name,
@@ -245,13 +270,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                               color: Colors.grey[500],
                               fontWeight: FontWeight.bold,
                             ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                       ],
                     ),
                   ],
                 ),
               ),
-              
+
               // Status indicator
               Column(
                 children: [
@@ -288,10 +314,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     if (!notification.isRead) {
       final notificationProvider = context.read<NotificationProvider>();
       await notificationProvider.markAsRead(notification.id);
+
+      // Update local state
+      setState(() {
+        final index = _notifications.indexWhere((n) => n.id == notification.id);
+        if (index != -1) {
+          _notifications[index] = _notifications[index].copyWith(isRead: true);
+        }
+      });
     }
-    
+
     // Navigate to plant detail if plant exists
-    if (plant != null) {
+    if (plant != null && mounted) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -305,17 +339,19 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     try {
       final notificationProvider = context.read<NotificationProvider>();
       await notificationProvider.markAllAsRead();
-      
+
       setState(() {
-        _notifications = notificationProvider.notifications;
+        _notifications = _notifications.map((n) => n.copyWith(isRead: true)).toList();
       });
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('All notifications marked as read'),
-          duration: Duration(seconds: 2),
-        ),
-      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('All notifications marked as read'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     } catch (e) {
       print('Error marking all notifications as read: $e');
     }
@@ -326,7 +362,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final notificationDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
-    
+
     if (notificationDate == today) {
       return 'Today';
     } else if (notificationDate == yesterday) {
@@ -347,7 +383,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Color _getActionTypeColor(String actionTypeName) {
     try {
       final actionType = ActionType.values.firstWhere(
-        (type) => type.name == actionTypeName,
+            (type) => type.name == actionTypeName,
       );
       return actionType.color;
     } catch (e) {
@@ -358,7 +394,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   IconData _getActionTypeIcon(String actionTypeName) {
     try {
       final actionType = ActionType.values.firstWhere(
-        (type) => type.name == actionTypeName,
+            (type) => type.name == actionTypeName,
       );
       return actionType.icon;
     } catch (e) {
