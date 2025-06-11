@@ -9,6 +9,10 @@
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>نحتاج الوصول إلى الصور</string>
 		<key>GIDClientID</key>
+		<key>NSCameraUsageDescription</key>
+        <string>This app needs access to camera to take photos of plants</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app needs access to photo library to select plant images</string>
 		<string>[439084202195-61qd0450774eba7fgm8mgd08mcgk7cfj.apps.googleusercontent.com]</string>
 		<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
 		<!-- Google Sign-in Section -->
@@ -29,6 +33,12 @@
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleURLTypes</key>
+		<key>UIBackgroundModes</key>
+        <array>
+            <string>fetch</string>
+            <string>processing</string>
+            <string>remote-notification</string>
+        </array>
 		<array>
 			<dict>
 				<key>CFBundleTypeRole</key>
@@ -55,6 +65,7 @@
 		<string>PlantHub</string>
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
+
 		<key>CFBundleShortVersionString</key>
 		<string>$(FLUTTER_BUILD_NAME)</string>
 		<key>CFBundleSignature</key>

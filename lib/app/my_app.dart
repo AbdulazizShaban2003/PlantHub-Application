@@ -31,6 +31,8 @@ import '../features/booking/home/presentation/manger/smila_books_cubit/similar_b
 import '../features/chatAi/manager/chat_provider.dart';
 import '../features/diagnosis/presentation/views/diagnosis_screen.dart';
 import '../features/home/presentation/views/explore_plant_view.dart';
+import '../features/my_plant/providers/plant_provider.dart';
+import '../features/my_plant/screens/main_screen.dart';
 
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key, required this.cameras});
@@ -103,6 +105,8 @@ class _PlantHubState extends State<PlantHub> {
           ),
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => LanguageProvider()),
+          ChangeNotifierProvider(create: (_) => PlantProvider()),
+          ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ChangeNotifierProvider(create: (_) => PlantViewModel()),
           ChangeNotifierProvider(create: (_) => ChatProvider()),
           ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),
@@ -126,7 +130,7 @@ class _PlantHubState extends State<PlantHub> {
               locale: Locale('en'),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.dark,
+              themeMode: ThemeMode.light,
               home: SplashView()
             );
           },
