@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
-import 'package:plant_hub_app/features/my_plant/screens/my_plant_view.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/theme/app_colors.dart';
@@ -10,6 +9,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../articles/domain/repositories/plant_repo.dart';
 import '../../../articles/view_model.dart';
+import '../../../my_plant/presentation/views/my_plant_view.dart';
 import '../../../my_plant/services/firebase_service_notification.dart';
 import '../widgets/hom_view_body.dart';
 

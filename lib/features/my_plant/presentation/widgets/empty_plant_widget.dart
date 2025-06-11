@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant_hub_app/core/utils/asstes_manager.dart';
 
 import '../../../../core/utils/size_config.dart';
-import '../../screens/add_plant_screen.dart';
+import '../views/add_plant_screen.dart';
 
 class EmptyPlantsWidget extends StatelessWidget {
   const EmptyPlantsWidget({super.key});

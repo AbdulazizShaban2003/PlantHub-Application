@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:provider/provider.dart';
-import '../../../core/utils/asstes_manager.dart';
-import '../presentation/widgets/empty_plant_widget.dart';
-import '../presentation/widgets/error_plant_widget.dart';
-import '../presentation/widgets/plant_Cart_widget.dart';
-import '../providers/plant_provider.dart';
+
+import '../../../../core/utils/asstes_manager.dart';
+import '../../providers/plant_provider.dart';
+import '../../services/notification_service.dart';
+import '../widgets/plant_content_widget.dart';
 import 'add_plant_screen.dart';
-import '../services/notification_service.dart';
+
 
 class MyPlantView extends StatefulWidget {
   const MyPlantView({super.key});
@@ -209,35 +209,3 @@ class _MyPlantViewState extends State<MyPlantView>
   }
 }
 
-class PlantsContent extends StatelessWidget {
-  const PlantsContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<PlantProvider>(
-      builder: (context, plantProvider, child) {
-        if (plantProvider.isLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (plantProvider.error != null) {
-          return ErrorPlantWidget(plantProvider: plantProvider);
-        }
-        if (plantProvider.plants.isEmpty) {
-          return const EmptyPlantsWidget();
-        }
-        return RefreshIndicator(
-          onRefresh: () => plantProvider.loadPlants(),
-          child: ListView.builder(
-            padding: EdgeInsets.all(SizeConfig().width(0.04)),
-            itemCount: plantProvider.plants.length,
-            itemBuilder: (context, index) {
-              final plant = plantProvider.plants[index];
-              return MyPlantCard(plant: plant);
-            },
-          ),
-        );
-      },
-    );
-  }
-}

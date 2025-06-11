@@ -1,15 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plant_hub_app/config/theme/app_colors.dart';
-import 'package:plant_hub_app/core/utils/size_config.dart';
-import 'package:plant_hub_app/features/auth/presentation/components/build_Text_field.dart';
+import 'package:plant_hub_app/features/my_plant/presentation/views/set_reminder_view.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import '../models/notification_model.dart';
-import '../presentation/widgets/build_image_widget.dart';
-import '../providers/plant_provider.dart';
-import 'set_reminder_screen.dart';
+import '../../../../core/utils/size_config.dart';
+import '../../models/notification_model.dart';
+import '../widgets/build_image_widget.dart';
+import '../../providers/plant_provider.dart';
 
 class AddPlantScreen extends StatefulWidget {
   const AddPlantScreen({super.key});

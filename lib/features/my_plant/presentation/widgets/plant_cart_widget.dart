@@ -1,13 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/utils/size_config.dart' show SizeConfig;
 import '../../models/notification_model.dart';
 import '../../providers/plant_provider.dart';
-import '../../screens/edit_plant_screen.dart' show EditPlantScreen;
-import '../../screens/plant_detail_screen.dart';
+import '../views/edit_plant_view.dart';
+import '../views/plant_detail_view.dart';
 
 class MyPlantCard extends StatelessWidget {
   final Plant plant;

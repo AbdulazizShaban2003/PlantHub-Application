@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../my_plant/models/notification_model.dart';
+import '../../../my_plant/presentation/views/plant_detail_view.dart';
 import '../../../my_plant/providers/plant_provider.dart';
 import '../../../my_plant/services/database_helper.dart';
-import '../../../my_plant/screens/plant_detail_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});

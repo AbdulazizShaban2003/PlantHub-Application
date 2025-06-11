@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/notification_model.dart';
-import '../providers/plant_provider.dart';
-import '../services/database_helper.dart';
-import '../services/notification_service.dart';
-import 'edit_plant_screen.dart';
+import '../../models/notification_model.dart';
+import '../../providers/plant_provider.dart';
+import '../../services/database_helper.dart';
+import '../../services/notification_service.dart';
+import 'edit_plant_view.dart';
 
 class PlantDetailScreen extends StatefulWidget {
   final Plant plant;

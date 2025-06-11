@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import '../models/notification_model.dart';
-import '../providers/plant_provider.dart';
-import '../services/database_helper.dart';
+import '../../models/notification_model.dart';
+import '../../providers/plant_provider.dart';
+import '../../services/database_helper.dart';
 
 class EditPlantScreen extends StatefulWidget {
   final Plant plant;

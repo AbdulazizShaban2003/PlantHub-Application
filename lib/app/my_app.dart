@@ -32,7 +32,6 @@ import '../features/chatAi/manager/chat_provider.dart';
 import '../features/diagnosis/presentation/views/diagnosis_screen.dart';
 import '../features/home/presentation/views/explore_plant_view.dart';
 import '../features/my_plant/providers/plant_provider.dart';
-import '../features/my_plant/screens/my_plant_view.dart';
 import '../features/my_plant/services/firebase_service_notification.dart' show FirebaseServiceNotify;
 
 class PlantHub extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/notification_model.dart';
-
+import 'package:plant_hub_app/core/widgets/outlined_button_widget.dart';
+import '../../models/notification_model.dart';
 class SetReminderScreen extends StatefulWidget {
   final ActionType actionType;
   final Reminder? existingReminder;
@@ -200,25 +200,8 @@ class _SetReminderScreenState extends State<SetReminderScreen> {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: _saveReminder,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4CAF50),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 0,
-                    ),
-                    child: const Text(
-                      'Save',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                  child:                 OutlinedButtonWidget(nameButton: 'Save', onPressed: _saveReminder)
+                  ,
                 ),
               ],
             ),

@@ -9,11 +9,6 @@ import 'package:timezone/data/latest.dart' as tz;
 import 'app/my_app.dart';
 import 'core/cache/cache_helper.dart';
 import 'core/service/service_locator.dart';
-import 'core/utils/size_config.dart';
-import 'features/my_plant/providers/plant_provider.dart'
-    show NotificationProvider, PlantProvider;
-import 'features/my_plant/screens/my_plant_view.dart';
-import 'features/my_plant/services/firebase_service_notification.dart';
 import 'features/my_plant/services/notification_service.dart';
 import 'firebase_options.dart';
 
@@ -56,7 +51,6 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
