@@ -394,7 +394,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     final result = await Navigator.push<Reminder>(
       context,
       MaterialPageRoute(
-        builder: (context) => SetReminderScreen(
+        builder: (context) => SetReminderView(
           actionType: actionType,
           existingReminder: _actionReminders[actionType],
         ),

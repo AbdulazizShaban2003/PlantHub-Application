@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:provider/provider.dart';
-
 import '../../../../core/utils/asstes_manager.dart';
 import '../../providers/plant_provider.dart';
 import '../../services/notification_service.dart';
@@ -40,6 +39,10 @@ class _MyPlantViewState extends State<MyPlantView>
 
   @override
   Widget build(BuildContext context) {
+    final width = SizeConfig().width(0.05);
+    final height = SizeConfig().width(0.05);
+    final fontSize = SizeConfig().responsiveFont(14);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -70,8 +73,8 @@ class _MyPlantViewState extends State<MyPlantView>
                     content: Row(
                       children: [
                         SizedBox(
-                          width: SizeConfig().width(0.05),
-                          height: SizeConfig().width(0.05),
+                          width: width,
+                          height: height,
                           child: CircularProgressIndicator(
                             strokeWidth: SizeConfig().width(0.005),
                             valueColor: const AlwaysStoppedAnimation<Color>(
@@ -82,9 +85,7 @@ class _MyPlantViewState extends State<MyPlantView>
                         SizedBox(width: SizeConfig().width(0.04)),
                         Text(
                           'Scheduling test notification...',
-                          style: TextStyle(
-                            fontSize: SizeConfig().responsiveFont(14),
-                          ),
+                          style: TextStyle(fontSize: fontSize),
                         ),
                       ],
                     ),
@@ -104,10 +105,8 @@ class _MyPlantViewState extends State<MyPlantView>
                         ),
                         SizedBox(width: SizeConfig().width(0.02)),
                         Text(
-                          '🧪 Test notification scheduled for 5 seconds!',
-                          style: TextStyle(
-                            fontSize: SizeConfig().responsiveFont(14),
-                          ),
+                          'Test notification scheduled for 5 seconds!',
+                          style: TextStyle(fontSize: fontSize),
                         ),
                       ],
                     ),
@@ -130,9 +129,7 @@ class _MyPlantViewState extends State<MyPlantView>
                         Expanded(
                           child: Text(
                             'Error: ${e.toString()}',
-                            style: TextStyle(
-                              fontSize: SizeConfig().responsiveFont(14),
-                            ),
+                            style: TextStyle(fontSize: fontSize),
                           ),
                         ),
                       ],
@@ -146,12 +143,12 @@ class _MyPlantViewState extends State<MyPlantView>
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(48.0),
+          preferredSize: const Size.fromHeight(48.0),
           child: Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: TabBar(
               controller: _tabController,
-              tabs: [
+              tabs: const [
                 Tab(text: 'My Plant'),
                 Tab(text: 'Herbs'),
               ],
@@ -160,7 +157,7 @@ class _MyPlantViewState extends State<MyPlantView>
               indicatorColor: ColorsManager.greenPrimaryColor,
               indicatorWeight: 3.0,
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: EdgeInsets.symmetric(horizontal: 16.0),
+              indicatorPadding: const EdgeInsets.symmetric(horizontal: 16.0),
               labelStyle: TextStyle(
                 fontSize: SizeConfig().responsiveFont(16),
                 fontWeight: FontWeight.bold,
@@ -174,15 +171,16 @@ class _MyPlantViewState extends State<MyPlantView>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
+        children: const [
           PlantsContent(),
           Center(child: Text('Herbs Content')),
         ],
       ),
       floatingActionButton: _tabController.index == 0
           ? Padding(
-        padding: EdgeInsets.only(bottom: 80.0),
+        padding: const EdgeInsets.only(bottom: 80.0),
         child: FloatingActionButton(
+          heroTag: 'plants_fab', // Tag فريد
           onPressed: () {
             Navigator.push(
               context,
@@ -203,7 +201,24 @@ class _MyPlantViewState extends State<MyPlantView>
           ),
         ),
       )
+          : _tabController.index == 1
+          ? Padding(
+        padding: const EdgeInsets.only(bottom: 80.0),
+        child: FloatingActionButton(
+          heroTag: 'harvest_fab', // Tag مختلف
+          onPressed: () {
+            // action for Harvest tab if needed
+          },
+          backgroundColor: ColorsManager.greenPrimaryColor,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+            size: SizeConfig().responsiveFont(33),
+          ),
+        ),
+      )
           : null,
+
     );
   }
 }

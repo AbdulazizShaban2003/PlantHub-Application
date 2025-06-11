@@ -1,35 +1,32 @@
+// views/set_reminder_view.dart
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/core/widgets/outlined_button_widget.dart';
+import '../../../../core/widgets/outlined_button_widget.dart';
 import '../../models/notification_model.dart';
-class SetReminderScreen extends StatefulWidget {
+import '../components/custom_dropdown.dart';
+import '../components/custom_time_picker.dart';
+import '../controllers/reminder_controller.dart';
+
+class SetReminderView extends StatefulWidget {
   final ActionType actionType;
   final Reminder? existingReminder;
 
-  const SetReminderScreen({
+  const SetReminderView({
     super.key,
     required this.actionType,
     this.existingReminder,
   });
 
   @override
-  State<SetReminderScreen> createState() => _SetReminderScreenState();
+  State<SetReminderView> createState() => _SetReminderViewState();
 }
 
-class _SetReminderScreenState extends State<SetReminderScreen> {
-  DateTime _selectedDateTime = DateTime.now().add(const Duration(hours: 1));
-  RepeatType _selectedRepeat = RepeatType.daily;
-  String _remindMeTo = '';
+class _SetReminderViewState extends State<SetReminderView> {
+  final ReminderController _controller = ReminderController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.existingReminder != null) {
-      _selectedDateTime = widget.existingReminder!.time;
-      _selectedRepeat = widget.existingReminder!.repeat;
-      _remindMeTo = widget.existingReminder!.remindMeTo;
-    } else {
-      _remindMeTo = widget.actionType.displayName;
-    }
+    _controller.initialize(widget.actionType, widget.existingReminder);
   }
 
   @override
@@ -59,124 +56,37 @@ class _SetReminderScreenState extends State<SetReminderScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            
-            // Remind me to section
-            const Text(
-              'Remind me to',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
+
+            CustomDropdown(
+              title: 'Remind me to',
+              value: _controller.remindMeTo,
+              items: [widget.actionType.displayName],
+              onChanged: (value) => setState(() => _controller.remindMeTo = value!),
             ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: _remindMeTo,
-                  isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: [widget.actionType.displayName].map((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        _remindMeTo = newValue;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-            
+
             const SizedBox(height: 32),
-            
-            // Repeat section
-            const Text(
-              'Repeat',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
+
+            CustomDropdown<RepeatType>(
+              title: 'Repeat',
+              value: _controller.selectedRepeat,
+              items: RepeatType.values,
+              displayText: _controller.getRepeatDisplayText,
+              onChanged: (value) => setState(() => _controller.selectedRepeat = value!),
             ),
-            const SizedBox(height: 12),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.shade300),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<RepeatType>(
-                  value: _selectedRepeat,
-                  isExpanded: true,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: RepeatType.values.map((RepeatType repeat) {
-                    return DropdownMenuItem<RepeatType>(
-                      value: repeat,
-                      child: Text(_getRepeatDisplayText(repeat)),
-                    );
-                  }).toList(),
-                  onChanged: (RepeatType? newValue) {
-                    if (newValue != null) {
-                      setState(() {
-                        _selectedRepeat = newValue;
-                      });
-                    }
-                  },
-                ),
-              ),
-            ),
-            
+
             const SizedBox(height: 32),
-            
-            // Time section
-            const Text(
-              'Time',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: Colors.black87,
-              ),
+
+            CustomTimePicker(
+              title: 'Time',
+              selectedDateTime: _controller.selectedDateTime,
+              onTap: () async {
+                final dateTime = await _controller.selectDateTime(context);
+                if (dateTime != null) setState(() {});
+              },
             ),
-            const SizedBox(height: 12),
-            InkWell(
-              onTap: _selectDateTime,
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade300),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      _formatTime(_selectedDateTime),
-                      style: const TextStyle(fontSize: 16),
-                    ),
-                    const Icon(Icons.keyboard_arrow_down),
-                  ],
-                ),
-              ),
-            ),
-            
+
             const Spacer(),
-            
-            // Bottom buttons
+
             Row(
               children: [
                 Expanded(
@@ -200,8 +110,13 @@ class _SetReminderScreenState extends State<SetReminderScreen> {
                 ),
                 const SizedBox(width: 16),
                 Expanded(
-                  child:                 OutlinedButtonWidget(nameButton: 'Save', onPressed: _saveReminder)
-                  ,
+                  child: OutlinedButtonWidget(
+                    nameButton: 'Save',
+                    onPressed: () {
+                      final reminder = _controller.saveReminder();
+                      Navigator.pop(context, reminder);
+                    },
+                  ),
                 ),
               ],
             ),
@@ -210,67 +125,5 @@ class _SetReminderScreenState extends State<SetReminderScreen> {
         ),
       ),
     );
-  }
-
-  String _getRepeatDisplayText(RepeatType repeat) {
-    switch (repeat) {
-      case RepeatType.once:
-        return 'Once';
-      case RepeatType.daily:
-        return 'Every day';
-      case RepeatType.weekly:
-        return 'Every week';
-      case RepeatType.monthly:
-        return 'Every month';
-    }
-  }
-
-  String _formatTime(DateTime dateTime) {
-    final hour = dateTime.hour;
-    final minute = dateTime.minute.toString().padLeft(2, '0');
-    final period = hour >= 12 ? 'PM' : 'AM';
-    final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-    return '$displayHour:$minute $period';
-  }
-
-  Future<void> _selectDateTime() async {
-    final DateTime? date = await showDatePicker(
-      context: context,
-      initialDate: _selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
-    );
-
-    if (date != null) {
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
-      );
-
-      if (time != null) {
-        setState(() {
-          _selectedDateTime = DateTime(
-            date.year,
-            date.month,
-            date.day,
-            time.hour,
-            time.minute,
-          );
-        });
-      }
-    }
-  }
-
-  void _saveReminder() {
-    final reminder = Reminder(
-      id: widget.existingReminder?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
-      time: _selectedDateTime,
-      repeat: _selectedRepeat,
-      remindMeTo: _remindMeTo,
-      tasks: [_remindMeTo],
-      isActive: true,
-    );
-
-    Navigator.pop(context, reminder);
   }
 }
