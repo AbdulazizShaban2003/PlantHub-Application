@@ -20,6 +20,7 @@ abstract class AuthRepository {
   Future<Either<String, bool>> checkEmailVerification();
 
   Future<Either<String, UserModel>> signInWithGoogle();
+  Future<Either<String, String>> refreshAuthToken();
 
   Future<Either<String, Unit>> signOut();
 }

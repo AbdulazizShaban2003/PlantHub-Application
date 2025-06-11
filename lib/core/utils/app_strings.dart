@@ -264,6 +264,10 @@ class AppStrings{
   static const String listening = "Listening... Release to send";
   static const String askMe = "Ask Me";
 static const String message = "Messages";
+  static const String tokenRefreshFailed = 'Failed to refresh token';
+  static const String tokenRefreshedSuccessfully = 'Token refreshed successfully';
+  static const String failedToRefreshToken = 'Failed to refresh token: ';
+  static const String unexpectedTokenRefreshError = 'Unexpected token refresh error';
 }
 class RegxStrings {
   // Regular expressions

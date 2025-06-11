@@ -136,17 +136,7 @@ class _PlantHubState extends State<PlantHub> {
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
               themeMode: ThemeMode.light,
-              home: FutureBuilder(
-                future: FirebaseServiceNotify().signInAnonymously(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Scaffold(
-                      body: Center(child: CircularProgressIndicator()),
-                    );
-                  }
-                  return const MyPlantView();
-                },
-              )
+              home: SplashView()
             );
           },
         ),

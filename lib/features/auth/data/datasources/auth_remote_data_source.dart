@@ -37,14 +37,17 @@ class AuthRemoteDataSource {
 
     return user;
   }
+// في ملف auth_remote_data_source.dart
 
   void _startTokenAutoRefresh(User user) {
     _tokenRefreshTimer?.cancel();
+
     _tokenRefreshTimer = Timer.periodic(const Duration(minutes: 55), (_) async {
       try {
         await user.getIdToken(true);
+        debugPrint('Token refreshed automatically');
       } catch (e) {
-        debugPrint('${AppStrings.tokenRefreshError}$e');
+        debugPrint('Auto token refresh failed: $e');
       }
     });
   }
@@ -100,6 +103,7 @@ class AuthRemoteDataSource {
     );
 
     final userCredential = await _auth.signInWithCredential(credential);
+    _startTokenAutoRefresh(userCredential.user!);
     final isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
 
     if (isNewUser) {
@@ -128,7 +132,18 @@ class AuthRemoteDataSource {
       return UserModel.fromMap(userDoc.data()!, userDoc.id);
     }
   }
+  Future<String?> refreshAuthToken() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) throw Exception(AppStrings.noAuthUser);
 
+      final token = await user.getIdToken(true);
+      return token;
+    } catch (e) {
+      debugPrint('${AppStrings.tokenRefreshError}$e');
+      throw Exception(AppStrings.tokenRefreshError);
+    }
+  }
   Future<void> signOut() async {
     _tokenRefreshTimer?.cancel();
     await _googleSignIn.signOut();

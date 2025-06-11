@@ -142,7 +142,9 @@ class AuthProviderManager with ChangeNotifier {
         },
             (user) async {
           _setUser(user);
+
           final verificationResult = await _repository.checkEmailVerification();
+
 
           verificationResult.fold(
                 (error) => FlushbarHelper.showError(context: context, message: error),
@@ -257,7 +259,33 @@ class AuthProviderManager with ChangeNotifier {
       _setLoading(false);
     }
   }
+  Future<void> refreshToken(BuildContext context) async {
+    try {
+      _setLoading(true);
+      final result = await _repository.refreshAuthToken();
 
+      result.fold(
+            (error) {
+          _setError(error);
+          FlushbarHelper.showError(context: context, message: error);
+        },
+            (token) {
+          FlushbarHelper.showSuccess(
+            context: context,
+            message: AppStrings.tokenRefreshedSuccessfully,
+          );
+        },
+      );
+    } catch (e) {
+      _setError(AppStrings.tokenRefreshError);
+      FlushbarHelper.showError(
+        context: context,
+        message: '${AppStrings.failedToRefreshToken}${e.toString()}',
+      );
+    } finally {
+      _setLoading(false);
+    }
+  }
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
       _setLoading(true);
@@ -337,4 +365,5 @@ class AuthProviderManager with ChangeNotifier {
     _user = user;
     notifyListeners();
   }
+
 }

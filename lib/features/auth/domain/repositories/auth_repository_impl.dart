@@ -28,6 +28,17 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(AppStrings.unexpectedLoginError);
     }
   }
+  @override
+  Future<Either<String, String>> refreshAuthToken() async {
+    try {
+      final token = await remoteDataSource.refreshAuthToken();
+      return Right(token!);
+    } on FirebaseAuthException catch (e) {
+      return Left(e.message ?? AppStrings.tokenRefreshFailed);
+    } catch (e) {
+      return Left(AppStrings.unexpectedTokenRefreshError);
+    }
+  }
 
   @override
   Future<Either<String, UserModel>> signUpWithEmailAndPassword({

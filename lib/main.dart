@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'app/my_app.dart';
+import 'core/cache/cache_helper.dart';
 import 'core/service/service_locator.dart';
 import 'core/utils/size_config.dart';
 import 'features/my_plant/providers/plant_provider.dart'
@@ -30,8 +31,12 @@ void main() async {
     persistenceEnabled: true,
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
+  await sl<CacheHelper>().init();
+
+
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
+
   ErrorWidget.builder = (FlutterErrorDetails details) {
     return MaterialApp(
       home: Scaffold(
