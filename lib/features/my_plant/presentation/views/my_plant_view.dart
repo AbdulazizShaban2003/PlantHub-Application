@@ -9,7 +9,6 @@ import '../../services/notification_service.dart';
 import '../widgets/plant_content_widget.dart';
 import 'add_plant_screen.dart';
 
-
 class MyPlantView extends StatefulWidget {
   const MyPlantView({super.key});
 
@@ -208,4 +207,3 @@ class _MyPlantViewState extends State<MyPlantView>
     );
   }
 }
-
