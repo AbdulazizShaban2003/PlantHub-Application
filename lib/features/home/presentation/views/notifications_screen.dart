@@ -1,19 +1,21 @@
 import 'dart:io';
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import '../../../my_plant/models/notification_model.dart';
 import '../../../my_plant/presentation/views/plant_detail_view.dart';
 import '../../../my_plant/providers/plant_provider.dart';
-import '../../../my_plant/services/database_helper.dart';
-
-class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+import '../../controller/notification_controller.dart';
+import '../widgets/empty_notification_widget.dart';
+class NotificationsView extends StatefulWidget {
+  const NotificationsView({super.key});
 
   @override
-  State<NotificationsScreen> createState() => _NotificationsScreenState();
+  State<NotificationsView> createState() => _NotificationsViewState();
 }
 
-class _NotificationsScreenState extends State<NotificationsScreen> {
+class _NotificationsViewState extends State<NotificationsView> {
   bool _isLoading = true;
   List<NotificationModel> _notifications = [];
   Map<String, Plant> _plantsMap = {};
@@ -70,14 +72,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title:  Text(
           'Notifications',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: Theme.of(context).textTheme.headlineMedium
         ),
-        backgroundColor: Colors.green,
+        iconTheme: IconThemeData(color: Theme.of(context).primaryColor),
         actions: [
           if (_notifications.isNotEmpty)
             IconButton(
@@ -92,51 +91,18 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           : _buildNotificationsList(),
     );
   }
-
   Widget _buildNotificationsList() {
     if (_notifications.isEmpty) {
-      return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.notifications_off,
-              size: 64,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'No notifications yet',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'You\'ll see notifications about your plants here',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      );
+      return EmptyNotifyWidget();
     }
-
     final Map<String, List<NotificationModel>> groupedNotifications = {};
     for (final notification in _notifications) {
-      final String dateKey = _getDateKey(notification.scheduledTime);
+      final String dateKey = getDateKey(notification.scheduledTime);
       if (!groupedNotifications.containsKey(dateKey)) {
         groupedNotifications[dateKey] = [];
       }
       groupedNotifications[dateKey]!.add(notification);
     }
-
-    // Sort date keys
     final List<String> sortedDateKeys = groupedNotifications.keys.toList()
       ..sort((a, b) {
         if (a == 'Today') return -1;
@@ -164,7 +130,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   dateKey,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 14,
                     color: Colors.grey,
                   ),
                 ),
@@ -181,12 +147,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Widget _buildNotificationCard(NotificationModel notification) {
     final Plant? plant = _plantsMap[notification.plantId];
-    final Color actionColor = _getActionTypeColor(notification.actionType);
-    final IconData actionIcon = _getActionTypeIcon(notification.actionType);
+    final Color actionColor = getActionTypeColor(notification.actionType);
+    final IconData actionIcon = getActionTypeIcon(notification.actionType);
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      color: notification.isRead ? null : Colors.green.shade50,
+      margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 4),
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: InkWell(
         onTap: () => _onNotificationTapped(notification, plant),
         child: Padding(
@@ -210,7 +176,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               ),
               const SizedBox(width: 12),
 
-              // Notification content - Fixed overflow
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +214,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              _formatTime(notification.scheduledTime),
+                              formatTime(notification.scheduledTime),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.grey[500],
@@ -279,8 +244,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         ? Icons.notifications_active
                         : Icons.notifications_none,
                     color: notification.isDelivered
-                        ? Colors.green
-                        : Colors.orange,
+                        ? ColorsManager.redColor
+                        : ColorsManager.greenPrimaryColor,
                     size: 20,
                   ),
                   const SizedBox(height: 4),
@@ -288,8 +253,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
+                      decoration:  BoxDecoration(
+                        color: ColorsManager.greenPrimaryColor,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -338,59 +303,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('All notifications marked as read'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+
+        FlushbarHelper.createSuccess(message: 'All notifications marked as read');
+
       }
     } catch (e) {
       print('Error marking all notifications as read: $e');
     }
   }
 
-  String _getDateKey(DateTime dateTime) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final notificationDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
 
-    if (notificationDate == today) {
-      return 'Today';
-    } else if (notificationDate == yesterday) {
-      return 'Yesterday';
-    } else {
-      return '${dateTime.day}/${dateTime.month}/${dateTime.year}';
-    }
-  }
 
-  String _formatTime(DateTime dateTime) {
-    final hour = dateTime.hour;
-    final minute = dateTime.minute.toString().padLeft(2, '0');
-    final period = hour >= 12 ? 'PM' : 'AM';
-    final displayHour = hour > 12 ? hour - 12 : (hour == 0 ? 12 : hour);
-    return '$displayHour:$minute $period';
-  }
-
-  Color _getActionTypeColor(String actionTypeName) {
-    try {
-      final actionType = ActionType.values.firstWhere(
-            (type) => type.name == actionTypeName,
-      );
-      return actionType.color;
-    } catch (e) {
-      return Colors.grey;
-    }
-  }
-  IconData _getActionTypeIcon(String actionTypeName) {
-    try {
-      final actionType = ActionType.values.firstWhere(
-            (type) => type.name == actionTypeName,
-      );
-      return actionType.icon;
-    } catch (e) {
-      return Icons.help;
-    }
-  }
 }
+

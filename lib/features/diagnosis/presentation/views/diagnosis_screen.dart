@@ -3,7 +3,7 @@ import '../../data/disease_info.dart';
 import '../../doamin/service.dart';
 
 class DiseaseScreen extends StatefulWidget {
-  const DiseaseScreen({Key? key}) : super(key: key);
+  const DiseaseScreen({super.key});
 
   @override
   _DiseaseScreenState createState() => _DiseaseScreenState();

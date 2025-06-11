@@ -39,7 +39,7 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
             children: [
               BuildCircleIcon(
                 iconData: CupertinoIcons.bell, onPressed: () {
-                Navigator.push(context, RouteHelper.navigateTo(NotificationsScreen()));
+                Navigator.push(context, RouteHelper.navigateTo(NotificationsView()));
               },
                 showBadge: false,
               ),

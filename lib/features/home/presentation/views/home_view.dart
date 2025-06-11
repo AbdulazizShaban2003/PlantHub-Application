@@ -9,6 +9,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../articles/domain/repositories/plant_repo.dart';
 import '../../../articles/view_model.dart';
+import '../../../diagnosis/presentation/views/diagnosis_screen.dart';
 import '../../../my_plant/presentation/views/my_plant_view.dart';
 import '../../../my_plant/services/firebase_service_notification.dart';
 import '../widgets/hom_view_body.dart';
@@ -31,7 +32,7 @@ class _HomeViewState extends State<HomeView> {
 
   List<Widget> screens = [
     const HomeViewBody(),
-    const Placeholder(),
+    const DiseaseScreen(),
     FutureBuilder(
       future: FirebaseServiceNotify().signInAnonymously(),
       builder: (context, snapshot) {
