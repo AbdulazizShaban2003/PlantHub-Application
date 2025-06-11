@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/notification_model.dart';
 
-class FirebaseService {
-  static final FirebaseService _instance = FirebaseService._internal();
-  factory FirebaseService() => _instance;
-  FirebaseService._internal();
+class FirebaseServiceNotify {
+  static final FirebaseServiceNotify _instance = FirebaseServiceNotify._internal();
+  factory FirebaseServiceNotify() => _instance;
+  FirebaseServiceNotify._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,7 +26,6 @@ class FirebaseService {
     }
   }
 
-  // Plant operations with new structure: users/{userId}/myPlant/{plantId}
   Future<void> savePlant(Plant plant) async {
     try {
       final String userId = currentUserId ?? '';

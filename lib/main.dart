@@ -1,60 +1,76 @@
+import 'package:camera/camera.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
-import 'features/my_plant/providers/plant_provider.dart' show NotificationProvider, PlantProvider;
-import 'features/my_plant/screens/main_screen.dart';
+import 'app/my_app.dart';
+import 'core/service/service_locator.dart';
+import 'core/utils/size_config.dart';
+import 'features/my_plant/providers/plant_provider.dart'
+    show NotificationProvider, PlantProvider;
+import 'features/my_plant/screens/my_plant_view.dart';
 import 'features/my_plant/services/firebase_service_notification.dart';
 import 'features/my_plant/services/notification_service.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
   await Firebase.initializeApp();
+  await EasyLocalization.ensureInitialized();
 
-  // Initialize timezone data
+  WidgetsFlutterBinding.ensureInitialized();
+  Provider.debugCheckInvalidValueType = null;
+  await setup();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseFirestore.instance.settings = Settings(
+    persistenceEnabled: true,
+    cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+  );
+  final cameras = await availableCameras();
+  final firstCamera = cameras.first;
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: Text(
+            'An error occurred, please try again later.',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+    );
+  };
+
+  tz.initializeTimeZones();
+  await NotificationService().initialize();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: Colors.white,
+      systemNavigationBarIconBrightness: Brightness.dark,
+    ),
+  );
   tz.initializeTimeZones();
 
   await NotificationService().initialize();
 
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => PlantProvider()),
-        ChangeNotifierProvider(create: (_) => NotificationProvider()),
-      ],
-      child: MaterialApp(
-        title: 'MyPlant',
-        home: const AuthWrapper(),
-        debugShowCheckedModeBanner: false,
-      ),
-    );
-  }
-}
-
-class AuthWrapper extends StatelessWidget {
-  const AuthWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: FirebaseService().signInAnonymously(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-        return const HomeScreen();
-      },
-    );
-  }
+  runApp(
+    EasyLocalization(
+      supportedLocales: [Locale('en'), Locale('ar')],
+      path: 'assets/translations',
+      fallbackLocale: Locale('en'),
+      saveLocale: true,
+      child: PlantHub(cameras: cameras),
+    ),
+  );
 }

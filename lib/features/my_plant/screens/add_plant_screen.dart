@@ -1,9 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
+import 'package:plant_hub_app/features/auth/presentation/components/build_Text_field.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../models/notification_model.dart';
+import '../presentation/widgets/build_image_widget.dart';
 import '../providers/plant_provider.dart';
 import 'set_reminder_screen.dart';
 
@@ -29,7 +33,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize only the 4 main actions
     for (final actionType in ActionType.values) {
       _selectedActions[actionType] = false;
       _actionReminders[actionType] = null;
@@ -46,32 +49,31 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Plant'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
+        title: Text(
+          'Add New Plant',
+          style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
+        ),
         actions: [
-          TextButton(
+          IconButton(
+            icon: Icon(Icons.save, size: SizeConfig().responsiveFont(24)),
             onPressed: _savePlant,
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
           ),
         ],
       ),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(SizeConfig().width(0.04)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildBasicInfoSection(),
-              const SizedBox(height: 24),
+              BuildBasicInfoWidget(nameController: _nameController, categoryController: _categoryController, descriptionController: _descriptionController,),
               _buildImageSection(),
-              const SizedBox(height: 24),
+              SizedBox(height: SizeConfig().height(0.03)),
               _buildActionSection(),
             ],
           ),
@@ -79,81 +81,24 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       ),
     );
   }
-
-  Widget _buildBasicInfoSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Basic Information',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Plant Name',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter plant name';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter category';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter description';
-                }
-                return null;
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget _buildImageSection() {
     return Card(
+      elevation: 0,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Images',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              'Plant images',
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontSize: SizeConfig().responsiveFont(15)
+                )
             ),
-            const SizedBox(height: 16),
-            _buildMainImagePicker(),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
+             buildMainImagePicker(),
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildAdditionalImagesPicker(),
           ],
         ),
@@ -161,35 +106,50 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     );
   }
 
-  Widget _buildMainImagePicker() {
+  Widget buildMainImagePicker() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Main Image *', style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        Text(
+          'Main Image *',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(14),
+          ),
+        ),
+        SizedBox(height: SizeConfig().height(0.01)),
         GestureDetector(
           onTap: _pickMainImage,
           child: Container(
-            height: 200,
+            height: SizeConfig().height(0.25),
             width: double.infinity,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
             ),
             child: _mainImage != null
                 ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
               child: Image.file(
                 File(_mainImage!.path),
                 fit: BoxFit.cover,
               ),
             )
-                : const Column(
+                : Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.add_a_photo, size: 48, color: Colors.grey),
-                SizedBox(height: 8),
-                Text('Tap to add main image'),
+                Icon(
+                  Icons.add_a_photo,
+                  size: SizeConfig().height(0.08),
+                  color: Colors.grey,
+                ),
+                SizedBox(height: SizeConfig().height(0.01)),
+                Text(
+                  'Tap to add main image',
+                  style: TextStyle(
+                    fontSize: SizeConfig().responsiveFont(14),
+                  ),
+                ),
               ],
             ),
           ),
@@ -202,67 +162,82 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Additional Images', style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        Text(
+          'Additional Images',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(14),
+          ),
+        ),
+        SizedBox(height: SizeConfig().height(0.01)),
         SizedBox(
-          height: 100,
+          height: SizeConfig().height(0.12),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               GestureDetector(
                 onTap: _pickAdditionalImages,
                 child: Container(
-                  width: 100,
+                  width: SizeConfig().width(0.25),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, size: 32, color: Colors.grey),
-                      Text('Add', style: TextStyle(fontSize: 12)),
+                      Icon(
+                        Icons.add,
+                        size: SizeConfig().height(0.05),
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        'Add',
+                        style: TextStyle(fontSize: SizeConfig().responsiveFont(12)),
+                      ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              ..._additionalImages.map((image) => Container(
-                width: 100,
-                margin: const EdgeInsets.only(right: 8),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(image.path),
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+              SizedBox(width: SizeConfig().width(0.02)),
+              ..._additionalImages.map(
+                    (image) => Container(
+                  width: SizeConfig().width(0.25),
+                  margin: EdgeInsets.only(right: SizeConfig().width(0.02)),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
+                        child: Image.file(
+                          File(image.path),
+                          width: SizeConfig().width(0.25),
+                          height: SizeConfig().height(0.12),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () => _removeAdditionalImage(image),
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            size: 16,
-                            color: Colors.white,
+                      Positioned(
+                        top: SizeConfig().height(0.005),
+                        right: SizeConfig().height(0.005),
+                        child: GestureDetector(
+                          onTap: () => _removeAdditionalImage(image),
+                          child: Container(
+                            padding: EdgeInsets.all(SizeConfig().width(0.005)),
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: SizeConfig().height(0.02),
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         ),
@@ -272,17 +247,23 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
   Widget _buildActionSection() {
     return Card(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Care Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: SizeConfig().responsiveFont(16),
+              ),
             ),
-            const SizedBox(height: 16),
-            ...ActionType.values.map((actionType) => _buildActionTile(actionType)),
+            SizedBox(height: SizeConfig().height(0.02)),
+            ...ActionType.values.map(
+                  (actionType) => _buildActionTile(actionType),
+            ),
           ],
         ),
       ),
@@ -293,11 +274,11 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     final bool isSelected = _selectedActions[actionType] ?? false;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: SizeConfig().height(0.01)),
       child: ListTile(
         leading: Container(
-          width: 40,
-          height: 40,
+          width: SizeConfig().height(0.05),
+          height: SizeConfig().height(0.05),
           decoration: BoxDecoration(
             color: actionType.color,
             shape: BoxShape.circle,
@@ -305,12 +286,15 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           child: Icon(
             actionType.icon,
             color: Colors.white,
-            size: 20,
+            size: SizeConfig().height(0.025),
           ),
         ),
         title: Text(
           actionType.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(14),
+          ),
         ),
         trailing: Switch(
           value: isSelected,
@@ -328,15 +312,19 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
         subtitle: isSelected && _actionReminders[actionType] != null
             ? Text(
           'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
-          style: const TextStyle(fontSize: 12, color: Colors.green),
+          style: TextStyle(
+            fontSize: SizeConfig().responsiveFont(12),
+            color: Colors.green,
+          ),
         )
             : null,
       ),
     );
   }
 
-  // Show image source selection (Camera or Gallery)
-  Future<void> _showImageSourceSelection(Function(ImageSource) onSourceSelected) async {
+  Future<void> _showImageSourceSelection(
+      Function(ImageSource) onSourceSelected,
+      ) async {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -344,16 +332,28 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           child: Wrap(
             children: [
               ListTile(
-                leading: const Icon(Icons.photo_camera),
-                title: const Text('Camera'),
+                leading: Icon(
+                  Icons.photo_camera,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                title: Text(
+                  'Camera',
+                  style: TextStyle(fontSize: SizeConfig().responsiveFont(16)),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   onSourceSelected(ImageSource.camera);
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Gallery'),
+                leading: Icon(
+                  Icons.photo_library,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                title: Text(
+                  'Gallery',
+                  style: TextStyle(fontSize: SizeConfig().responsiveFont(16)),
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   onSourceSelected(ImageSource.gallery);
@@ -417,7 +417,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
     if (_mainImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a main image')),
+        SnackBar(
+          content: Text(
+            'Please select a main image',
+            style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+          ),
+        ),
       );
       return;
     }
@@ -428,12 +433,14 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     final List<PlantAction> actions = [];
     for (final entry in _selectedActions.entries) {
       if (entry.value) {
-        actions.add(PlantAction(
-          id: _uuid.v4(),
-          type: entry.key,
-          isEnabled: true,
-          reminder: _actionReminders[entry.key],
-        ));
+        actions.add(
+          PlantAction(
+            id: _uuid.v4(),
+            type: entry.key,
+            isEnabled: true,
+            reminder: _actionReminders[entry.key],
+          ),
+        );
       }
     }
 
@@ -449,7 +456,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     if (plantProvider.error != null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${plantProvider.error}')),
+          SnackBar(
+            content: Text(
+              'Error: ${plantProvider.error}',
+              style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+            ),
+          ),
         );
       }
       return;
@@ -458,7 +470,12 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
     if (mounted) {
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Plant added successfully!')),
+        SnackBar(
+          content: Text(
+            'Plant added successfully!',
+            style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+          ),
+        ),
       );
     }
   }

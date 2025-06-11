@@ -4,7 +4,7 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:uuid/uuid.dart';
 import '../models/notification_model.dart';
 import '../services/database_helper.dart';
-import 'firebase_service_notification.dart' show FirebaseService;
+import 'firebase_service_notification.dart' show FirebaseServiceNotify;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -16,7 +16,7 @@ class NotificationService {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  final FirebaseService _firebaseService = FirebaseService();
+  final FirebaseServiceNotify _firebaseService = FirebaseServiceNotify();
   final Uuid _uuid = const Uuid();
 
   Future<void> initialize() async {

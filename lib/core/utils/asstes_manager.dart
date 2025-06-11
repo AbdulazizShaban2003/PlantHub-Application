@@ -14,5 +14,6 @@ class AssetsManager {
   static const String forgetPasswordImage ="assets/animation/forgetPassword.json";
   static const String backgroundGetStarted ="assets/images/background_getstarted.jpg";
   static const String noSearchImage = "assets/images/no_searsh.png";
+  static const String iconPlant = 'assets/images/plant_icon.png';
 
 }

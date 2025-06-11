@@ -10,7 +10,7 @@ import '../services/firebase_service_notification.dart';
 import '../services/notification_service.dart';
 
 class PlantProvider with ChangeNotifier {
-  final FirebaseService _firebaseService = FirebaseService();
+  final FirebaseServiceNotify _firebaseService = FirebaseServiceNotify();
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final NotificationService _notificationService = NotificationService();
   final ImagePicker _imagePicker = ImagePicker();
