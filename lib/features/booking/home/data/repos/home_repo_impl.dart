@@ -7,9 +7,17 @@ import 'home_repo.dart';
 
 const Map<String, String> bookCategories = {
   'plants': 'plant detection disease',
-  'programming': 'programming',
-  'fiction': 'fiction',
-  'science': 'science',
+  'plant': 'plant',
+  'garden': 'garden',
+  'plant disease': 'plant disease',
+  'tomato disease': 'tomato disease',
+  'pea disease': 'pea disease',
+  'orange disease': 'orange disease',
+  'corn disease': 'corn disease',
+  'eggplant disease': 'eggplant disease',
+  'wheat disease': 'wheat disease',
+  'monitoring plants': 'monitoring plants',
+  'plants disease': 'plants disease',
 };
 
 class HomeRepoImpl implements HomeRepo {
@@ -17,47 +25,51 @@ class HomeRepoImpl implements HomeRepo {
 
   HomeRepoImpl(this.apiService);
 
-  // ========== الوظائف المشتركة ==========
   Future<Either<FailureApi, List<BookModel>>> _fetchBooks({
     required String endPoint,
     String? errorContext,
   }) async {
     try {
       final data = await apiService.get(endPoint: endPoint);
-      final books = (data['items'] as List)
-          .map((item) => BookModel.fromJson(item))
-          .toList();
+      final books =
+          (data['items'] as List)
+              .map((item) => BookModel.fromJson(item))
+              .toList();
       return right(books);
     } on DioError catch (e) {
       return left(ServerFailureApi.fromDioError(e));
     } catch (e) {
-      return left(ServerFailureApi(
-        errorContext != null ? '$errorContext: ${e.toString()}' : e.toString(),
-      ));
+      return left(
+        ServerFailureApi(
+          errorContext != null
+              ? '$errorContext: ${e.toString()}'
+              : e.toString(),
+        ),
+      );
     }
   }
 
-  // ========== التطبيقات الرئيسية ==========
   @override
   Future<Either<FailureApi, List<BookModel>>> fetchNewsetBooks() async {
     try {
-      final futures = bookCategories.values
-          .map((category) => _fetchBooksByCategory(category))
-          .toList();
+      final futures =
+          bookCategories.values
+              .map((category) => _fetchBooksByCategory(category))
+              .toList();
 
       final results = await Future.wait(futures);
 
       final allBooks = results.fold<List<BookModel>>(
         [],
-            (acc, result) => result.fold(
-              (failure) => acc,
-              (books) => [...acc, ...books],
-        ),
+        (acc, result) =>
+            result.fold((failure) => acc, (books) => [...acc, ...books]),
       );
 
       return right(allBooks);
     } catch (e) {
-      return left(ServerFailureApi('Failed to fetch newest books: ${e.toString()}'));
+      return left(
+        ServerFailureApi('Failed to fetch newest books: ${e.toString()}'),
+      );
     }
   }
 
@@ -83,37 +95,50 @@ class HomeRepoImpl implements HomeRepo {
   Future<Either<FailureApi, List<BookModel>>> fetchBooksFromAllCategories({
     List<String> categories = const [
       'plant detection disease',
-      'programming',
-      'fiction',
-      'science'
+      'tomato disease',
+      'pea disease',
+      'orange disease',
+      'corn disease',
+      'eggplant disease',
+      'wheat disease',
+      'monitoring plants',
+      'plants disease',
+      'plants',
     ],
   }) async {
     try {
-      final futures = categories
-          .map((category) => _fetchBooks(
-        endPoint: 'volumes?Filtering=free-ebooks&Sorting=newest&q=$category',
-        errorContext: 'Category: $category',
-      ))
-          .toList();
+      final futures =
+          categories
+              .map(
+                (category) => _fetchBooks(
+                  endPoint:
+                      'volumes?Filtering=free-ebooks&Sorting=newest&q=$category',
+                  errorContext: 'Category: $category',
+                ),
+              )
+              .toList();
 
       final results = await Future.wait(futures);
 
       final allBooks = results.fold<List<BookModel>>(
         [],
-            (acc, result) => result.fold(
-              (failure) => acc,
-              (books) => [...acc, ...books],
-        ),
+        (acc, result) =>
+            result.fold((failure) => acc, (books) => [...acc, ...books]),
       );
 
       return right(allBooks);
     } catch (e) {
-      return left(ServerFailureApi('Failed to fetch all categories books: ${e.toString()}'));
+      return left(
+        ServerFailureApi(
+          'Failed to fetch all categories books: ${e.toString()}',
+        ),
+      );
     }
   }
 
-  // ========== الدوال المساعدة ==========
-  Future<Either<FailureApi, List<BookModel>>> _fetchBooksByCategory(String category) {
+  Future<Either<FailureApi, List<BookModel>>> _fetchBooksByCategory(
+    String category,
+  ) {
     return _fetchBooks(
       endPoint: 'volumes?Filtering=free-ebooks&Sorting=newest&q=$category',
       errorContext: 'Category: $category',

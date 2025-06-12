@@ -8,13 +8,18 @@ abstract class HomeRepo {
   Future<Either<FailureApi, List<BookModel>>> fetchSimilarBooks(
       {required String category});
 
-  // دالة جديدة لجلب الكتب من جميع الفئات المطلوبة
   Future<Either<FailureApi, List<BookModel>>> fetchBooksFromAllCategories({
     List<String> categories = const [
       'plant detection disease',
-      'programming',
-      'fiction',
-      'science'
+      'tomato disease',
+      'pea disease',
+      'orange disease',
+      'corn disease',
+      'eggplant disease',
+      'wheat disease',
+      'monitoring plants',
+      'plants disease',
+      'plants'
     ],
   });
 }

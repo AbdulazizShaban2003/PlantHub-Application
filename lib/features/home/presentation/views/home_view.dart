@@ -49,8 +49,6 @@ class _HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
-
     return Scaffold(
       extendBody: true,
       body: Center(child: screens[_selectedIndex]),

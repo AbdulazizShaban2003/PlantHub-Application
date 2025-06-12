@@ -29,11 +29,7 @@ import '../features/booking/home/presentation/manger/featured_books_cubit/featur
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/manager/chat_provider.dart';
-import '../features/diagnosis/presentation/views/diagnosis_screen.dart';
-import '../features/home/presentation/views/explore_plant_view.dart';
 import '../features/my_plant/providers/plant_provider.dart';
-import '../features/my_plant/services/firebase_service_notification.dart' show FirebaseServiceNotify;
-
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key, required this.cameras});
   final List<CameraDescription> cameras;
@@ -81,6 +77,7 @@ class _PlantHubState extends State<PlantHub> {
       ],
       child: MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (_) => NotificationProvider()),
           Provider(create: (_) => AuthRemoteDataSource()),
           Provider(create: (_) => OperationController()),
           Provider(create: (_) => PlantRepository()),
@@ -105,11 +102,9 @@ class _PlantHubState extends State<PlantHub> {
                 (context) => ProfileProvider(context.read<ProfileRepository>()),
           ),
           ChangeNotifierProvider(create: (_) => PlantProvider()),
-          ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => LanguageProvider()),
           ChangeNotifierProvider(create: (_) => PlantProvider()),
-          ChangeNotifierProvider(create: (_) => NotificationProvider()),
           ChangeNotifierProvider(create: (_) => PlantViewModel()),
           ChangeNotifierProvider(create: (_) => ChatProvider()),
           ChangeNotifierProvider(create: (_) => PasswordVisibilityProvider()),

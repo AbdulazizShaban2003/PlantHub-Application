@@ -20,8 +20,15 @@ class NewsetBooksCubit extends Cubit<NewsetBooksState> {
     );
   }
 
-  // دالة جديدة لجلب الكتب من جميع الفئات
-  Future<void> fetchBooksFromAllCategories() async {
+  List<BookModel> filterPlantBooks(List<BookModel> allBooks) {
+    return allBooks.where((book) {
+      return book.volumeInfo.categories?.any((category) =>
+      category.toLowerCase().contains('plant') ||
+          category.toLowerCase().contains('garden') ||
+          category.toLowerCase().contains('botany')) ?? false;
+    }).toList();
+
+  }  Future<void> fetchBooksFromAllCategories() async {
     emit(NewsetBooksLoading());
     var result = await homeRepo.fetchBooksFromAllCategories();
     result.fold(

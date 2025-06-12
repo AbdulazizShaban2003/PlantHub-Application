@@ -20,8 +20,18 @@ class BookViewBody extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children:  [
+              Padding(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig().width(0.04),
+                    vertical: SizeConfig().height(0.03)),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.search),
+                    hintText: "search book...",
+                  ),
+                ),
+              ),
 
-              CustomAppBar(),
               FeaturedBooksListView(),
               SizedBox(
                 height: SizeConfig().height(0.03),
