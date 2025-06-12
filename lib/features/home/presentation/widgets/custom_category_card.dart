@@ -6,7 +6,7 @@ class PlantCategoryCard extends StatelessWidget {
   final String title;
   final String image;
 
-  PlantCategoryCard({required this.title, required this.image});
+  const PlantCategoryCard({super.key, required this.title, required this.image});
 
   @override
   Widget build(BuildContext context) {

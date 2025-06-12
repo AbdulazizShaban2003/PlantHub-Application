@@ -39,9 +39,9 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantViewModel>(context);
     final List<Plant> categoryPlants = plantProvider.getPlantsByCategory(widget.category);
-
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(
           _getCategoryTitle(widget.category),
           style: Theme.of(context).textTheme.headlineSmall,
@@ -98,7 +98,6 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
                 ],
                             )
                   : ListView.builder(
-                padding: const EdgeInsets.all(16),
                 itemCount: categoryPlants.length,
                 itemBuilder: (context, index) {
                   final plant = categoryPlants[index];
@@ -115,15 +114,14 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
     );
   }
   Widget _buildPlantCard(BuildContext context, Plant plant,int index) {
-
+    final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
+    final article = plantProvider.displayedPlants[index];
     return GestureDetector(
       onTap: () {
-        final plantProvider = Provider.of<PlantViewModel>(context, listen: false);
-        Navigator.push(context, RouteHelper.navigateTo(ArticlePlantDetailsView(plantId: plantProvider.displayedPlants[index].id)));
+        Navigator.push(context, RouteHelper.navigateTo(ArticlePlantDetailsView(plantId: plant.id)));
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -141,6 +139,7 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
               child: CacheNetworkImage(imageUrl: plant.image, width: double.infinity, height: 200)
 
             ),
+            Text(plant.description,maxLines: 2,overflow: TextOverflow.ellipsis,)
             // Plant details
           ],
         ),
@@ -154,22 +153,15 @@ class _CategoryPlantsViewState extends State<CategoryPlantsView> {
         return 'Succulents & Cacti';
       case 'flowering':
         return 'Flowering Plants';
-      case 'foliage':
-        return 'Foliage Plants';
       case 'trees':
         return 'Trees';
-      case 'shrubs':
-        return 'Weeds & Shrubs';
       case 'fruits':
         return 'Fruits';
       case 'vegetables':
         return 'Vegetables';
       case 'herbs':
         return 'Herbs';
-      case 'mushrooms':
-        return 'Mushrooms';
-      case 'toxic':
-        return 'Toxic Plants';
+
       default:
         return category.substring(0, 1).toUpperCase() + category.substring(1);
     }

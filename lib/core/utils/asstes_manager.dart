@@ -15,5 +15,11 @@ class AssetsManager {
   static const String backgroundGetStarted ="assets/images/background_getstarted.jpg";
   static const String noSearchImage = "assets/images/no_searsh.png";
   static const String iconPlant = 'assets/images/plant_icon.png';
+  static const String succulentsCacti = 'assets/images/categoies/succulents Cacti.png';
+  static const String flowers = 'assets/images/categoies/flowers.png';
+  static const String trees = 'assets/images/categoies/trees.png';
+  static const String fruits = 'assets/images/categoies/fruits.png';
+  static const String vegetables = 'assets/images/categoies/vegetables.png';
+  static const String herbs = 'assets/images/categoies/herbs.png';
 
 }

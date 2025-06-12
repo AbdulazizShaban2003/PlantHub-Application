@@ -81,7 +81,6 @@ class PlantViewModel with ChangeNotifier {
       _startLoading();
       _selectedCategory = category;
 
-      // استخدام الدالة المرنة للبحث
       final plants = await _plantRepository.getPlantsByCategoryFlexible(category);
 
       if (plants.isEmpty) {

@@ -1,18 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/core/provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../articles/view_model.dart';
-import '../components/build_header.dart';
-import '../views/category_plant_view.dart';
 import 'custom_app_bar_home_view.dart';
 import 'custom_ask_expert.dart';
 import 'custom_explore_book.dart';
-import 'custom_explore_plant.dart';
 import 'custom_popular_articles.dart';
+import 'explore_plant_category.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -21,7 +18,6 @@ class HomeViewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final plantProvider = Provider.of<PlantViewModel>(context, listen: true);
     final provider = context.watch<ProfileProvider>();
-
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider.loadProfile();
@@ -34,7 +30,7 @@ class HomeViewBody extends StatelessWidget {
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
-              title: CustomAppBarHomeView(plantProvider:plantProvider ),
+              title: CustomAppBarHomeView(plantProvider: plantProvider),
             ),
           ];
         },
@@ -42,7 +38,6 @@ class HomeViewBody extends StatelessWidget {
           onRefresh: () async {
             await plantProvider.fetchAllPlants();
             await provider.loadProfile();
-
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
@@ -62,116 +57,15 @@ class HomeViewBody extends StatelessWidget {
                   SizedBox(height: SizeConfig().height(0.025)),
                   CustomExplorBook(),
                   SizedBox(height: SizeConfig().height(0.03)),
-                  BuildHeader(header: "Explore Plants", onTab: () {  },),
-                  SizedBox(
-                    height: SizeConfig().height(0.8),
-                    child: Padding(
-                      padding: EdgeInsets.all(SizeConfig().width(0.03)),
-                      child: GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 2,
-                        mainAxisSpacing: SizeConfig().height(0.02),
-                        crossAxisSpacing: SizeConfig().width(0.04),
-                        childAspectRatio: 0.9,
-                        children: [
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Succulents\n& Cacti',
-                            imagePath: 'assets/images/categoies/succulents Cacti.png',
-                            category: 'succulents',
-                          ),
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Flowering\nPlants',
-                            imagePath: 'assets/images/categoies/flowers.png',
-                            category: 'flowering',
-                          ),
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Trees',
-                            imagePath: 'assets/images/categoies/trees.png',
-                            category: 'trees',
-                          ),
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Fruits',
-                            imagePath: 'assets/images/categoies/fruits.png',
-                            category: 'fruits',
-                          ),
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Vegetables',
-                            imagePath: 'assets/images/categoies/vegetables.png',
-                            category: 'vegetables',
-                          ),
-                          _buildCategoryCard(
-                            context: context,
-                            title: 'Herbs',
-                            imagePath: 'assets/images/categoies/herbs.png',
-                            category: 'herbs',
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),         
-                  SizedBox(height: SizeConfig().height(0.07),)
+                  ExplorePlantsCategory(),
+                  SizedBox(height: SizeConfig().height(0.07)),
                 ],
               ),
             ),
           ),
-    ))
+        ),
+      ),
     );
   }
 }
-Widget _buildCategoryCard({
-  required BuildContext context,
-  required String title,
-  required String imagePath,
-  required String category,
-}) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CategoryPlantsView(category: category),
-        ),
-      );
-    },
-    child: Container(
-      decoration: BoxDecoration(
 
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 10,),
-          Image.asset(
-            imagePath,
-            height: 60,
-            width: 65,
-            fit: BoxFit.cover,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style:  TextStyle(
-              fontSize: 13,
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}

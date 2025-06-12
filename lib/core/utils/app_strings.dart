@@ -159,6 +159,13 @@ class AppStrings{
   static const String emailError = 'Could not launch email app';
   static const String notificationSettingsTitle = 'Notification Settings';
   static const String enableNotifications = 'Enable Notifications';
+  static const String explorePlants = "Explore Plants";
+  static const String succulentsCacti = "Succulents\n& Cacti";
+  static const String floweringPlants = "Flowering\nPlants";
+  static const String trees = "Trees";
+  static const String fruits = "Fruits";
+  static const String vegetables = "Vegetables";
+  static const String herbs = "Herbs";
   static const String turnOnOffAll = 'Turn on/off all notifications';
   static const String notificationTypes = 'Notification Types';
   static const String newMessages = 'New Messages';
