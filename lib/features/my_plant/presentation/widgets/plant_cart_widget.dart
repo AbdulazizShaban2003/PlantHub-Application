@@ -121,7 +121,6 @@ class MyPlantCard extends StatelessWidget {
                 ),
               ),
 
-              // More Options
               IconButton(
                 onPressed: () => _showPlantOptions(context, plant),
                 icon: Icon(Icons.more_vert,
