@@ -131,10 +131,10 @@ class _PlantHubState extends State<PlantHub> {
               debugShowCheckedModeBanner: false,
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
-              locale: Locale('en'),
+              locale: languageProvider.currentLocale,
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.dark,
+              themeMode: themeProvider.themeMode,
               home: SplashView()
             );
           },

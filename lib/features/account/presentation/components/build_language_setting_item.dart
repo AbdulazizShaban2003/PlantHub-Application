@@ -33,7 +33,8 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
         ),
         PopupMenuButton<String>(
           icon: Icon(
-            Icons.arrow_drop_down,
+            Icons.arrow_forward_ios,
+            size: 18,
             color: Theme.of(context).disabledColor,
           ),
           onSelected: (String languageCode) async {
@@ -54,8 +55,9 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: context.locale.languageCode == 'en'
-                                ? Colors.green[700]
-                                : null,
+                                ? ColorsManager.greenPrimaryColor
+
+                            : ColorsManager.blackColor,
                           ),
                         ),
                       ],
@@ -64,7 +66,8 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                   if (context.locale.languageCode == 'en')
                     Icon(
                       Icons.check_circle,
-                      color: Colors.green[600],
+                      color:ColorsManager.greenPrimaryColor
+                      ,
                       size: 20,
                     ),
                 ],
@@ -85,7 +88,7 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                             fontWeight: FontWeight.w500,
                             color: context.locale.languageCode == 'ar'
                                 ? ColorsManager.greenPrimaryColor
-                                : null,
+                                : ColorsManager.blackColor,
                           ),
                         ),
                       ],
@@ -105,7 +108,7 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
             borderRadius: BorderRadius.circular(12),
           ),
           elevation: 8,
-          offset: const Offset(0, 40), // إضافة const
+          offset: const Offset(0, 40),
         ),
       ],
     ),

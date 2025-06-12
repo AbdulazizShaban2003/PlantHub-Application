@@ -17,6 +17,10 @@
 		<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
 		<!-- Google Sign-in Section -->
 		<key>CFBundleURLTypes</key>
+		<key>NSCameraUsageDescription</key>
+        <string>لإلتقاط الصور الشخصية</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>لاختيار الصور الشخصية</string>
 		<array>
 			<dict>
 				<key>CFBundleTypeRole</key>

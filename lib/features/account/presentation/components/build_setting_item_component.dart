@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 
 Widget buildSettingItem({
   required BuildContext context,
@@ -58,7 +59,7 @@ Widget buildSettingItem({
               child: Switch(
                 value: toggleValue,
                 onChanged: onToggleChanged,
-                activeColor: Colors.green,
+                activeColor: ColorsManager.greenPrimaryColor,
               ),
             ),
           if (!hasToggle && !isLogout)

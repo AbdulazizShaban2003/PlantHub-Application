@@ -12,12 +12,14 @@ class PrivacyPolicyScreen extends StatelessWidget {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            forceMaterialTransparency: true,
+            forceElevated: true,
             title: Text(
               AppStrings.privacyPolicyTitle,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
-            centerTitle: true,
           ),
+
 
           SliverPadding(
             padding: const EdgeInsets.all(16.0),

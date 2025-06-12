@@ -21,5 +21,6 @@ class AssetsManager {
   static const String fruits = 'assets/images/categoies/fruits.png';
   static const String vegetables = 'assets/images/categoies/vegetables.png';
   static const String herbs = 'assets/images/categoies/herbs.png';
+  static const String emptyImage= 'assets/images/empty_image.png';
 
 }

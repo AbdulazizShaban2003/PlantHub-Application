@@ -1,11 +1,13 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/features/bookMark/presentation/views/bookmark_view.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/asstes_manager.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../account/presentation/views/profile_view.dart';
@@ -90,7 +92,7 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
 
         ],
         leading: Padding(
-          padding:  EdgeInsets.only(left: SizeConfig().width(0.04)),
+          padding: EdgeInsets.only(left: SizeConfig().width(0.04)),
           child: GestureDetector(
             onTap: (){
               Navigator.push(context, RouteHelper.navigateTo(const ProfileView()));
@@ -104,7 +106,14 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
                   color: Colors.grey.shade300,
                   width: 1,
                 ),
-                image: provider.profileImagePath != null
+                image: FirebaseAuth.instance.currentUser?.photoURL != null
+                    ? DecorationImage(
+                  image: NetworkImage(
+                    FirebaseAuth.instance.currentUser!.photoURL!,
+                  ),
+                  fit: BoxFit.cover,
+                )
+                    : provider.profileImagePath != null
                     ? DecorationImage(
                   image: FileImage(
                     File(provider.profileImagePath!),
@@ -112,14 +121,11 @@ class CustomAppBarHomeView extends StatelessWidget implements PreferredSizeWidge
                   fit: BoxFit.cover,
                 )
                     : const DecorationImage(
-                  image: NetworkImage(
-                    'https://i.pravatar.cc/150?img=11',
-                  ),
+                  image: AssetImage(AssetsManager.emptyImage),
                   fit: BoxFit.cover,
                 ),
               ),
             ),
-
           ),
         ),
       ),

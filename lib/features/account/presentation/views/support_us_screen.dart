@@ -9,32 +9,21 @@ class ContactSupportScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context); // Initialize SizeConfig
+    SizeConfig().init(context);
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back,
-              color: Colors.black,
-              size: SizeConfig().responsiveFont(24)), // Responsive icon size
-          onPressed: () => Navigator.pop(context),
-        ),
         title: Text(
           AppStrings.contactSupportTitle,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: SizeConfig().responsiveFont(18), // Responsive font size
-            fontWeight: FontWeight.w600,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.all(SizeConfig().width(0.04)), // Responsive padding
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           children: [
-            SizedBox(height: SizeConfig().height(0.02)), // Responsive spacing
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildContactItem(
               icon: Icons.email,
               iconColor: const Color(0xFF00D4AA),
@@ -58,7 +47,7 @@ class ContactSupportScreen extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: SizeConfig().height(0.02)), // Responsive spacing
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildContactItem(
               icon: Icons.language,
               iconColor: const Color(0xFF00D4AA),
@@ -69,7 +58,7 @@ class ContactSupportScreen extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: SizeConfig().height(0.02)), // Responsive spacing
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildContactItem(
               icon: Icons.chat,
               iconColor: const Color(0xFF25D366),
@@ -96,7 +85,7 @@ class ContactSupportScreen extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: SizeConfig().height(0.02)), // Responsive spacing
+            SizedBox(height: SizeConfig().height(0.02)),
           ],
         ),
       ),
@@ -111,31 +100,31 @@ class ContactSupportScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(SizeConfig().width(0.03)), // Responsive radius
+      borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
       child: Container(
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig().width(0.06),
             vertical: SizeConfig().height(0.02)),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(SizeConfig().width(0.03)), // Responsive radius
+          borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
           border: Border.all(color: Colors.grey.shade200),
         ),
         child: Row(
           children: [
             Container(
-              padding: EdgeInsets.all(SizeConfig().width(0.02)), // Responsive padding
+              padding: EdgeInsets.all(SizeConfig().width(0.02)),
               decoration: BoxDecoration(
                 color: iconColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(SizeConfig().width(0.02)), // Responsive radius
+                borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
               ),
               child: Icon(
                 icon,
                 color: iconColor,
-                size: SizeConfig().responsiveFont(24), // Responsive icon size
+                size: SizeConfig().responsiveFont(24),
               ),
             ),
-            SizedBox(width: SizeConfig().width(0.04)), // Responsive spacing
+            SizedBox(width: SizeConfig().width(0.04)),
             Expanded(
               child: Text(
                 title,

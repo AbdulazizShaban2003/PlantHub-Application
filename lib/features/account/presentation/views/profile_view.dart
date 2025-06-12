@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -14,6 +15,7 @@ import 'package:plant_hub_app/features/auth/presentation/controller/operation_co
 import 'package:plant_hub_app/features/auth/presentation/controller/vaildator_auth_controller.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/utils/asstes_manager.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
 import '../../../auth/presentation/components/build_Text_field.dart';
 import '../controllers/country_controller.dart';
@@ -35,7 +37,7 @@ class _ProfileViewState extends State<ProfileView> {
   late final TextEditingController _phoneController;
   String _selectedGender = "Male";
   DateTime? _selectedDate;
-  String _countryCode = "+20"; // Changed default to Egypt
+  String _countryCode = "+20";
   final ImagePicker _picker = ImagePicker();
 
   @override
@@ -69,6 +71,8 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<void> _pickImage() async {
+    if (FirebaseAuth.instance.currentUser?.photoURL != null) return;
+
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       final directory = await getApplicationDocumentsDirectory();
@@ -121,7 +125,7 @@ class _ProfileViewState extends State<ProfileView> {
           ),
           child: MediaQuery(
             data: MediaQuery.of(context).copyWith(
-              textScaleFactor: 1.0, // القيمة الافتراضية
+              textScaleFactor: 1.0,
             ),
             child: child!,
           ),
@@ -174,7 +178,7 @@ class _ProfileViewState extends State<ProfileView> {
 
         FlushbarHelper.createError(
           message: '${AppStrings.profileSaveFailed}${e.toString()}',
-          duration: const Duration(seconds: 5),
+          duration: const Duration(seconds: 2),
         ).show(context);
       }
     } else {
@@ -184,6 +188,7 @@ class _ProfileViewState extends State<ProfileView> {
       ).show(context);
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ProfileProvider>();
@@ -215,9 +220,10 @@ class _ProfileViewState extends State<ProfileView> {
                 SizedBox(height: SizeConfig().height(0.03)),
                 Center(
                   child: GestureDetector(
-                    onTap: _pickImage,
+                    onTap: FirebaseAuth.instance.currentUser?.photoURL != null ? null : _pickImage,
                     child: SelectedImageWidget(
                       profileImagePath: provider.profileImagePath,
+                      hasPhotoUrl: FirebaseAuth.instance.currentUser?.photoURL != null,
                     ),
                   ),
                 ),
@@ -252,40 +258,25 @@ class _ProfileViewState extends State<ProfileView> {
                           width: SizeConfig().width(0.3),
                           height: SizeConfig().height(0.01),
                           child: CountryCodePicker(
+
                             dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
                             dialogSize: Size(
                               SizeConfig().width(0.9),
                               SizeConfig().height(0.7),
                             ),
-                            searchDecoration: InputDecoration(
-                              hintText: AppKeyStringTr.searchCountry,
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).hintColor,
-                                fontSize: SizeConfig().responsiveFont(13),
-                              ),
-                              filled: true,
-                              fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide.none,
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                vertical: SizeConfig().height(0.001),
-                                horizontal: SizeConfig().width(0.01),
-                              ),
-                            ),
+                                 searchStyle: TextStyle(fontSize: SizeConfig().responsiveFont(10)),
+
                             onChanged: (code) {
                               setState(() {
                                 _countryCode = code.dialCode ?? "+20";
                               });
                             },
                             initialSelection: 'EG',
-                            favorite: const ['EG', 'SA', 'AE', 'KW', 'QA', 'OM', 'BH'],
                             showCountryOnly: true,
                             showOnlyCountryWhenClosed: false,
                             alignLeft: true,
-                            padding: EdgeInsets.all(1),
-                            margin: EdgeInsets.all(5),
+                            padding: const EdgeInsets.all(1),
+                            margin: const EdgeInsets.all(5),
                             countryFilter: arabCountries,
                             textStyle: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
@@ -386,7 +377,10 @@ class _ProfileViewState extends State<ProfileView> {
                     ),
                   ],
                 ),
-                SizedBox(height: SizeConfig().height(0.05)),
+                SizedBox(height: SizeConfig().height(0.02)),
+                Divider(),
+                SizedBox(height: SizeConfig().height(0.03)),
+
                 OutlinedButtonWidget(
                   nameButton: AppKeyStringTr.save,
                   onPressed: _saveProfile,

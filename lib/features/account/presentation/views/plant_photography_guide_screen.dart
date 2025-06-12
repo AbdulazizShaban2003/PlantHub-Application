@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'dart:io';
+
+import '../../../../core/utils/app_strings.dart';
+import '../section/build_tips_section.dart';
+import '../widgets/build_header_card.dart';
+
 
 class PlantPhotographyGuideScreen extends StatefulWidget {
   const PlantPhotographyGuideScreen({super.key});
@@ -17,24 +24,25 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Plant Photography Guide'),
-        backgroundColor: Colors.green[600],
-        foregroundColor: Colors.white,
-        elevation: 0,
+        forceMaterialTransparency: true,
+
+        title: Text(
+          AppStrings.appBarTitle,
+          style: Theme.of(context).textTheme.bodyLarge
+        ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHeaderCard(),
-            SizedBox(height: 20),
-            _buildCameraSection(),
-            SizedBox(height: 20),
-            _buildTipsSection(),
-            SizedBox(height: 20),
+            buildHeaderCard(),
+            SizedBox(height: SizeConfig().height(0.02)),
+            SizedBox(height: SizeConfig().height(0.02)),
+            buildTipsSection(),
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildStepsSection(),
-            SizedBox(height: 20),
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildBestPracticesSection(),
           ],
         ),
@@ -42,210 +50,36 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
     );
   }
 
-  Widget _buildHeaderCard() {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: LinearGradient(
-            colors: [Colors.green[400]!, Colors.green[600]!],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.camera_alt, color: Colors.white, size: 30),
-                SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    'How to Photograph Plants',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 12),
-            Text(
-              'Learn the best techniques to capture stunning plant photos with perfect lighting, composition, and detail.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.white.withOpacity(0.9),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildCameraSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '📸 Take a Photo',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[700],
-              ),
-            ),
-            SizedBox(height: 16),
-            if (_selectedImage != null) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.file(
-                  _selectedImage!,
-                  height: 200,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              SizedBox(height: 16),
-            ],
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => _pickImage(ImageSource.camera),
-                    icon: Icon(Icons.camera_alt),
-                    label: Text('Camera'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[600],
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => _pickImage(ImageSource.gallery),
-                    icon: Icon(Icons.photo_library),
-                    label: Text('Gallery'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[400],
-                      foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildTipsSection() {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '💡 Quick Tips',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green[700],
-              ),
-            ),
-            SizedBox(height: 16),
-            _buildTipItem('🌅', 'Best Time', 'Golden hour (early morning or late afternoon)'),
-            _buildTipItem('💧', 'After Rain', 'Water droplets add natural beauty'),
-            _buildTipItem('🔍', 'Get Close', 'Focus on interesting details and textures'),
-            _buildTipItem('📐', 'Rule of Thirds', 'Place subject off-center for better composition'),
-          ],
-        ),
-      ),
-    );
-  }
 
-  Widget _buildTipItem(String emoji, String title, String description) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(emoji, style: TextStyle(fontSize: 20)),
-          SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-                Text(
-                  description,
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _buildStepsSection() {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
+      ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '📋 Step-by-Step Guide',
+              AppStrings.stepsSectionTitle,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: SizeConfig().responsiveFont(18),
                 fontWeight: FontWeight.bold,
-                color: Colors.green[700],
+                color: ColorsManager.greenPrimaryColor
               ),
             ),
-            SizedBox(height: 16),
-            _buildStepItem(1, 'Choose Your Subject', 'Select a healthy, interesting plant or flower'),
-            _buildStepItem(2, 'Find Good Light', 'Use natural light, avoid harsh shadows'),
-            _buildStepItem(3, 'Clean the Plant', 'Remove dust, dead leaves, or debris'),
-            _buildStepItem(4, 'Set Your Angle', 'Try different perspectives - eye level, above, below'),
-            _buildStepItem(5, 'Focus Carefully', 'Tap on your subject to ensure sharp focus'),
-            _buildStepItem(6, 'Take Multiple Shots', 'Capture several photos with slight variations'),
+            SizedBox(height: SizeConfig().height(0.02)),
+            _buildStepItem(1, AppStrings.step1Title, AppStrings.step1Description),
+            _buildStepItem(2, AppStrings.step2Title, AppStrings.step2Description),
+            _buildStepItem(3, AppStrings.step3Title, AppStrings.step3Description),
+            _buildStepItem(4, AppStrings.step4Title, AppStrings.step4Description),
+            _buildStepItem(5, AppStrings.step5Title, AppStrings.step5Description),
+            _buildStepItem(6, AppStrings.step6Title, AppStrings.step6Description),
           ],
         ),
       ),
@@ -254,15 +88,14 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
 
   Widget _buildStepItem(int number, String title, String description) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: SizeConfig().height(0.01)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 30,
-            height: 30,
-            decoration: BoxDecoration(
-              color: Colors.green[600],
+            width: SizeConfig().width(0.08),
+            height: SizeConfig().width(0.08),
+            decoration: BoxDecoration(color: ColorsManager.greenPrimaryColor,
               shape: BoxShape.circle,
             ),
             child: Center(
@@ -271,11 +104,12 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
+                  fontSize: SizeConfig().responsiveFont(14),
                 ),
               ),
             ),
           ),
-          SizedBox(width: 12),
+          SizedBox(width: SizeConfig().width(0.03)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -284,14 +118,14 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: SizeConfig().responsiveFont(16),
                   ),
                 ),
                 Text(
                   description,
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14,
+                    fontSize: SizeConfig().responsiveFont(14),
                   ),
                 ),
               ],
@@ -305,26 +139,29 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
   Widget _buildBestPracticesSection() {
     return Card(
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
+      ),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '⭐ Best Practices',
+              AppStrings.practicesSectionTitle,
               style: TextStyle(
-                fontSize: 20,
+                fontSize: SizeConfig().responsiveFont(18),
                 fontWeight: FontWeight.bold,
-                color: Colors.green[700],
+                  color: ColorsManager.greenPrimaryColor
+
               ),
             ),
-            SizedBox(height: 16),
-            _buildPracticeItem(Icons.wb_sunny, 'Lighting', 'Use soft, diffused natural light'),
-            _buildPracticeItem(Icons.center_focus_strong, 'Composition', 'Fill the frame with your subject'),
-            _buildPracticeItem(Icons.palette, 'Background', 'Choose simple, non-distracting backgrounds'),
-            _buildPracticeItem(Icons.zoom_in, 'Details', 'Capture textures, patterns, and unique features'),
-            _buildPracticeItem(Icons.straighten, 'Stability', 'Keep your phone steady or use a tripod'),
+            SizedBox(height: SizeConfig().height(0.02)),
+            _buildPracticeItem(Icons.wb_sunny, AppStrings.practice1Title, AppStrings.practice1Description),
+            _buildPracticeItem(Icons.center_focus_strong, AppStrings.practice2Title, AppStrings.practice2Description),
+            _buildPracticeItem(Icons.palette, AppStrings.practice3Title, AppStrings.practice3Description),
+            _buildPracticeItem(Icons.zoom_in, AppStrings.practice4Title, AppStrings.practice4Description),
+            _buildPracticeItem(Icons.straighten, AppStrings.practice5Title, AppStrings.practice5Description),
           ],
         ),
       ),
@@ -333,12 +170,17 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
 
   Widget _buildPracticeItem(IconData icon, String title, String description) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: SizeConfig().height(0.01)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: Colors.green[600], size: 24),
-          SizedBox(width: 12),
+          Icon(
+            icon,
+          color: ColorsManager.greenPrimaryColor,
+
+          size: SizeConfig().responsiveFont(22),
+          ),
+          SizedBox(width: SizeConfig().width(0.03)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,14 +189,14 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
                   title,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: SizeConfig().responsiveFont(16),
                   ),
                 ),
                 Text(
                   description,
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontSize: 14,
+                    fontSize: SizeConfig().responsiveFont(14),
                   ),
                 ),
               ],
@@ -365,34 +207,4 @@ class _PlantPhotographyGuideScreenState extends State<PlantPhotographyGuideScree
     );
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    try {
-      final XFile? image = await _picker.pickImage(
-        source: source,
-        maxWidth: 1800,
-        maxHeight: 1800,
-        imageQuality: 85,
-      );
-
-      if (image != null) {
-        setState(() {
-          _selectedImage = File(image.path);
-        });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Photo selected successfully!'),
-            backgroundColor: Colors.green[600],
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error selecting image: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
 }

@@ -66,7 +66,7 @@ class AppThemes {
     appBarTheme: AppBarTheme(
       titleSpacing: 10,
       iconTheme: IconThemeData(
-        color: ColorsManager.greenPrimaryColor,
+        color: ColorsManager.blackColor,
 
       ),
       foregroundColor: Color(0xFF121212),
@@ -186,7 +186,7 @@ class AppThemes {
     scaffoldBackgroundColor: Color(0xFF121212),
     appBarTheme: AppBarTheme(
       backgroundColor: Color(0xFF121212),
-      foregroundColor: Colors.black,
+      foregroundColor: Colors.white,
       centerTitle: true,
       elevation: 0,
       actionsPadding: EdgeInsets.symmetric(horizontal: 10),

@@ -1,57 +1,83 @@
 import 'dart:io';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
+import '../../../../core/utils/asstes_manager.dart';
 
 class SelectedImageWidget extends StatelessWidget {
   const SelectedImageWidget({
     super.key,
     required String? profileImagePath,
-  }) : _profileImagePath = profileImagePath;
+    required bool hasPhotoUrl,
+  }) : _profileImagePath = profileImagePath, _hasPhotoUrl = hasPhotoUrl;
 
   final String? _profileImagePath;
+  final bool _hasPhotoUrl;
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
+    final User? user = FirebaseAuth.instance.currentUser;
+    final String? photoUrl = user?.photoURL;
+    final defaultAvatar = Image.asset(AssetsManager.emptyImage);
+
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
         Container(
-          width: 100,
-          height: 100,
+          width: SizeConfig().height(0.12),
+          height: SizeConfig().height(0.12),
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
               color: Colors.grey.shade300,
-              width: 1,
+              width: SizeConfig().width(0.003),
             ),
-            image: _profileImagePath != null
-                ? DecorationImage(
-              image: FileImage(
-                File(_profileImagePath!),
-              ),
-              fit: BoxFit.cover,
-            )
-                : const DecorationImage(
-              image: NetworkImage(
-                'https://i.pravatar.cc/150?img=11',
-              ),
-              fit: BoxFit.cover,
-            ),
+            image: _getProfileImageDecoration(),
           ),
         ),
-        Container(
-          padding: const EdgeInsets.all(4),
-          decoration: const BoxDecoration(
-            color: Color(0xFF00A86B),
-            shape: BoxShape.circle,
-          ),
-          child: const Icon(
-            Icons.edit,
-            color: Colors.white,
-            size: 18,
-          ),
-        ),
+        if (!_hasPhotoUrl) _buildEditIcon(),
       ],
+    );
+  }
+
+  DecorationImage? _getProfileImageDecoration() {
+    final User? user = FirebaseAuth.instance.currentUser;
+
+    if (user?.photoURL != null) {
+      return DecorationImage(
+        image: NetworkImage(user!.photoURL!),
+        fit: BoxFit.cover,
+      );
+    } else if (_profileImagePath != null) {
+      return DecorationImage(
+        image: FileImage(File(_profileImagePath!)),
+        fit: BoxFit.cover,
+      );
+    }
+    return const DecorationImage(
+      image: AssetImage(AssetsManager.emptyImage),
+      fit: BoxFit.cover,
+    );
+  }
+
+  Widget _buildEditIcon() {
+    return Container(
+      padding: EdgeInsets.all(SizeConfig().width(0.01)),
+      decoration: BoxDecoration(
+        color: const Color(0xFF00A86B),
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: Colors.white,
+          width: SizeConfig().width(0.005),
+        ),
+      ),
+      child: Icon(
+        Icons.edit,
+        color: Colors.white,
+        size: SizeConfig().responsiveFont(16),
+      ),
     );
   }
 }

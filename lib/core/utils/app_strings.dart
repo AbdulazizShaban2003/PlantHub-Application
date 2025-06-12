@@ -17,6 +17,7 @@ class AppKeyStringTr {
       'privacyPolicyTermsOfService'.tr();
   static String login = 'login'.tr();
   static String signUp = 'signUp'.tr();
+
   static String continueWithGoogle = 'continueWithGoogle'.tr();
   static String continueWithApple = 'continueWithApple'.tr();
   static String continueWithFacebook = 'continueWithFacebook'.tr();
@@ -225,6 +226,15 @@ class AppStrings{
   static const String failedToSendReset = 'Failed to send password reset email';
   static const String failedToReset = 'Failed to send password reset: ';
   static const String signingIn = 'Signing ...';
+  static const String account = 'account';
+  static const String darkMode = 'dark mode';
+  static const String notifications = 'notifications';
+  static const String photographyGuide = 'photography guide';
+  static const String supportUs = 'support us';
+  static const String privacyPolicy = 'privacy policy';
+  static const String logout = 'logout';
+  static const String logoutConfirmation = 'logout confirmation';
+  static const String cancel = 'cancel';
   static const String googleSignInSuccess = 'Signed in with Google successfully!';
   static const String googleSignInFailed = 'Google sign-in failed';
   static const String failedGoogleSignIn = 'Failed to sign in with Google: ';
@@ -275,6 +285,58 @@ static const String message = "Messages";
   static const String tokenRefreshedSuccessfully = 'Token refreshed successfully';
   static const String failedToRefreshToken = 'Failed to refresh token: ';
   static const String unexpectedTokenRefreshError = 'Unexpected token refresh error';
+  static const String appBarTitle = 'Plant Photography Guide';
+
+  // Header Card
+  static const String headerCardTitle = 'How to Photograph Plants';
+  static const String headerCardDescription =
+      'Learn the best techniques to capture stunning plant photos with perfect lighting, composition, and detail.';
+
+  // Camera Section
+  static const String cameraSectionTitle = '📸 Take a Photo';
+  static const String cameraButton = 'Camera';
+  static const String galleryButton = 'Gallery';
+  static const String photoSelectedSuccess = 'Photo selected successfully!';
+  static const String photoSelectionError = 'Error selecting image: ';
+
+  // Tips Section
+  static const String tipsSectionTitle = '💡 Quick Tips';
+  static const String tip1Title = 'Best Time';
+  static const String tip1Description = 'Golden hour (early morning or late afternoon)';
+  static const String tip2Title = 'After Rain';
+  static const String tip2Description = 'Water droplets add natural beauty';
+  static const String tip3Title = 'Get Close';
+  static const String tip3Description = 'Focus on interesting details and textures';
+  static const String tip4Title = 'Rule of Thirds';
+  static const String tip4Description = 'Place subject off-center for better composition';
+
+  // Steps Section
+  static const String stepsSectionTitle = '📋 Step-by-Step Guide';
+  static const String step1Title = 'Choose Your Subject';
+  static const String step1Description = 'Select a healthy, interesting plant or flower';
+  static const String step2Title = 'Find Good Light';
+  static const String step2Description = 'Use natural light, avoid harsh shadows';
+  static const String step3Title = 'Clean the Plant';
+  static const String step3Description = 'Remove dust, dead leaves, or debris';
+  static const String step4Title = 'Set Your Angle';
+  static const String step4Description = 'Try different perspectives - eye level, above, below';
+  static const String step5Title = 'Focus Carefully';
+  static const String step5Description = 'Tap on your subject to ensure sharp focus';
+  static const String step6Title = 'Take Multiple Shots';
+  static const String step6Description = 'Capture several photos with slight variations';
+
+  // Best Practices Section
+  static const String practicesSectionTitle = '⭐ Best Practices';
+  static const String practice1Title = 'Lighting';
+  static const String practice1Description = 'Use soft, diffused natural light';
+  static const String practice2Title = 'Composition';
+  static const String practice2Description = 'Fill the frame with your subject';
+  static const String practice3Title = 'Background';
+  static const String practice3Description = 'Choose simple, non-distracting backgrounds';
+  static const String practice4Title = 'Details';
+  static const String practice4Description = 'Capture textures, patterns, and unique features';
+  static const String practice5Title = 'Stability';
+  static const String practice5Description = 'Keep your phone steady or use a tripod';
 }
 class RegxStrings {
   // Regular expressions
