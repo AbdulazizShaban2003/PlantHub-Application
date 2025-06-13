@@ -254,15 +254,12 @@ class NotificationService {
         isRead: false,
       );
 
-      // حفظ الإشعار في قاعدة البيانات المحلية.
       await _databaseHelper.insertNotification(notification);
       print('💾 Notification saved to local database');
 
-      // حفظ الإشعار في Firebase.
       await _firebaseService.saveNotification(notification);
       print('☁️ Notification saved to Firebase');
 
-      // جدولة الإشعار المحلي الفعلي.
       await _scheduleLocalNotification(notification, reminder);
 
       print('✅ Reminder scheduled successfully: ${notification.title}');
@@ -271,8 +268,6 @@ class NotificationService {
       rethrow;
     }
   }
-
-  /// يجدول الإشعار المحلي باستخدام `flutter_local_notifications`.
   Future<void> _scheduleLocalNotification(
       NotificationModel notification,
       Reminder reminder,
