@@ -347,7 +347,19 @@ static const String message = "Messages";
   static const String clearHistory = 'Clear History';
   static const String clearHistoryConfirmation = 'Are you sure you want to clear all history?';
   static const String clear = 'Clear';
+  static const String noCareScheduleSet = 'No care schedule set';
+  static const String editPlantToAddReminders = 'Edit your plant to add care reminders';
+  static const String next = 'Next:';
+  static const String repeat = 'Repeat:';
+  static const String tasks = 'Tasks:';
+  static const String noReminderSet = 'No reminder set';
+  static const String noRemindersYet = 'No reminders yet';
+  static const String scheduled = 'Scheduled:';
+  static const String sent = 'Sent';
+  static const String pending = 'Pending';
+  static const String noPhotosYet = 'No photos yet';
 }
+
 class RegxStrings {
   // Regular expressions
   static const String emailPattern =
