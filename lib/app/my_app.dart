@@ -29,6 +29,9 @@ import '../features/booking/home/presentation/manger/featured_books_cubit/featur
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
 import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/manager/chat_provider.dart';
+import '../features/diagnosis/presentation/providers/diagnosis_provider.dart';
+import '../features/diagnosis/presentation/providers/disease_provider.dart';
+import '../features/diagnosis/presentation/providers/history_provider.dart';
 import '../features/my_plant/providers/plant_provider.dart';
 class PlantHub extends StatefulWidget {
   const PlantHub({super.key, required this.cameras});
@@ -102,6 +105,9 @@ class _PlantHubState extends State<PlantHub> {
                 (context) => ProfileProvider(context.read<ProfileRepository>()),
           ),
           ChangeNotifierProvider(create: (_) => PlantProvider()),
+          ChangeNotifierProvider(create: (_) => DiseaseProvider()),
+          ChangeNotifierProvider(create: (_) => DiagnosisProvider()),
+          ChangeNotifierProvider(create: (_) => HistoryProvider()),
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => LanguageProvider()),
           ChangeNotifierProvider(create: (_) => PlantProvider()),

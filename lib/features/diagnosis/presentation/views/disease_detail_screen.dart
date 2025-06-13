@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:provider/provider.dart';
+import '../providers/disease_provider.dart';
 class DiseaseDetailScreen extends StatefulWidget {
   final String diseaseId;
   final String diseaseName;
@@ -16,36 +16,13 @@ class DiseaseDetailScreen extends StatefulWidget {
 }
 
 class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  Map<String, dynamic>? diseaseData;
-  bool isLoading = true;
-
   @override
   void initState() {
     super.initState();
-    _fetchDiseaseDetails();
-  }
-
-  Future<void> _fetchDiseaseDetails() async {
-    try {
-      final diseaseDoc = await _firestore.collection('diseases').doc(widget.diseaseId).get();
-
-      if (diseaseDoc.exists) {
-        setState(() {
-          diseaseData = diseaseDoc.data();
-          isLoading = false;
-        });
-      } else {
-        setState(() {
-          isLoading = false;
-        });
-      }
-    } catch (e) {
-      print('Error fetching disease details: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
+    // Load disease details when widget initializes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DiseaseProvider>(context, listen: false).loadDiseaseById(widget.diseaseId);
+    });
   }
 
   @override
@@ -68,219 +45,272 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
         ),
         centerTitle: true,
       ),
-      body: isLoading
-          ? Center(child: CircularProgressIndicator(color: Color(0xFF00A67E)))
-          : diseaseData == null
-          ? Center(child: Text('Disease information not found'))
-          : SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Disease Image
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                    diseaseData!['imageUrl'] ?? 'https://via.placeholder.com/400x200',
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+      body: Consumer<DiseaseProvider>(
+        builder: (context, diseaseProvider, child) {
+          final isLoading = diseaseProvider.isLoading;
+          final disease = diseaseProvider.selectedDisease;
+          final errorMessage = diseaseProvider.errorMessage;
 
-            // Disease Details
-            Padding(
-              padding: const EdgeInsets.all(16.0),
+          if (isLoading) {
+            return Center(child: CircularProgressIndicator(color: Color(0xFF00A67E)));
+          }
+
+          if (disease == null) {
+            return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Disease Name and Category
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          diseaseData!['name'] ?? 'Unknown Disease',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Color(0xFF00A67E).withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          diseaseData!['category'] ?? 'Unknown',
-                          style: TextStyle(
-                            color: Color(0xFF00A67E),
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 16),
-
-                  // Scientific Name
-                  if (diseaseData!['scientificName'] != null) ...[
-                    Text(
-                      'Scientific Name:',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 4),
-                    Text(
-                      diseaseData!['scientificName'],
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                    SizedBox(height: 16),
-                  ],
-
-                  // Description
                   Text(
-                    'Description:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    diseaseData!['description'] ?? 'No description available',
+                    'Disease information not found',
                     style: TextStyle(fontSize: 16),
                   ),
-
-                  SizedBox(height: 16),
-
-                  // Symptoms
-                  Text(
-                    'Symptoms:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  if (diseaseData!['symptoms'] is List) ...[
-                    ...List.generate(
-                      (diseaseData!['symptoms'] as List).length,
-                          (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('• ', style: TextStyle(fontSize: 16)),
-                            Expanded(
-                              child: Text(
-                                diseaseData!['symptoms'][index],
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ] else if (diseaseData!['symptoms'] is String) ...[
+                  if (errorMessage.isNotEmpty) ...[
+                    SizedBox(height: 8),
                     Text(
-                      diseaseData!['symptoms'],
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ] else ...[
-                    Text(
-                      'No symptoms information available',
-                      style: TextStyle(fontSize: 16),
+                      errorMessage,
+                      style: TextStyle(fontSize: 14, color: Colors.red),
                     ),
                   ],
-
                   SizedBox(height: 16),
-
-                  // Treatment
-                  Text(
-                    'Treatment:',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  ElevatedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF00A67E),
                     ),
+                    child: Text('Go Back'),
                   ),
-                  SizedBox(height: 8),
-                  if (diseaseData!['treatment'] is List) ...[
-                    ...List.generate(
-                      (diseaseData!['treatment'] as List).length,
-                          (index) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('• ', style: TextStyle(fontSize: 16)),
-                            Expanded(
-                              child: Text(
-                                diseaseData!['treatment'][index],
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ] else if (diseaseData!['treatment'] is String) ...[
-                    Text(
-                      diseaseData!['treatment'],
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ] else ...[
-                    Text(
-                      'No treatment information available',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-
-                  SizedBox(height: 24),
-
-                  // Ask Expert Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        // Navigate to chat or experts consultation
-                        print('Navigate to experts consultation');
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(0xFF00A67E),
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: Text(
-                        'Ask Expert',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
                 ],
+              ),
+            );
+          }
+
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Disease Image
+                Container(
+                  width: double.infinity,
+                  height: 200,
+                  child: Image.network(
+                    disease.image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: Colors.grey.shade200,
+                      child: Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                        size: 50,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Disease Details
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Disease Name
+                      Text(
+                        disease.name,
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      SizedBox(height: 16),
+
+                      // Description
+                      _buildSection(
+                        title: 'Description',
+                        content: disease.description,
+                        icon: Icons.description,
+                      ),
+
+                      SizedBox(height: 24),
+
+                      // Symptoms
+                      _buildListSection(
+                        title: 'Symptoms',
+                        items: disease.symptoms,
+                        icon: Icons.sick,
+                      ),
+
+                      SizedBox(height: 24),
+
+                      // Causes
+                      _buildListSection(
+                        title: 'Causes',
+                        items: disease.causes,
+                        icon: Icons.bug_report,
+                      ),
+
+                      SizedBox(height: 24),
+
+                      // Treatment
+                      _buildListSection(
+                        title: 'Treatment',
+                        items: disease.treatment,
+                        icon: Icons.healing,
+                      ),
+
+                      SizedBox(height: 32),
+
+                      // Ask Expert Button
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Navigate to expert consultation
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF00A67E),
+                            padding: EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                          ),
+                          child: Text(
+                            'Ask Expert',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildSection({
+    required String title,
+    required String content,
+    required IconData icon,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: Color(0xFF00A67E),
+              size: 24,
+            ),
+            SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
             ),
           ],
         ),
-      ),
+        SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Text(
+            content,
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black87,
+              height: 1.6,
+            ),
+          ),
+        ),
+      ],
     );
   }
+
+  Widget _buildListSection({
+    required String title,
+    required List<String> items,
+    required IconData icon,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              icon,
+              color: Color(0xFF00A67E),
+              size: 24,
+            ),
+            SizedBox(width: 8),
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12),
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade200),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: items.map((item) => Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('• ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  Expanded(
+                    child: Text(
+                      item,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black87,
+                        height: 1.6,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            )).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clear selected disease when leaving the screen
+    Provider.of<DiseaseProvider>(context, listen: false).clearSelectedDisease();
+    super.dispose();
+  }
 }
+

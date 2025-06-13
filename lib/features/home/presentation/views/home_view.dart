@@ -2,6 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/views/common_diseases_view.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/views/history_screen.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/widgets/common_diseases_section.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config/theme/app_colors.dart';
@@ -32,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
 
   List<Widget> screens = [
     const HomeViewBody(),
-    const DiseaseScreen(),
+    const DiagnoseScreen(),
     FutureBuilder(
       future: FirebaseServiceNotify().signInAnonymously(),
       builder: (context, snapshot) {
