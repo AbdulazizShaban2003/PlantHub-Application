@@ -4,6 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'app/my_app.dart';
@@ -27,8 +28,6 @@ void main() async {
     cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
   );
   await sl<CacheHelper>().init();
-
-
   final cameras = await availableCameras();
   final firstCamera = cameras.first;
 
@@ -44,9 +43,20 @@ void main() async {
       ),
     );
   };
+  final NotificationService notificationService = NotificationService();
+  await notificationService.initialize();
 
   tz.initializeTimeZones();
-  await NotificationService().initialize();
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+  await notificationService.flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+
+  String? initialRoute;
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    final String? payload = notificationAppLaunchDetails!.notificationResponse?.payload;
+    if (payload != null && payload.isNotEmpty) {
+      print('App launched by notification with payload: $payload');
+    }
+  }
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -59,10 +69,6 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.dark,
     ),
   );
-  tz.initializeTimeZones();
-
-  await NotificationService().initialize();
-
   runApp(
     EasyLocalization(
       supportedLocales: [Locale('en'), Locale('ar')],

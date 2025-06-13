@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
+import 'package:shared_preferences/shared_preferences.dart'; //
+import '../features/my_plant/services/notification_service.dart'; //
 
 class NotificationSettingsScreen extends StatefulWidget {
   final bool initialValue;
@@ -27,8 +29,15 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
   @override
   void initState() {
     super.initState();
-    _notificationsEnabled = widget.initialValue;
+    _loadNotificationSettings();
   }
+
+  Future<void> _loadNotificationSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() { //
+      _notificationsEnabled = prefs.getBool('notificationsEnabled') ?? true;
+    }); //
+  } //
 
   @override
   Widget build(BuildContext context) {
@@ -160,10 +169,18 @@ class _NotificationSettingsScreenState extends State<NotificationSettingsScreen>
             ),
             Switch(
               value: _notificationsEnabled,
-              onChanged: (value) {
-                setState(() {
-                  _notificationsEnabled = value;
-                });
+              onChanged: (value) async { //
+                setState(() { //
+                  _notificationsEnabled = value; //
+                }); //
+                final prefs = await SharedPreferences.getInstance(); //
+                await prefs.setBool('notificationsEnabled', value); //
+
+                if (!value) { //
+                  await NotificationService().cancelAllNotifications(); //
+                  print('All notifications cancelled due to global setting.'); //
+                } //
+                widget.onSettingsChanged(value); //
               },
               activeColor: Colors.green,
             ),
