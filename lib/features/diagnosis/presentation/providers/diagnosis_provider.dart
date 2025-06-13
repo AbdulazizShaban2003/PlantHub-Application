@@ -46,11 +46,10 @@ class DiagnosisProvider with ChangeNotifier {
       // In a real app, you would send the image to your API
       // For demo purposes, we'll simulate an API response
       await Future.delayed(Duration(seconds: 2));
-      
+       
       // Simulate API call
       final result = await _simulateApiCall(imagePath);
       
-      // Process the result
       await _handleDiagnosisResult(result);
     } catch (e) {
       _status = DiagnosisStatus.error;
@@ -60,9 +59,7 @@ class DiagnosisProvider with ChangeNotifier {
     }
   }
 
-  // Simulate API call (in a real app, this would be a real API call)
   Future<Map<String, dynamic>> _simulateApiCall(String imagePath) async {
-    // For demo purposes, generate a random result
     final random = DateTime.now().millisecondsSinceEpoch % 3;
     
     if (random == 0) {

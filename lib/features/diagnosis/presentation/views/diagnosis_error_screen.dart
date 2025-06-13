@@ -22,7 +22,7 @@ class DiagnosisErrorScreen extends StatelessWidget {
 
             Expanded(
               flex: 2,
-              child: Container(
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Image.asset(
                   "assets/images/image_error.png",

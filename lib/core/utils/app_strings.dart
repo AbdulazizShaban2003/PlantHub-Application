@@ -337,6 +337,16 @@ static const String message = "Messages";
   static const String practice4Description = 'Capture textures, patterns, and unique features';
   static const String practice5Title = 'Stability';
   static const String practice5Description = 'Keep your phone steady or use a tripod';
+  static const String diagnosisHistory = 'Diagnosis History';
+  static const String searchHistoryHint = 'Search history...';
+  static const String noDiagnosisHistory = 'No diagnosis history';
+  static const String noResultsFor = 'No results for';
+  static const String healthy = 'Healthy';
+  static const String diseased = 'Diseased';
+  static const String at = 'at';
+  static const String clearHistory = 'Clear History';
+  static const String clearHistoryConfirmation = 'Are you sure you want to clear all history?';
+  static const String clear = 'Clear';
 }
 class RegxStrings {
   // Regular expressions
@@ -456,4 +466,5 @@ class RegxStrings {
 
   static const String emptyPhone = 'Please Enter phone number';
 }
+
 

@@ -17,7 +17,6 @@ class DiseaseProvider with ChangeNotifier {
   String get errorMessage => _errorMessage;
   DiseaseModel? get selectedDisease => _selectedDisease;
 
-  // Load all diseases
   Future<void> loadAllDiseases() async {
     _setLoading(true);
     try {
@@ -32,11 +31,13 @@ class DiseaseProvider with ChangeNotifier {
     }
   }
 
-  // Load common diseases
-  Future<void> loadCommonDiseases({int limit = 5}) async {
+  // تم تصحيح الخطأ هنا:
+  // 1. إزالة المعامل `limit` من تعريف الدالة لأن `DiseaseService.getAllDiseases()` لم تعد تقبله.
+  // 2. إضافة الفاصلة المنقوطة المفقودة.
+  Future<void> loadCommonDiseases() async { // تم إزالة {int limit = 5}
     _setLoading(true);
     try {
-      final loadedDiseases = await DiseaseService.getRandomDiseases(limit: limit);
+      final loadedDiseases = await DiseaseService.getAllDiseases();
       _commonDiseases = loadedDiseases;
       _errorMessage = '';
     } catch (e) {
@@ -47,7 +48,6 @@ class DiseaseProvider with ChangeNotifier {
     }
   }
 
-  // Load disease by ID
   Future<void> loadDiseaseById(String diseaseId) async {
     _setLoading(true);
     try {
@@ -63,7 +63,6 @@ class DiseaseProvider with ChangeNotifier {
     }
   }
 
-  // Search diseases
   Future<List<DiseaseModel>> searchDiseases(String query) async {
     _setLoading(true);
     try {
@@ -79,13 +78,11 @@ class DiseaseProvider with ChangeNotifier {
     }
   }
 
-  // Helper method to set loading state
   void _setLoading(bool loading) {
     _isLoading = loading;
     notifyListeners();
   }
 
-  // Clear selected disease
   void clearSelectedDisease() {
     _selectedDisease = null;
     notifyListeners();

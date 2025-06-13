@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/disease_provider.dart';
+
 class DiseaseDetailScreen extends StatefulWidget {
   final String diseaseId;
   final String diseaseName;
@@ -308,9 +309,6 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
 
   @override
   void dispose() {
-    // Clear selected disease when leaving the screen
-    Provider.of<DiseaseProvider>(context, listen: false).clearSelectedDisease();
     super.dispose();
   }
 }
-

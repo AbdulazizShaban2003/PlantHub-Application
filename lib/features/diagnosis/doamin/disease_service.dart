@@ -5,15 +5,14 @@ import '../data/disease_info.dart';
 class DiseaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String _collectionName = 'diseases';
-  static const int _searchLimit = 20;
 
-  // Get all diseases with pagination support
-  static Future<List<DiseaseModel>> getAllDiseases({int limit = 10, DocumentSnapshot? lastDocument}) async {
+  // Get all diseases with pagination support, without a fixed limit
+  static Future<List<DiseaseModel>> getAllDiseases(
+      {DocumentSnapshot? lastDocument}) async {
     try {
       Query query = _firestore
           .collection(_collectionName)
-          .orderBy('name')
-          .limit(limit);
+          .orderBy('name');
 
       if (lastDocument != null) {
         query = query.startAfterDocument(lastDocument);
@@ -58,7 +57,6 @@ class DiseaseService {
           .where('name_lowercase', isGreaterThanOrEqualTo: lowercaseQuery)
           .where('name_lowercase', isLessThanOrEqualTo: '$lowercaseQuery\uf8ff')
           .orderBy('name_lowercase')
-          .limit(_searchLimit)
           .get();
 
       return querySnapshot.docs
@@ -85,29 +83,6 @@ class DiseaseService {
     } catch (e) {
       print('Error fetching diseases by category: $e');
       throw Exception('Failed to fetch diseases for this category');
-    }
-  }
-
-  // Get random diseases
-  static Future<List<DiseaseModel>> getRandomDiseases({int limit = 5}) async {
-    try {
-      final querySnapshot = await _firestore
-          .collection(_collectionName)
-          .get();
-
-      final allDiseases = querySnapshot.docs
-          .map((doc) => DiseaseModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>))
-          .toList();
-
-      if (allDiseases.isEmpty) return [];
-      if (allDiseases.length <= limit) return allDiseases;
-
-      // Shuffle and take first 'limit' items
-      allDiseases.shuffle(Random());
-      return allDiseases.take(limit).toList();
-    } catch (e) {
-      print('Error fetching random diseases: $e');
-      throw Exception('Failed to fetch random diseases');
     }
   }
 }

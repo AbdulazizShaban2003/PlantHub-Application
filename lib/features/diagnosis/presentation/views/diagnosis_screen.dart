@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/providers/disease_provider.dart';
 import 'package:provider/provider.dart';
-import '../../../../core/widgets/outlined_button_widget.dart';
+import '../widgets/build_icon_diagnose.dart';
 import '../widgets/common_diseases_section.dart';
-import '../widgets/explore_diseases_section.dart';
-import '../widgets/ask_expert_section.dart';
 import 'diagnosis_error_screen.dart';
 import 'diagnosis_result_screen.dart';
 import 'diagnosis_healthy_screen.dart';
@@ -39,7 +38,10 @@ class _DiagnoseScreenState extends State<DiagnoseScreen> {
       );
 
       if (image != null) {
-        final diagnosisProvider = Provider.of<DiagnosisProvider>(context, listen: false);
+        final diagnosisProvider = Provider.of<DiagnosisProvider>(
+          context,
+          listen: false,
+        );
         await diagnosisProvider.processImage(image.path);
         _navigateBasedOnDiagnosisResult();
       }
@@ -49,21 +51,28 @@ class _DiagnoseScreenState extends State<DiagnoseScreen> {
   }
 
   void _navigateBasedOnDiagnosisResult() {
-    final diagnosisProvider = Provider.of<DiagnosisProvider>(context, listen: false);
+    final diagnosisProvider = Provider.of<DiagnosisProvider>(
+      context,
+      listen: false,
+    );
 
     switch (diagnosisProvider.status) {
       case DiagnosisStatus.noPlant:
-        Navigator.push(context, MaterialPageRoute(builder: (_) => const DiagnosisErrorScreen()));
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const DiagnosisErrorScreen()),
+        );
         break;
 
       case DiagnosisStatus.healthy:
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => DiagnosisHealthyScreen(
-              imagePath: diagnosisProvider.imagePath,
-              apiResponse: null,
-            ),
+            builder:
+                (_) => DiagnosisHealthyScreen(
+                  imagePath: diagnosisProvider.imagePath,
+                  apiResponse: null,
+                ),
           ),
         );
         break;
@@ -73,10 +82,11 @@ class _DiagnoseScreenState extends State<DiagnoseScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (_) => DiagnosisResultScreen(
-                imagePath: diagnosisProvider.imagePath,
-                diseaseData: diagnosisProvider.detectedDisease!,
-              ),
+              builder:
+                  (_) => DiagnosisResultScreen(
+                    imagePath: diagnosisProvider.imagePath,
+                    diseaseData: diagnosisProvider.detectedDisease!,
+                  ),
             ),
           );
         }
@@ -110,7 +120,10 @@ class _DiagnoseScreenState extends State<DiagnoseScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Select Image Source', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  'Select Image Source',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -173,138 +186,129 @@ class _DiagnoseScreenState extends State<DiagnoseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: Consumer<DiagnosisProvider>(
         builder: (context, diagnosisProvider, child) {
           final isLoading = diagnosisProvider.status == DiagnosisStatus.loading;
 
           return isLoading
-              ? const Center(child: CircularProgressIndicator(color: Color(0xFF00A67E)))
+              ? const Center(
+                child: CircularProgressIndicator(color: Color(0xFF00A67E)),
+              )
               : RefreshIndicator(
-            onRefresh: _onRefresh,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                SliverAppBar(
-                  backgroundColor: Colors.white,
-                  elevation: 0,
-                  pinned: true,
-                  centerTitle: true,
-                  title: Row(
-                    children: [
-                      Image.asset(
-                        'assets/images/leaf_icon.png',
-                        width: 24,
-                        height: 24,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.eco, color: Color(0xFF00A67E)),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Diagnose',
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.history, color: Colors.black),
-                      onPressed: () {
-                        Provider.of<HistoryProvider>(context, listen: false).loadHistory();
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => HistoryScreen()));
-                      },
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.refresh, color: Colors.black),
-                      onPressed: _onRefresh,
-                    ),
-                  ],
-                ),
-              ],
-              body: Padding(
-                padding: const EdgeInsets.all(16),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search diseases...',
-                          prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                          filled: true,
-                          fillColor: Colors.grey.shade100,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: BorderSide.none,
+                onRefresh: _onRefresh,
+                child: NestedScrollView(
+                  headerSliverBuilder:
+                      (context, innerBoxIsScrolled) => [
+                        SliverAppBar(
+                          title: TitleAppBarDiagnose(),
+                          actions: [
+                            IconHistoryComponent(),
+
+                          ],
+                        ),
+                      ],
+                  body: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextField(
+                            style: Theme.of(context).textTheme.bodySmall,
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              hintText: 'Search diseases...',
+                              prefixIcon: const Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade100,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                            onChanged: (query) {
+                              Provider.of<DiseaseProvider>(
+                                context,
+                                listen: false,
+                              ).searchDiseases(query);
+                            },
                           ),
-                        ),
-                        onSubmitted: (query) {
-                          // Search action
-                        },
+                          const SizedBox(height: 24),
+                          BuildIconDiagnose(onPressed: _showImageSourceDialog),
+                          SizedBox(height: 30),
+                          CommonDiseasesSection(),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 5,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          children: [
-                            Image.asset(
-                              'assets/images/icon_diagnosis.png',
-                              width: 100,
-                              height: 100,
-                              errorBuilder: (_, __, ___) => Container(
-                                width: 100,
-                                height: 100,
-                                color: Colors.grey.shade200,
-                                child: const Icon(Icons.eco, color: Color(0xFF00A67E), size: 40),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Check Your Plant',
-                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    'Take photos, start diagnose diseases & get plant care tips',
-                                    style: TextStyle(fontSize: 10, color: Colors.grey.shade600),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  SizedBox(
-                                    child: OutlinedButtonWidget(nameButton: 'Diagnose',onPressed: _showImageSourceDialog,),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      CommonDiseasesSection(),
-                      const SizedBox(height: 24),
-                      const SizedBox(height: 24),
-                    ],
+                    ),
                   ),
                 ),
-              ),
-            ),
-          );
+              );
         },
       ),
     );
   }
 }
+
+class IconHistoryComponent extends StatelessWidget {
+  const IconHistoryComponent({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: const Icon(
+        Icons.history,
+        color: Colors.black,
+      ),
+      onPressed: () {
+        Provider.of<HistoryProvider>(
+          context,
+          listen: false,
+        ).loadHistory();
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => HistoryView(),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class TitleAppBarDiagnose extends StatelessWidget {
+  const TitleAppBarDiagnose({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Image.asset(
+          'assets/images/plant_icon.png',
+          width: 24,
+          height: 24,
+          errorBuilder:
+              (_, __, ___) => const Icon(
+                Icons.eco,
+                color: Color(0xFF00A67E),
+              ),
+        ),
+        const SizedBox(width: 8),
+        const Text(
+          'Diagnose',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+}
+

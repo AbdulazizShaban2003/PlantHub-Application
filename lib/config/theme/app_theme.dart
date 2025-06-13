@@ -26,7 +26,11 @@ class AppThemes {
       prefixIconColor: Colors.grey.shade400,
 
     ),
-
+    dialogTheme:  DialogTheme(
+      backgroundColor: Colors.white,
+      titleTextStyle: TextStyle(color: Colors.black, fontSize: 20),
+      contentTextStyle: TextStyle(color: Colors.black54),
+    ),
     scaffoldBackgroundColor: Color(0xFFFFFFFF),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
@@ -207,6 +211,13 @@ class AppThemes {
       backgroundColor: Colors.black,
       elevation: 0,
     ),
+
+      dialogTheme: DialogTheme(
+        backgroundColor: Colors.grey[900], // للوضع المظلم
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
+        contentTextStyle: TextStyle(color: Colors.white70),
+      ),
+
     bottomAppBarTheme: BottomAppBarTheme(color: Colors.black, elevation: 0),
     textTheme: TextTheme(
       headlineLarge: TextStyle(
