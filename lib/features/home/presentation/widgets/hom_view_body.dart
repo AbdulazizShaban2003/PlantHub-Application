@@ -5,6 +5,7 @@ import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../account/presentation/manager/profile_provider.dart';
 import '../../../articles/view_model.dart';
+import '../../../diagnosis/presentation/providers/disease_provider.dart';
 import 'custom_app_bar_home_view.dart';
 import 'custom_ask_expert.dart';
 import 'custom_explore_book.dart';
@@ -46,6 +47,17 @@ class HomeViewBody extends StatelessWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    onChanged: (query) {
+                      Provider.of<DiseaseProvider>(
+                        context,
+                        listen: false,
+                      ).searchDiseases(query);
+                      plantProvider.searchPlants(query);
+                      Provider.of<DiseaseProvider>(
+                        context,
+                        listen: false,
+                      ).searchDiseases(query);
+                    },
                     decoration: InputDecoration(
                       prefixIcon: Icon(CupertinoIcons.search),
                       hintText: AppKeyStringTr.searchPlant,
