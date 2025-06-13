@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../providers/plant_provider.dart';
 import '../../services/notification_service.dart';
+import '../widgets/harvest_content_widget.dart';
 import '../widgets/plant_content_widget.dart';
 import 'add_plant_screen.dart';
 
@@ -152,10 +153,10 @@ class _MyPlantViewState extends State<MyPlantView>
               controller: _tabController,
               tabs: const [
                 Tab(text: 'My Plant'),
-                Tab(text: 'Herbs'),
+                Tab(text: 'Harvest'),
               ],
               labelColor: ColorsManager.greenPrimaryColor,
-              unselectedLabelColor: Colors.grey,
+              unselectedLabelColor: Theme.of(context).primaryColor,
               indicatorColor: ColorsManager.greenPrimaryColor,
               indicatorWeight: 3.0,
               indicatorSize: TabBarIndicatorSize.tab,
@@ -173,9 +174,9 @@ class _MyPlantViewState extends State<MyPlantView>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: const [
-          PlantsContent(),
-          Center(child: Text('Herbs Content')),
+        children: [
+          const PlantsContent(),
+          HarvestGuideWidget(),
         ],
       ),
       floatingActionButton: _tabController.index == 0
@@ -207,9 +208,8 @@ class _MyPlantViewState extends State<MyPlantView>
           ? Padding(
         padding: const EdgeInsets.only(bottom: 80.0),
         child: FloatingActionButton(
-          heroTag: 'harvest_fab', // Tag مختلف
+          heroTag: 'harvest_fab',
           onPressed: () {
-            // action for Harvest tab if needed
           },
           backgroundColor: ColorsManager.greenPrimaryColor,
           child: Icon(

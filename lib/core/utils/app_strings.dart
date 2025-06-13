@@ -358,6 +358,13 @@ static const String message = "Messages";
   static const String sent = 'Sent';
   static const String pending = 'Pending';
   static const String noPhotosYet = 'No photos yet';
+
+  static const String viewDetails = 'View Details';
+  static const String editPlant = 'Edit Plant';
+  static const String deletePlant = 'Delete Plant';
+  static const String confirmDeletePlant = 'Are you sure you want to delete';
+  static const String added = 'Added';
+  static const String description = 'Description';
 }
 
 class RegxStrings {

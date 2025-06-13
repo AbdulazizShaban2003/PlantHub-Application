@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart' show SizeConfig;
 import '../../models/notification_model.dart';
 import '../../providers/plant_provider.dart';
@@ -14,16 +16,15 @@ class MyPlantCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final displayActions =
     plant.actions.where((action) => action.isEnabled).take(4).toList();
 
     return GestureDetector(
       onTap: () {
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PlantDetailScreen(plant: plant),
-          ),
+            context,
+            RouteHelper.navigateTo(PlantDetailScreen(plant: plant))
         ).then((_) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             if (context.mounted) {
@@ -42,14 +43,13 @@ class MyPlantCard extends StatelessWidget {
           padding: EdgeInsets.all(SizeConfig().width(0.04)),
           child: Row(
             children: [
-              // Plant Image
               Hero(
                 tag: 'plant_image_${plant.id}',
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
                   child: Container(
-                    width: SizeConfig().height(0.08),
-                    height: SizeConfig().height(0.08),
+                    width: SizeConfig().width(0.3),
+                    height: SizeConfig().height(0.15),
                     color: Colors.grey[200],
                     child: plant.mainImagePath.isNotEmpty &&
                         File(plant.mainImagePath).existsSync()
@@ -67,7 +67,6 @@ class MyPlantCard extends StatelessWidget {
               ),
               SizedBox(width: SizeConfig().width(0.04)),
 
-              // Plant Info
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,7 +91,6 @@ class MyPlantCard extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig().height(0.01)),
 
-                    // Action Indicators
                     SizedBox(
                       width: double.infinity,
                       child: Wrap(
@@ -149,7 +147,7 @@ class MyPlantCard extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.visibility,
                   size: SizeConfig().responsiveFont(24)),
-              title: Text('View Details',
+              title: Text(AppStrings.viewDetails,
                   style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
               onTap: () {
                 Navigator.pop(context);
@@ -169,7 +167,7 @@ class MyPlantCard extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.edit, size: SizeConfig().responsiveFont(24)),
-              title: Text('Edit Plant',
+              title: Text(AppStrings.editPlant,
                   style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
               onTap: () {
                 Navigator.pop(context);
@@ -191,7 +189,7 @@ class MyPlantCard extends StatelessWidget {
               leading: Icon(Icons.delete,
                   color: Colors.red, size: SizeConfig().responsiveFont(24)),
               title: Text(
-                'Delete Plant',
+                AppStrings.deletePlant,
                 style: TextStyle(
                     color: Colors.red,
                     fontSize: SizeConfig().responsiveFont(16)),
@@ -211,14 +209,14 @@ class MyPlantCard extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Delete Plant',
+        title: Text(AppStrings.deletePlant,
             style: TextStyle(fontSize: SizeConfig().responsiveFont(18))),
-        content: Text('Are you sure you want to delete ${plant.name}?',
+        content: Text('${AppStrings.confirmDeletePlant} ${plant.name}?',
             style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel',
+            child: Text(AppStrings.cancel,
                 style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
           ),
           TextButton(
@@ -231,7 +229,7 @@ class MyPlantCard extends StatelessWidget {
               });
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('Delete',
+            child: Text(AppStrings.deletePlant,
                 style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
           ),
         ],

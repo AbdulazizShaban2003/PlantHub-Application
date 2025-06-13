@@ -132,7 +132,7 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
           child: TabBar(
             controller: _tabController,
             labelColor: ColorsManager.greenPrimaryColor,
-            unselectedLabelColor: Colors.white,
+            unselectedLabelColor: Theme.of(context).primaryColor,
             indicatorColor: ColorsManager.greenPrimaryColor,
             tabs: const [
               Tab(icon: Icon(Icons.schedule), text: 'Care Schedule'),

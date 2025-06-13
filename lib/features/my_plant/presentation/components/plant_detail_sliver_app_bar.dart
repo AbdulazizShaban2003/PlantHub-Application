@@ -20,8 +20,7 @@ class PlantDetailSliverAppBar extends StatelessWidget {
     return SliverAppBar(
       expandedHeight: 300,
       pinned: true,
-      backgroundColor: Colors.green,
-      foregroundColor: Colors.white,
+      forceMaterialTransparency: true,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           plantName,
