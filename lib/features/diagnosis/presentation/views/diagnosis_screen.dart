@@ -260,9 +260,9 @@ class IconHistoryComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(
+      icon:  Icon(
         Icons.history,
-        color: Colors.black,
+        color: Theme.of(context).primaryColor
       ),
       onPressed: () {
         Provider.of<HistoryProvider>(
