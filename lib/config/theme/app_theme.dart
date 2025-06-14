@@ -41,6 +41,48 @@ class AppThemes {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
     ),
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: Colors.white,
+      dialHandColor: Colors.green[100],
+      dialBackgroundColor: Colors.white,
+      entryModeIconColor: Colors.green[100],
+      hourMinuteTextColor: Colors.black,
+
+      dayPeriodTextStyle: const TextStyle(
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+        color: Colors.black,
+      ),
+
+      dayPeriodColor: Colors.grey[100],
+
+      hourMinuteColor: MaterialStateColor.resolveWith((states) =>
+      states.contains(MaterialState.selected)
+          ? Colors.green[100]! // أخضر فاتح عند التحديد
+          : Colors.white, // أبيض عند عدم التحديد
+      ),
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
+
+      hourMinuteTextStyle: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w400,
+        color: Colors.black,
+      ),
+
+      // أرقام الدايل (أسود)
+      dialTextColor: Colors.black,
+
+      // نص "Select Time" (أسود وغامق)
+      helpTextStyle: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+        color: Colors.black,
+      ),
+    ),
+
     dividerTheme: DividerThemeData(
       thickness: SizeConfig().height(0.001),
        color:  Color(0x1F000000).withOpacity(0.2)

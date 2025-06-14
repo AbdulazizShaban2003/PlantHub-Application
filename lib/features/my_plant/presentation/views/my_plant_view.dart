@@ -1,12 +1,11 @@
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart' as AppSettings;
+import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../providers/plant_provider.dart';
-import '../../services/notification_service.dart';
 import '../widgets/harvest_content_widget.dart';
 import '../widgets/plant_content_widget.dart';
 import 'add_plant_screen.dart';
@@ -42,118 +41,29 @@ class _MyPlantViewState extends State<MyPlantView>
 
   @override
   Widget build(BuildContext context) {
-    final width = SizeConfig().width(0.05);
-    final height = SizeConfig().width(0.05);
-    final fontSize = SizeConfig().responsiveFont(14);
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         leading: Padding(
           padding: const EdgeInsets.all(9.0),
           child: Image(
             image: AssetImage(AssetsManager.iconPlant),
-            height: SizeConfig().height(0.06),
+            height: SizeConfig().height(0.05),
           ),
         ),
         title: Text(
-          'My Plants',
+          AppStrings.myPlant,
           style: Theme.of(context).textTheme.headlineSmall,
         ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications_active,
-              size: SizeConfig().responsiveFont(24),
-            ),
-            onPressed: () async {
-              try {
-                final notificationService = NotificationService();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        SizedBox(
-                          width: width,
-                          height: height,
-                          child: CircularProgressIndicator(
-                            strokeWidth: SizeConfig().width(0.005),
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                              Colors.white,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: SizeConfig().width(0.04)),
-                        Text(
-                          'Scheduling test notification...',
-                          style: TextStyle(fontSize: fontSize),
-                        ),
-                      ],
-                    ),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-                await notificationService.scheduleTestNotification();
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle,
-                          color: Colors.white,
-                          size: SizeConfig().responsiveFont(20),
-                        ),
-                        SizedBox(width: SizeConfig().width(0.02)),
-                        Text(
-                          'Test notification scheduled for 5 seconds!',
-                          style: TextStyle(fontSize: fontSize),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: Colors.green,
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(
-                          Icons.error,
-                          color: Colors.white,
-                          size: SizeConfig().responsiveFont(20),
-                        ),
-                        SizedBox(width: SizeConfig().width(0.02)),
-                        Expanded(
-                          child: Text(
-                            'Error: ${e.toString()}',
-                            style: TextStyle(fontSize: fontSize),
-                          ),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: Colors.red,
-                    duration: const Duration(seconds: 5),
-                  ),
-                );
-              }
-            },
-          ),
-        ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48.0),
           child: Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: TabBar(
               controller: _tabController,
-              tabs: const [
-                Tab(text: 'My Plant'),
-                Tab(text: 'Harvest'),
+              tabs:  [
+                Tab(text: AppStrings.myPlant),
+                Tab(text: AppStrings.harvest),
               ],
               labelColor: ColorsManager.greenPrimaryColor,
               unselectedLabelColor: Theme.of(context).primaryColor,
@@ -187,10 +97,7 @@ class _MyPlantViewState extends State<MyPlantView>
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const AddPlantScreen(),
-              ),
-            ).then((_) {
+              RouteHelper.navigateTo(const AddPlantScreen())).then((_) {
               if (mounted) {
                 context.read<PlantProvider>().loadPlants();
               }
@@ -199,7 +106,7 @@ class _MyPlantViewState extends State<MyPlantView>
           backgroundColor: ColorsManager.greenPrimaryColor,
           child: Icon(
             Icons.add,
-            color: Colors.white,
+            color: ColorsManager.whiteColor,
             size: SizeConfig().responsiveFont(33),
           ),
         ),
@@ -214,7 +121,7 @@ class _MyPlantViewState extends State<MyPlantView>
           backgroundColor: ColorsManager.greenPrimaryColor,
           child: Icon(
             Icons.add,
-            color: Colors.white,
+            color: ColorsManager.whiteColor,
             size: SizeConfig().responsiveFont(33),
           ),
         ),

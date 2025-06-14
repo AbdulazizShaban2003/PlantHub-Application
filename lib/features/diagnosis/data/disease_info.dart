@@ -28,6 +28,7 @@ class DiseaseModel {
       treatment: List<String>.from(json['treatment']?.map((e) => e.toString()) ?? []),
     );
   }
+
   factory DiseaseModel.fromFirestore(String id, Map<String, dynamic> data) {
     return DiseaseModel(
       id: id,

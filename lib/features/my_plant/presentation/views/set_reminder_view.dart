@@ -5,6 +5,7 @@ import '../../models/notification_model.dart';
 import '../components/custom_dropdown.dart';
 import '../components/custom_time_picker.dart';
 import '../controllers/reminder_controller.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart'; // Import SizeConfig
 
 class SetReminderView extends StatefulWidget {
   final ActionType actionType;
@@ -37,44 +38,46 @@ class _SetReminderViewState extends State<SetReminderView> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.close, color: Colors.black),
+          icon: Icon(Icons.close, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
+        title: Text(
           'Set Reminder',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 18,
+            fontSize: SizeConfig().responsiveFont(18),
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(SizeConfig().width(0.06)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            SizedBox(height: SizeConfig().height(0.025)),
 
             CustomDropdown(
               title: 'Remind me to',
               value: _controller.remindMeTo,
               items: [widget.actionType.displayName],
-              onChanged: (value) => setState(() => _controller.remindMeTo = value!),
+              onChanged:
+                  (value) => setState(() => _controller.remindMeTo = value!),
             ),
 
-            const SizedBox(height: 32),
-
+            SizedBox(height: SizeConfig().height(0.04)),
             CustomDropdown<RepeatType>(
               title: 'Repeat',
               value: _controller.selectedRepeat,
               items: RepeatType.values,
               displayText: _controller.getRepeatDisplayText,
-              onChanged: (value) => setState(() => _controller.selectedRepeat = value!),
+              onChanged:
+                  (value) =>
+                  setState(() => _controller.selectedRepeat = value!),
             ),
 
-            const SizedBox(height: 32),
+            SizedBox(height: SizeConfig().height(0.04)),
 
             CustomTimePicker(
               title: 'Time',
@@ -85,30 +88,19 @@ class _SetReminderViewState extends State<SetReminderView> {
               },
             ),
 
-            const Spacer(),
+            Spacer(),
 
             Row(
               children: [
                 Expanded(
-                  child: TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: const Text(
-                      'Cancel',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.grey,
-                      ),
-                    ),
+                  child: OutlinedButtonWidget(
+                    nameButton: 'Cancel',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: SizeConfig().width(0.04)),
                 Expanded(
                   child: OutlinedButtonWidget(
                     nameButton: 'Save',
@@ -120,7 +112,7 @@ class _SetReminderViewState extends State<SetReminderView> {
                 ),
               ],
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: SizeConfig().height(0.04)),
           ],
         ),
       ),

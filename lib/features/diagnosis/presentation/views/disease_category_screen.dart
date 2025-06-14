@@ -1,221 +1,229 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'disease_detail_screen.dart';
-
-class DiseaseCategoryScreen extends StatefulWidget {
-  final String categoryName;
-
-  const DiseaseCategoryScreen({
-    Key? key,
-    required this.categoryName,
-  }) : super(key: key);
-
-  @override
-  _DiseaseCategoryScreenState createState() => _DiseaseCategoryScreenState();
-}
-
-class _DiseaseCategoryScreenState extends State<DiseaseCategoryScreen> {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  List<Map<String, dynamic>> diseases = [];
-  bool isLoading = true;
-  String searchQuery = '';
-  final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchDiseases();
-  }
-
-  Future<void> _fetchDiseases() async {
-    try {
-      final diseasesSnapshot = await _firestore.collection('diseases')
-          .where('category', isEqualTo: widget.categoryName)
-          .get();
-
-      setState(() {
-        diseases = diseasesSnapshot.docs
-            .map((doc) => {
-          'id': doc.id,
-          ...doc.data(),
-        })
-            .toList();
-        isLoading = false;
-      });
-    } catch (e) {
-      print('Error fetching diseases: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  void _searchDiseases(String query) {
-    setState(() {
-      searchQuery = query;
-    });
-  }
-
-  List<Map<String, dynamic>> _getFilteredDiseases() {
-    if (searchQuery.isEmpty) {
-      return diseases;
-    }
-
-    return diseases.where((disease) =>
-        disease['name'].toString().toLowerCase().contains(searchQuery.toLowerCase())
-    ).toList();
-  }
-
-  void _navigateToDiseaseDetail(String diseaseId, String diseaseName) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DiseaseDetailScreen(diseaseId: diseaseId, diseaseName: diseaseName),
-      ),
-    );
-  }
+class DiagnosisSuccessScreen extends StatelessWidget {
+  const DiagnosisSuccessScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          widget.categoryName,
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: TextField(
-              controller: _searchController,
-              onChanged: _searchDiseases,
-              decoration: InputDecoration(
-                hintText: 'Search diseases...',
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
-                filled: true,
-                fillColor: Colors.grey.shade100,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: BorderSide.none,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Success animation/icon
+              Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: Colors.green.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.check_circle,
+                  size: 80,
+                  color: Colors.green,
                 ),
               ),
-            ),
-          ),
 
-          // Disease List
-          Expanded(
-            child: isLoading
-                ? Center(child: CircularProgressIndicator(color: Color(0xFF00A67E)))
-                : _getFilteredDiseases().isEmpty
-                ? Center(child: Text('No diseases found'))
-                : ListView.separated(
-              padding: EdgeInsets.all(16),
-              itemCount: _getFilteredDiseases().length,
-              separatorBuilder: (context, index) => SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final disease = _getFilteredDiseases()[index];
-                return _buildDiseaseItem(disease);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+              SizedBox(height: 32),
 
-  Widget _buildDiseaseItem(Map<String, dynamic> disease) {
-    return InkWell(
-      onTap: () => _navigateToDiseaseDetail(disease['id'], disease['name']),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 3,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            // Disease image
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(8),
-                bottomLeft: Radius.circular(8),
-              ),
-              child: Image.network(
-                disease['imageUrl'] ?? 'https://via.placeholder.com/80',
-                width: 80,
-                height: 80,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  width: 80,
-                  height: 80,
-                  color: Colors.grey.shade300,
-                  child: Icon(Icons.image_not_supported, color: Colors.grey),
+              Text(
+                'Image Sent Successfully!',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
                 ),
+                textAlign: TextAlign.center,
               ),
-            ),
 
-            // Disease info
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
+              SizedBox(height: 16),
+
+              Text(
+                'Your plant image has been successfully submitted for diagnosis. We are analyzing it now.',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                ),
+                textAlign: TextAlign.center,
+              ),
+
+              SizedBox(height: 48),
+
+              // Processing steps
+              Container(
+                padding: EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey.shade200),
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      disease['name'] ?? 'Unknown Disease',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    _buildProcessStep(
+                      icon: Icons.upload_file,
+                      title: 'Image Uploaded',
+                      subtitle: 'Your image has been received',
+                      isCompleted: true,
                     ),
-                    SizedBox(height: 4),
-                    Text(
-                      disease['shortDescription'] ?? 'No description available',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade700,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    SizedBox(height: 16),
+                    _buildProcessStep(
+                      icon: Icons.analytics,
+                      title: 'AI Analysis',
+                      subtitle: 'Our AI is analyzing your plant',
+                      isCompleted: false,
+                      isActive: true,
+                    ),
+                    SizedBox(height: 16),
+                    _buildProcessStep(
+                      icon: Icons.assignment,
+                      title: 'Results Ready',
+                      subtitle: 'Diagnosis results will be available soon',
+                      isCompleted: false,
                     ),
                   ],
                 ),
               ),
-            ),
 
-            // Arrow icon
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+              SizedBox(height: 48),
+
+              // Action buttons
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(0xFF00A67E),
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      child: Text(
+                        'Back to Home',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  SizedBox(height: 12),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      onPressed: () {
+                        // Navigate to another diagnosis
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                      },
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: Color(0xFF00A67E)),
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                      ),
+                      child: Text(
+                        'Diagnose Another Plant',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF00A67E),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildProcessStep({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required bool isCompleted,
+    bool isActive = false,
+  }) {
+    Color iconColor;
+    Color backgroundColor;
+
+    if (isCompleted) {
+      iconColor = Colors.green;
+      backgroundColor = Colors.green.withOpacity(0.1);
+    } else if (isActive) {
+      iconColor = Color(0xFF00A67E);
+      backgroundColor = Color(0xFF00A67E).withOpacity(0.1);
+    } else {
+      iconColor = Colors.grey;
+      backgroundColor = Colors.grey.withOpacity(0.1);
+    }
+
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: backgroundColor,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            isCompleted ? Icons.check : icon,
+            color: iconColor,
+            size: 24,
+          ),
+        ),
+
+        SizedBox(width: 16),
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: isCompleted || isActive ? Colors.black : Colors.grey,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        if (isActive)
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF00A67E)),
+            ),
+          ),
+      ],
     );
   }
 }

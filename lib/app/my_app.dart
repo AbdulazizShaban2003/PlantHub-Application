@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:plant_hub_app/features/auth/presentation/manager/auth_provider.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/forget_password_view.dart';
 import 'package:plant_hub_app/features/splash/presentation/view/splash_view.dart';
 import 'package:provider/provider.dart';
 import '../config/theme/app_theme.dart';

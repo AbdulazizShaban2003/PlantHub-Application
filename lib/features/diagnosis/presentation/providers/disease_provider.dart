@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-
 import '../../data/disease_info.dart';
 import '../../doamin/disease_service.dart';
 
@@ -31,17 +30,14 @@ class DiseaseProvider with ChangeNotifier {
     }
   }
 
-  // تم تصحيح الخطأ هنا:
-  // 1. إزالة المعامل `limit` من تعريف الدالة لأن `DiseaseService.getAllDiseases()` لم تعد تقبله.
-  // 2. إضافة الفاصلة المنقوطة المفقودة.
-  Future<void> loadCommonDiseases() async { // تم إزالة {int limit = 5}
+  Future<void> loadCommonDiseases() async {
     _setLoading(true);
     try {
-      final loadedDiseases = await DiseaseService.getAllDiseases();
+      final loadedDiseases = await DiseaseService.getAllDiseasesWithoutLimit();
       _commonDiseases = loadedDiseases;
       _errorMessage = '';
     } catch (e) {
-      _errorMessage = 'Failed to load common diseases: $e';
+      _errorMessage = 'Failed to load diseases: $e';
       print(_errorMessage);
     } finally {
       _setLoading(false);

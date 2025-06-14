@@ -365,6 +365,9 @@ static const String message = "Messages";
   static const String confirmDeletePlant = 'Are you sure you want to delete';
   static const String added = 'Added';
   static const String description = 'Description';
+  static const String myPlant = 'My Plants';
+  static const String harvest = 'Harvest';
+
 }
 
 class RegxStrings {

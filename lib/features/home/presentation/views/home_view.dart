@@ -87,7 +87,7 @@ class _HomeViewState extends State<HomeView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: ColorsManager.greenPrimaryColor,
+        backgroundColor:Color(0xFF00A67E),
         elevation: 4,
         shape: const CircleBorder(),
         child: Icon(

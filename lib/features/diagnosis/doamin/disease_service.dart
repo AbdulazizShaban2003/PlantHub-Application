@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../data/disease_info.dart';
 
@@ -6,7 +5,6 @@ class DiseaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   static const String _collectionName = 'diseases';
 
-  // Get all diseases with pagination support, without a fixed limit
   static Future<List<DiseaseModel>> getAllDiseases(
       {DocumentSnapshot? lastDocument}) async {
     try {
@@ -28,8 +26,6 @@ class DiseaseService {
       throw Exception('Failed to fetch diseases');
     }
   }
-
-  // Get disease by ID
   static Future<DiseaseModel?> getDiseaseById(String diseaseId) async {
     try {
       final docSnapshot = await _firestore
@@ -45,8 +41,6 @@ class DiseaseService {
       throw Exception('Failed to fetch disease details');
     }
   }
-
-  // Search diseases
   static Future<List<DiseaseModel>> searchDiseases(String searchQuery) async {
     try {
       if (searchQuery.trim().isEmpty) return [];
@@ -68,7 +62,6 @@ class DiseaseService {
     }
   }
 
-  // Get diseases by category
   static Future<List<DiseaseModel>> getDiseasesByCategory(String category) async {
     try {
       final querySnapshot = await _firestore
@@ -83,6 +76,22 @@ class DiseaseService {
     } catch (e) {
       print('Error fetching diseases by category: $e');
       throw Exception('Failed to fetch diseases for this category');
+    }
+  }
+
+  static Future<List<DiseaseModel>> getAllDiseasesWithoutLimit() async {
+    try {
+      final querySnapshot = await _firestore
+          .collection(_collectionName)
+          .orderBy('name')
+          .get();
+
+      return querySnapshot.docs
+          .map((doc) => DiseaseModel.fromFirestore(doc.id, doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print('Error fetching all diseases: $e');
+      throw Exception('Failed to fetch all diseases');
     }
   }
 }

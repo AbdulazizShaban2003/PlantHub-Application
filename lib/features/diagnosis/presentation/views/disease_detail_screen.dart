@@ -20,7 +20,6 @@ class _DiseaseDetailScreenState extends State<DiseaseDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // Load disease details when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<DiseaseProvider>(context, listen: false).loadDiseaseById(widget.diseaseId);
     });
