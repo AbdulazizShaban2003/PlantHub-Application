@@ -108,6 +108,8 @@ class _PlantHubState extends State<PlantHub> {
           ChangeNotifierProvider(create: (_) => DiseaseProvider()),
           ChangeNotifierProvider(create: (_) => DiagnosisProvider()),
           ChangeNotifierProvider(create: (_) => HistoryProvider()),
+          ChangeNotifierProvider(create: (_) => DiagnosisProvider()),
+          ChangeNotifierProvider(create: (_) => HistoryProvider()),
           ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ChangeNotifierProvider(create: (_) => LanguageProvider()),
           ChangeNotifierProvider(create: (_) => PlantProvider()),

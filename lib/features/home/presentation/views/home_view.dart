@@ -35,7 +35,7 @@ class _HomeViewState extends State<HomeView> {
 
   List<Widget> screens = [
     const HomeViewBody(),
-    const DiagnoseScreen(),
+    const DiagnosisScreen(),
     FutureBuilder(
       future: FirebaseServiceNotify().signInAnonymously(),
       builder: (context, snapshot) {

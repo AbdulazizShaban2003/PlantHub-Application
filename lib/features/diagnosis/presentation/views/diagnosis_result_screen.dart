@@ -1,15 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../data/disease_info.dart';
+import '../../data/plant_diagnosis_response_model.dart';
 
 class DiagnosisResultScreen extends StatelessWidget {
   final String imagePath;
-  final DiseaseModel diseaseData;
+  final PlantDiagnosisResponse response;
 
   const DiagnosisResultScreen({
     Key? key,
     required this.imagePath,
-    required this.diseaseData,
+    required this.response,
   }) : super(key: key);
 
   @override
@@ -39,11 +39,7 @@ class DiagnosisResultScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.warning_amber_rounded,
-                      color: Colors.red,
-                      size: 24,
-                    ),
+                    Icon(Icons.warning_amber_rounded, color: Colors.red, size: 24),
                     SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -59,7 +55,9 @@ class DiagnosisResultScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 4),
                           Text(
-                            'Your plant appears to have ${diseaseData.name}',
+                            response.diseaseInfo.name.isNotEmpty
+                                ? 'Your plant appears to have ${response.diseaseInfo.name}'
+                                : 'A disease has been detected in your plant',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.red.shade600,
@@ -88,104 +86,113 @@ class DiagnosisResultScreen extends StatelessWidget {
               SizedBox(height: 24),
 
               // Disease Information
-              Text(
-                diseaseData.name,
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+              if (response.diseaseInfo.name.isNotEmpty) ...[
+                Text(
+                  response.diseaseInfo.name,
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-
-              SizedBox(height: 16),
+                SizedBox(height: 16),
+              ],
 
               // Description
-              Text(
-                'Description',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              if (response.diseaseInfo.description.isNotEmpty) ...[
+                Text(
+                  'Description',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                diseaseData.description,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey.shade700,
-                  height: 1.5,
+                SizedBox(height: 8),
+                Text(
+                  response.diseaseInfo.description,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade700,
+                    height: 1.5,
+                  ),
                 ),
-              ),
+                SizedBox(height: 24),
+              ],
 
-              SizedBox(height: 24),
-
-              // Symptoms
-              Text(
-                'Symptoms',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              // Care instructions
+              if (response.data.care.isNotEmpty) ...[
+                Text(
+                  'Care Instructions',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 8),
-              ...diseaseData.symptoms.map((symptom) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('• ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Expanded(
-                      child: Text(
-                        symptom,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade700,
-                          height: 1.5,
-                        ),
-                      ),
+                SizedBox(height: 8),
+                Text(
+                  response.data.care,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey.shade700,
+                    height: 1.5,
+                  ),
+                ),
+                SizedBox(height: 24),
+              ],
+
+              // Treatments
+              if (response.diseaseInfo.treatments.isNotEmpty) ...[
+                Text(
+                  'Treatments',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 8),
+                ...response.diseaseInfo.treatments.map((treatment) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.grey.shade200),
                     ),
-                  ],
-                ),
-              )),
-
-              SizedBox(height: 24),
-
-              // Treatment
-              Text(
-                'Treatment',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 8),
-              ...diseaseData.treatment.map((treatment) => Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('• ', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                    Expanded(
-                      child: Text(
-                        treatment,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey.shade700,
-                          height: 1.5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          treatment.name,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey.shade800,
+                          ),
                         ),
-                      ),
+                        if (treatment.description.isNotEmpty) ...[
+                          SizedBox(height: 4),
+                          Text(
+                            treatment.description,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade700,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                )),
+                SizedBox(height: 24),
+              ],
 
-              SizedBox(height: 32),
-
-              // Ask Expert Button
+              // Back to diagnosis button
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to expert consultation
+                    Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF00A67E),
@@ -195,7 +202,7 @@ class DiagnosisResultScreen extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Ask Expert',
+                    'Diagnose Another Plant',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -204,8 +211,6 @@ class DiagnosisResultScreen extends StatelessWidget {
                   ),
                 ),
               ),
-
-              SizedBox(height: 20),
             ],
           ),
         ),

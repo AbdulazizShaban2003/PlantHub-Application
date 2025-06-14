@@ -22,11 +22,11 @@ class DiagnosisErrorScreen extends StatelessWidget {
 
             Expanded(
               flex: 2,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Image.asset(
-                  "assets/images/image_error.png",
-                  fit: BoxFit.contain,
+              child: Center(
+                child: Icon(
+                  Icons.error_outline,
+                  size: 120,
+                  color: Colors.red.shade300,
                 ),
               ),
             ),
@@ -56,7 +56,6 @@ class DiagnosisErrorScreen extends StatelessWidget {
               ),
             ),
 
-            // Try Again button
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: SizedBox(

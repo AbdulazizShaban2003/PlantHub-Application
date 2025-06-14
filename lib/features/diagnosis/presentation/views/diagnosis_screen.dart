@@ -1,314 +1,233 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plant_hub_app/features/diagnosis/presentation/providers/disease_provider.dart';
 import 'package:provider/provider.dart';
-import '../widgets/build_icon_diagnose.dart';
-import '../widgets/common_diseases_section.dart';
-import 'diagnosis_error_screen.dart';
-import 'diagnosis_result_screen.dart';
-import 'diagnosis_healthy_screen.dart';
 import '../providers/diagnosis_provider.dart';
 import '../providers/history_provider.dart';
+import 'diagnosis_error_screen.dart';
+import 'diagnosis_healthy_screen.dart';
+import 'diagnosis_result_screen.dart';
 import 'history_screen.dart';
+import 'package:camera/camera.dart';
+import 'camera_screen.dart';
 
-class DiagnoseScreen extends StatefulWidget {
-  const DiagnoseScreen({super.key});
+class DiagnosisScreen extends StatefulWidget {
+  const DiagnosisScreen({super.key});
 
   @override
-  State<DiagnoseScreen> createState() => _DiagnoseScreenState();
+  State<DiagnosisScreen> createState() => _DiagnosisScreenState();
 }
 
-class _DiagnoseScreenState extends State<DiagnoseScreen> {
-  final TextEditingController _searchController = TextEditingController();
+class _DiagnosisScreenState extends State<DiagnosisScreen> {
+  final ImagePicker _picker = ImagePicker();
 
   @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickImage(ImageSource source) async {
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: source,
-        maxWidth: 1080,
-        maxHeight: 1080,
-        imageQuality: 85,
-      );
-
-      if (image != null) {
-        final diagnosisProvider = Provider.of<DiagnosisProvider>(
-          context,
-          listen: false,
-        );
-        await diagnosisProvider.processImage(image.path);
-        _navigateBasedOnDiagnosisResult();
-      }
-    } catch (e) {
-      _showErrorSnackBar('Error picking image: $e');
-    }
-  }
-
-  void _navigateBasedOnDiagnosisResult() {
-    final diagnosisProvider = Provider.of<DiagnosisProvider>(
-      context,
-      listen: false,
-    );
-
-    switch (diagnosisProvider.status) {
-      case DiagnosisStatus.noPlant:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const DiagnosisErrorScreen()),
-        );
-        break;
-
-      case DiagnosisStatus.healthy:
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder:
-                (_) => DiagnosisHealthyScreen(
-                  imagePath: diagnosisProvider.imagePath,
-                  apiResponse: null,
-                ),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Icon(Icons.eco, color: Color(0xFF00A67E)),
+            SizedBox(width: 8),
+            Text('Plant Diagnosis'),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.history),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => HistoryScreen()),
+              );
+            },
           ),
-        );
-        break;
+        ],
+      ),
+      body: Consumer<DiagnosisProvider>(
+        builder: (context, diagnosisProvider, child) {
+          // Show loading if processing
+          if (diagnosisProvider.status == DiagnosisStatus.loading) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(color: Color(0xFF00A67E)),
+                  SizedBox(height: 16),
+                  Text('Analyzing your plant...'),
+                ],
+              ),
+            );
+          }
 
-      case DiagnosisStatus.diseased:
-        if (diagnosisProvider.detectedDisease != null) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (_) => DiagnosisResultScreen(
-                    imagePath: diagnosisProvider.imagePath,
-                    diseaseData: diagnosisProvider.detectedDisease!,
+          // Navigate based on diagnosis result
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _navigateBasedOnResult(diagnosisProvider);
+          });
+
+          return Padding(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Plant icon
+                Container(
+                  width: 120,
+                  height: 120,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF00A67E).withOpacity(0.1),
+                    shape: BoxShape.circle,
                   ),
+                  child: Icon(
+                    Icons.eco,
+                    size: 60,
+                    color: Color(0xFF00A67E),
+                  ),
+                ),
+
+                SizedBox(height: 32),
+
+                Text(
+                  'Diagnose Your Plant',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+
+                SizedBox(height: 16),
+
+                Text(
+                  'Take a photo or select from gallery to diagnose plant diseases',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+
+                SizedBox(height: 48),
+
+                // Diagnose button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () => _showCameraScreen(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF00A67E),
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
+                    child: Text(
+                      'Diagnose',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Show error message if any
+                if (diagnosisProvider.status == DiagnosisStatus.error) ...[
+                  SizedBox(height: 16),
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.red.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.red.shade200),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_outline, color: Colors.red),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            diagnosisProvider.errorMessage,
+                            style: TextStyle(color: Colors.red.shade700),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ],
             ),
           );
-        }
-        break;
+        },
+      ),
+    );
+  }
 
-      case DiagnosisStatus.error:
-        _showErrorSnackBar(diagnosisProvider.errorMessage);
-        break;
+  Future<void> _showCameraScreen() async {
+    try {
+      // Get available cameras
+      final cameras = await availableCameras();
+      if (cameras.isEmpty) {
+        _showErrorSnackBar('No cameras available on this device');
+        return;
+      }
 
-      default:
-        break;
+      // Navigate to camera screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CameraScreen(cameras: cameras),
+        ),
+      );
+    } catch (e) {
+      _showErrorSnackBar('Error accessing camera: $e');
     }
   }
 
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), backgroundColor: Colors.red),
-    );
-  }
-
-  void _showImageSourceDialog() {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
-      ),
-      builder: (_) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'Select Image Source',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildImageSourceOption(
-                      icon: Icons.camera_alt,
-                      label: 'Camera',
-                      onTap: () {
-                        Navigator.pop(context);
-                        _pickImage(ImageSource.camera);
-                      },
-                    ),
-                    _buildImageSourceOption(
-                      icon: Icons.photo_library,
-                      label: 'Gallery',
-                      onTap: () {
-                        Navigator.pop(context);
-                        _pickImage(ImageSource.gallery);
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildImageSourceOption({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: const Color(0xFF00A67E).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Icon(icon, color: const Color(0xFF00A67E), size: 30),
-          ),
-          const SizedBox(height: 8),
-          Text(label),
-        ],
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
       ),
     );
   }
 
-  Future<void> _onRefresh() async {
-    Provider.of<DiagnosisProvider>(context, listen: false).resetDiagnosis();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<DiagnosisProvider>(
-        builder: (context, diagnosisProvider, child) {
-          final isLoading = diagnosisProvider.status == DiagnosisStatus.loading;
-
-          return isLoading
-              ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF00A67E)),
-              )
-              : RefreshIndicator(
-                onRefresh: _onRefresh,
-                child: NestedScrollView(
-                  headerSliverBuilder:
-                      (context, innerBoxIsScrolled) => [
-                        SliverAppBar(
-                          title: TitleAppBarDiagnose(),
-                          actions: [
-                            IconHistoryComponent(),
-
-                          ],
-                        ),
-                      ],
-                  body: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TextField(
-                            style: Theme.of(context).textTheme.bodySmall,
-                            controller: _searchController,
-                            decoration: InputDecoration(
-                              hintText: 'Search diseases...',
-                              prefixIcon: const Icon(
-                                Icons.search,
-                                color: Colors.grey,
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey.shade100,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
-                            onChanged: (query) {
-                              Provider.of<DiseaseProvider>(
-                                context,
-                                listen: false,
-                              ).searchDiseases(query);
-                            },
-                          ),
-                          const SizedBox(height: 24),
-                          BuildIconDiagnose(onPressed: _showImageSourceDialog),
-                          SizedBox(height: 30),
-                          CommonDiseasesSection(),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-        },
-      ),
-    );
-  }
-}
-
-class IconHistoryComponent extends StatelessWidget {
-  const IconHistoryComponent({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      icon:  Icon(
-        Icons.history,
-        color: Theme.of(context).primaryColor
-      ),
-      onPressed: () {
-        Provider.of<HistoryProvider>(
+  void _navigateBasedOnResult(DiagnosisProvider provider) {
+    switch (provider.status) {
+      case DiagnosisStatus.noPlant:
+        Navigator.pushReplacement(
           context,
-          listen: false,
-        ).loadHistory();
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => HistoryView(),
-          ),
+          MaterialPageRoute(builder: (_) => DiagnosisErrorScreen()),
         );
-      },
-    );
-  }
-}
-
-class TitleAppBarDiagnose extends StatelessWidget {
-  const TitleAppBarDiagnose({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Image.asset(
-          'assets/images/plant_icon.png',
-          width: 24,
-          height: 24,
-          errorBuilder:
-              (_, __, ___) => const Icon(
-                Icons.eco,
-                color: Color(0xFF00A67E),
+        break;
+      case DiagnosisStatus.healthy:
+        if (provider.diagnosisResponse != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => DiagnosisHealthyScreen(
+                imagePath: provider.imagePath,
+                response: provider.diagnosisResponse!,
               ),
-        ),
-        const SizedBox(width: 8),
-        const Text(
-          'Diagnose',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ],
-    );
+            ),
+          );
+        }
+        break;
+      case DiagnosisStatus.diseased:
+        if (provider.diagnosisResponse != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => DiagnosisResultScreen(
+                imagePath: provider.imagePath,
+                response: provider.diagnosisResponse!,
+              ),
+            ),
+          );
+        }
+        break;
+      default:
+        break;
+    }
   }
 }
-
