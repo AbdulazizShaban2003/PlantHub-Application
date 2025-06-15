@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/features/my_plant/data/models/notification_model.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart'; // Import SizeConfig
 
 class PlantActionIndicator extends StatelessWidget {
   final PlantAction action;
@@ -9,10 +10,14 @@ class PlantActionIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig().width(0.03),
+        vertical: SizeConfig().height(0.0075),
+      ),
       decoration: BoxDecoration(
         color: action.type.color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
+        // Responsive border radius
+        borderRadius: BorderRadius.circular(SizeConfig().width(0.05)),
         border: Border.all(color: action.type.color.withOpacity(0.3)),
       ),
       child: Row(
@@ -20,14 +25,15 @@ class PlantActionIndicator extends StatelessWidget {
         children: [
           Icon(
             action.type.icon,
-            size: 16,
+            // Responsive icon size
+            size: SizeConfig().responsiveFont(16),
             color: action.type.color,
           ),
-          const SizedBox(width: 4),
+          SizedBox(width: SizeConfig().width(0.01)),
           Text(
             action.type.displayName,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: SizeConfig().responsiveFont(12),
               color: action.type.color,
               fontWeight: FontWeight.w500,
             ),

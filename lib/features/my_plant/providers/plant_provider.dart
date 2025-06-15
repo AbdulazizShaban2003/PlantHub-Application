@@ -60,8 +60,8 @@ class PlantProvider with ChangeNotifier {
     required String name,
     required String category,
     required String description,
-    required XFile mainImage,
-    required List<XFile> additionalImages,
+     XFile ? mainImage,
+     List<XFile> ?additionalImages,
     required List<PlantAction> actions,
   }) async {
     _setLoading(true);
@@ -76,12 +76,12 @@ class PlantProvider with ChangeNotifier {
       print('💾 Adding new plant: $name');
 
       // Save main image to local storage
-      final String mainImagePath = await saveImageToLocal(mainImage, plantId, true);
+      final String mainImagePath = await saveImageToLocal(mainImage!, plantId, true);
       print('📸 Main image saved: $mainImagePath');
 
       // Save additional images to local storage
       final List<String> additionalImagePaths = [];
-      for (int i = 0; i < additionalImages.length; i++) {
+      for (int i = 0; i < additionalImages!.length; i++) {
         final String imagePath = await saveImageToLocal(additionalImages[i], plantId, false);
         additionalImagePaths.add(imagePath);
         print('📸 Additional image ${i + 1} saved: $imagePath');

@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/models/notification_model.dart';
 import '../../providers/plant_provider.dart';
 import '../../services/database_helper.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 class EditPlantScreen extends StatefulWidget {
   final Plant plant;
@@ -36,16 +38,15 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   }
 
   void _initializeData() {
-    // Initialize form fields
     _nameController.text = widget.plant.name;
     _categoryController.text = widget.plant.category;
     _descriptionController.text = widget.plant.description;
 
-    // Initialize actions
     for (final actionType in ActionType.values) {
-      final existingAction = widget.plant.actions
-          .where((action) => action.type == actionType)
-          .firstOrNull;
+      final existingAction =
+          widget.plant.actions
+              .where((action) => action.type == actionType)
+              .firstOrNull;
 
       if (existingAction != null) {
         _selectedActions[actionType] = existingAction.isEnabled;
@@ -69,15 +70,21 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Plant'),
-        backgroundColor: Colors.green,
-        foregroundColor: Colors.white,
+        title: Text(
+          'Edit Plant',
+          style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
+        ),
         actions: [
-          TextButton(
-            onPressed: _savePlant,
-            child: const Text(
-              'Save',
-              style: TextStyle(color: Colors.white, fontSize: 16),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: SizeConfig().width(0.16),
+              maxWidth: SizeConfig().width(0.25),
+            ),
+
+            child: GestureDetector(
+              onTap: _savePlant,
+
+              child: Text('Save', style: Theme.of(context).textTheme.bodySmall),
             ),
           ),
         ],
@@ -85,14 +92,14 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+          padding: EdgeInsets.all(SizeConfig().width(0.04)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildBasicInfoSection(),
-              const SizedBox(height: 24),
+              SizedBox(height: SizeConfig().height(0.03)),
               _buildImageSection(),
-              const SizedBox(height: 24),
+              SizedBox(height: SizeConfig().height(0.03)),
               _buildActionSection(),
             ],
           ),
@@ -103,21 +110,36 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildBasicInfoSection() {
     return Card(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
+
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Basic Information',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: SizeConfig().responsiveFont(18),
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             TextFormField(
               controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Plant Name',
-                border: OutlineInputBorder(),
+              minLines: 1,
+              maxLines: null,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+                fontSize: SizeConfig().responsiveFont(14),
+              ),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                hintText: 'Plant Name',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -126,12 +148,22 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             TextFormField(
+
               controller: _categoryController,
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                border: OutlineInputBorder(),
+              minLines: 1,
+              maxLines: null,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+                fontSize: SizeConfig().responsiveFont(14),
+              ),
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                hintText: 'Category',
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
@@ -140,14 +172,22 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             TextFormField(
               controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+              minLines: 1,
+              maxLines: null,
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+                fontSize: SizeConfig().responsiveFont(14),
               ),
-              maxLines: 3,
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 16,
+                ),
+                hintText: 'Description',
+              ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
                   return 'Please enter description';
@@ -155,6 +195,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
                 return null;
               },
             ),
+            SizedBox(height: SizeConfig().height(0.02)),
           ],
         ),
       ),
@@ -163,18 +204,23 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildImageSection() {
     return Card(
+      elevation: 0,
+      color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Images',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: SizeConfig().responsiveFont(18),
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildCurrentMainImage(),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildCurrentAdditionalImages(),
           ],
         ),
@@ -186,41 +232,62 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Main Image', style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        Text(
+          'Main Image',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(14),
+          ),
+        ),
+        SizedBox(height: SizeConfig().height(0.01)),
         GestureDetector(
           onTap: _pickNewMainImage,
           child: Container(
-            height: 200,
+            height: SizeConfig().height(0.25),
             width: double.infinity,
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
             ),
-            child: _newMainImage != null
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.file(
-                File(_newMainImage!.path),
-                fit: BoxFit.cover,
-              ),
-            )
-                : widget.plant.mainImagePath.isNotEmpty && File(widget.plant.mainImagePath).existsSync()
-                ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.file(
-                File(widget.plant.mainImagePath),
-                fit: BoxFit.cover,
-              ),
-            )
-                : const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.add_a_photo, size: 48, color: Colors.grey),
-                SizedBox(height: 8),
-                Text('Tap to change main image'),
-              ],
-            ),
+            child:
+                _newMainImage != null
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig().width(0.02),
+                      ),
+                      child: Image.file(
+                        File(_newMainImage!.path),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : widget.plant.mainImagePath.isNotEmpty &&
+                        File(widget.plant.mainImagePath).existsSync()
+                    ? ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig().width(0.02),
+                      ),
+                      child: Image.file(
+                        File(widget.plant.mainImagePath),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                    : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_a_photo,
+                          size: SizeConfig().responsiveFont(48),
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: SizeConfig().height(0.01)),
+                        Text(
+                          'Tap to change main image',
+                          style: TextStyle(
+                            fontSize: SizeConfig().responsiveFont(14),
+                          ),
+                        ),
+                      ],
+                    ),
           ),
         ),
       ],
@@ -231,87 +298,108 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Additional Images', style: TextStyle(fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
+        Text(
+          'Additional Images',
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(14),
+          ),
+        ),
+        SizedBox(height: SizeConfig().height(0.01)),
         SizedBox(
-          height: 100,
+          height: SizeConfig().height(0.125),
           child: ListView(
             scrollDirection: Axis.horizontal,
             children: [
               GestureDetector(
                 onTap: _pickNewAdditionalImages,
                 child: Container(
-                  width: 100,
+                  width: SizeConfig().width(0.25),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig().width(0.02),
+                    ),
                   ),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add, size: 32, color: Colors.grey),
-                      Text('Add', style: TextStyle(fontSize: 12)),
+                      Icon(
+                        Icons.add,
+                        size: SizeConfig().responsiveFont(32),
+                        color: Colors.grey,
+                      ),
+                      Text(
+                        'Add',
+                        style: TextStyle(
+                          fontSize: SizeConfig().responsiveFont(12),
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
-              // Show existing additional images
+              SizedBox(width: SizeConfig().width(0.02)),
               ...widget.plant.additionalImagePaths.map((imagePath) {
                 if (File(imagePath).existsSync()) {
                   return Container(
-                    width: 100,
-                    margin: const EdgeInsets.only(right: 8),
+                    width: SizeConfig().width(0.25),
+                    margin: EdgeInsets.only(right: SizeConfig().width(0.02)),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig().width(0.02),
+                      ),
                       child: Image.file(
                         File(imagePath),
-                        width: 100,
-                        height: 100,
+                        width: SizeConfig().width(0.25),
+                        height: SizeConfig().height(0.125),
                         fit: BoxFit.cover,
                       ),
                     ),
                   );
                 }
-                return const SizedBox.shrink();
+                return SizedBox.shrink();
               }),
-              // Show new additional images
-              ..._newAdditionalImages.map((image) => Container(
-                width: 100,
-                margin: const EdgeInsets.only(right: 8),
-                child: Stack(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.file(
-                        File(image.path),
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
+              ..._newAdditionalImages.map(
+                (image) => Container(
+                  width: SizeConfig().width(0.25),
+                  margin: EdgeInsets.only(right: SizeConfig().width(0.02)),
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                          SizeConfig().width(0.02),
+                        ),
+                        child: Image.file(
+                          File(image.path),
+                          width: SizeConfig().width(0.25),
+                          height: SizeConfig().height(0.125),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      top: 4,
-                      right: 4,
-                      child: GestureDetector(
-                        onTap: () => _removeNewAdditionalImage(image),
-                        child: Container(
-                          padding: const EdgeInsets.all(2),
-                          decoration: const BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(
-                            Icons.close,
-                            size: 16,
-                            color: Colors.white,
+                      Positioned(
+                        top: SizeConfig().height(0.005),
+                        right: SizeConfig().width(0.01),
+                        child: GestureDetector(
+                          onTap: () => _removeNewAdditionalImage(image),
+                          child: Container(
+                            padding: EdgeInsets.all(SizeConfig().width(0.005)),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.close,
+                              size: SizeConfig().responsiveFont(16),
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         ),
@@ -321,17 +409,25 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildActionSection() {
     return Card(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      elevation: 0,
+
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'Care Actions',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: SizeConfig().responsiveFont(18),
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 16),
-            ...ActionType.values.map((actionType) => _buildActionTile(actionType)),
+            SizedBox(height: SizeConfig().height(0.02)),
+            ...ActionType.values.map(
+              (actionType) => _buildActionTile(actionType),
+            ),
           ],
         ),
       ),
@@ -342,11 +438,11 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     final bool isSelected = _selectedActions[actionType] ?? false;
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: EdgeInsets.only(bottom: SizeConfig().height(0.01)),
       child: ListTile(
         leading: Container(
-          width: 40,
-          height: 40,
+          width: SizeConfig().width(0.1),
+          height: SizeConfig().width(0.1),
           decoration: BoxDecoration(
             color: actionType.color,
             shape: BoxShape.circle,
@@ -354,12 +450,15 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
           child: Icon(
             actionType.icon,
             color: Colors.white,
-            size: 20,
+            size: SizeConfig().responsiveFont(20),
           ),
         ),
         title: Text(
           actionType.displayName,
-          style: const TextStyle(fontWeight: FontWeight.w500),
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: SizeConfig().responsiveFont(16),
+          ),
         ),
         trailing: Switch(
           value: isSelected,
@@ -371,15 +470,19 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               }
             });
           },
-          activeColor: Colors.green,
+          activeColor: ColorsManager.greenPrimaryColor,
         ),
         onTap: isSelected ? () => _setReminder(actionType) : null,
-        subtitle: isSelected && _actionReminders[actionType] != null
-            ? Text(
-          'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
-          style: const TextStyle(fontSize: 12, color: Colors.green),
-        )
-            : null,
+        subtitle:
+            isSelected && _actionReminders[actionType] != null
+                ? Text(
+                  'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
+                  style: TextStyle(
+                    fontSize: SizeConfig().responsiveFont(12),
+                    color: ColorsManager.greenPrimaryColor,
+                  ),
+                )
+                : null,
       ),
     );
   }
@@ -411,10 +514,11 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Future<void> _setReminder(ActionType actionType) async {
     final result = await showDialog<Reminder>(
       context: context,
-      builder: (context) => ReminderDialog(
-        actionType: actionType,
-        existingReminder: _actionReminders[actionType],
-      ),
+      builder:
+          (context) => ReminderDialog(
+            actionType: actionType,
+            existingReminder: _actionReminders[actionType],
+          ),
     );
 
     if (result != null) {
@@ -432,33 +536,41 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
     final plantProvider = context.read<PlantProvider>();
 
     try {
-      // Handle new main image
       String mainImagePath = widget.plant.mainImagePath;
       if (_newMainImage != null) {
-        mainImagePath = await plantProvider.saveImageToLocal(_newMainImage!, widget.plant.id, true);
+        mainImagePath = await plantProvider.saveImageToLocal(
+          _newMainImage!,
+          widget.plant.id,
+          true,
+        );
       }
 
-      // Handle new additional images
-      List<String> additionalImagePaths = List.from(widget.plant.additionalImagePaths);
+      List<String> additionalImagePaths = List.from(
+        widget.plant.additionalImagePaths,
+      );
       for (final image in _newAdditionalImages) {
-        final String imagePath = await plantProvider.saveImageToLocal(image, widget.plant.id, false);
+        final String imagePath = await plantProvider.saveImageToLocal(
+          image,
+          widget.plant.id,
+          false,
+        );
         additionalImagePaths.add(imagePath);
       }
 
-      // Create actions list
       final List<PlantAction> actions = [];
       for (final entry in _selectedActions.entries) {
         if (entry.value) {
-          actions.add(PlantAction(
-            id: _uuid.v4(),
-            type: entry.key,
-            isEnabled: true,
-            reminder: _actionReminders[entry.key],
-          ));
+          actions.add(
+            PlantAction(
+              id: _uuid.v4(),
+              type: entry.key,
+              isEnabled: true,
+              reminder: _actionReminders[entry.key],
+            ),
+          );
         }
       }
 
-      // Create updated plant
       final Plant updatedPlant = widget.plant.copyWith(
         name: _nameController.text.trim(),
         category: _categoryController.text.trim(),
@@ -482,15 +594,15 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
       if (mounted) {
         Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Plant updated successfully!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Plant updated successfully!')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error updating plant: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error updating plant: $e')));
       }
     }
   }
@@ -527,7 +639,6 @@ class _ReminderDialogState extends State<ReminderDialog> {
       _remindMeToController.text = widget.existingReminder!.remindMeTo;
       _tasks.addAll(widget.existingReminder!.tasks);
     } else {
-      // Add default task
       final defaultTask = '${widget.actionType.displayName} your plant';
       _remindMeToController.text = defaultTask;
       _tasks.add(defaultTask);
@@ -544,40 +655,64 @@ class _ReminderDialogState extends State<ReminderDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Set ${widget.actionType.displayName} Reminder'),
+      title: Text(
+        'Set ${widget.actionType.displayName} Reminder',
+        style: TextStyle(fontSize: SizeConfig().responsiveFont(18)),
+      ),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Tasks:', style: TextStyle(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            // Display current tasks
-            ..._tasks.map((task) => ListTile(
-              dense: true,
-              title: Text(task),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete, color: Colors.red),
-                onPressed: () {
-                  setState(() {
-                    _tasks.remove(task);
-                  });
-                },
+            Text(
+              'Tasks:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: SizeConfig().responsiveFont(16),
               ),
-            )),
-            // Add new task
+            ),
+            SizedBox(height: SizeConfig().height(0.01)),
+            ..._tasks.map(
+              (task) => ListTile(
+                dense: true,
+                title: Text(
+                  task,
+                  style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                    size: SizeConfig().responsiveFont(20),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _tasks.remove(task);
+                    });
+                  },
+                ),
+              ),
+            ),
             Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _taskController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: 'Add new task',
                       isDense: true,
+                      hintStyle: TextStyle(
+                        fontSize: SizeConfig().responsiveFont(14),
+                      ),
                     ),
+                    style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add_circle, color: Colors.green),
+                  icon: Icon(
+                    Icons.add_circle,
+                    color: Colors.green,
+                    size: SizeConfig().responsiveFont(24),
+                  ),
                   onPressed: () {
                     if (_taskController.text.trim().isNotEmpty) {
                       setState(() {
@@ -589,27 +724,47 @@ class _ReminderDialogState extends State<ReminderDialog> {
                 ),
               ],
             ),
-            const Divider(),
-            const SizedBox(height: 16),
+            Divider(),
+            SizedBox(height: SizeConfig().height(0.02)),
             ListTile(
-              title: const Text('Date & Time'),
-              subtitle: Text(_selectedDateTime.toString().substring(0, 16)),
-              trailing: const Icon(Icons.calendar_today),
+              title: Text(
+                'Date & Time',
+                style: TextStyle(fontSize: SizeConfig().responsiveFont(16)),
+              ),
+              subtitle: Text(
+                _selectedDateTime.toString().substring(0, 16),
+                style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+              ),
+              trailing: Icon(
+                Icons.calendar_today,
+                size: SizeConfig().responsiveFont(24),
+              ),
               onTap: _selectDateTime,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: SizeConfig().height(0.02)),
             DropdownButtonFormField<RepeatType>(
               value: _selectedRepeat,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Repeat',
-                border: OutlineInputBorder(),
+                labelStyle: TextStyle(
+                  fontSize: SizeConfig().responsiveFont(16),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
+                ),
               ),
-              items: RepeatType.values.map((repeat) {
-                return DropdownMenuItem(
-                  value: repeat,
-                  child: Text(repeat.displayName),
-                );
-              }).toList(),
+              items:
+                  RepeatType.values.map((repeat) {
+                    return DropdownMenuItem(
+                      value: repeat,
+                      child: Text(
+                        repeat.displayName,
+                        style: TextStyle(
+                          fontSize: SizeConfig().responsiveFont(14),
+                        ),
+                      ),
+                    );
+                  }).toList(),
               onChanged: (value) {
                 if (value != null) {
                   setState(() {
@@ -624,11 +779,17 @@ class _ReminderDialogState extends State<ReminderDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+          ),
         ),
         ElevatedButton(
           onPressed: _saveReminder,
-          child: const Text('Save'),
+          child: Text(
+            'Save',
+            style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+          ),
         ),
       ],
     );
@@ -665,14 +826,17 @@ class _ReminderDialogState extends State<ReminderDialog> {
   void _saveReminder() {
     if (_tasks.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please add at least one task')),
+        SnackBar(
+          content: Text(
+            'Please add at least one task',
+            style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+          ),
+        ),
       );
       return;
     }
 
-    // Use first task as main reminder text
     final mainTask = _tasks.first;
-
     final reminder = Reminder(
       id: widget.existingReminder?.id ?? _uuid.v4(),
       time: _selectedDateTime,

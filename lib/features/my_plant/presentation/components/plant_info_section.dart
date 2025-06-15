@@ -27,11 +27,7 @@ class PlantInfoSection extends StatelessWidget {
                   children: [
                     Text(
                       plant.category,
-                      style: TextStyle(
-                        fontSize: SizeConfig().responsiveFont(16),
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: Theme.of(context).textTheme.bodySmall
                     ),
                     SizedBox(height: SizeConfig().height(0.01)),
                     Text(
@@ -52,11 +48,7 @@ class PlantInfoSection extends StatelessWidget {
           SizedBox(height: SizeConfig().height(0.025)),
           Text(
             AppStrings.description,
-            style: TextStyle(
-              fontSize: SizeConfig().responsiveFont(18),
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[800],
-            ),
+            style: Theme.of(context).textTheme.bodySmall
           ),
           SizedBox(height: SizeConfig().height(0.01)),
           Text(
@@ -64,7 +56,7 @@ class PlantInfoSection extends StatelessWidget {
             maxLines: 3,
             style: TextStyle(
               fontSize: SizeConfig().responsiveFont(16),
-              color: Colors.grey[700],
+              color: Colors.grey,
               height: 1.5,
             ),
           ),

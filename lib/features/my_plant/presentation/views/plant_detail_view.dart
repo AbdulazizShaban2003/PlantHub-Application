@@ -14,6 +14,7 @@ import '../widgets/reminders_tab.dart';
 import '../widgets/gallery_tab.dart';
 import '../widgets/history_tab.dart';
 import '../components/delete_confirmation_dialog.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart'; // Import SizeConfig
 
 class PlantDetailScreen extends StatefulWidget {
   final Plant plant;
@@ -24,7 +25,8 @@ class PlantDetailScreen extends StatefulWidget {
   State<PlantDetailScreen> createState() => _PlantDetailScreenState();
 }
 
-class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProviderStateMixin {
+class _PlantDetailScreenState extends State<PlantDetailScreen>
+    with TickerProviderStateMixin {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
   final NotificationService _notificationService = NotificationService();
   late TabController _tabController;
@@ -49,11 +51,15 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
     setState(() => _isLoading = true);
 
     try {
-      final List<String> images = await _databaseHelper.getPlantImages(widget.plant.id);
-      final List<NotificationModel> allNotifications = await _notificationService.getUserNotifications();
-      final List<NotificationModel> plantNotifications = allNotifications
-          .where((notification) => notification.plantId == widget.plant.id)
-          .toList();
+      final List<String> images = await _databaseHelper.getPlantImages(
+        widget.plant.id,
+      );
+      final List<NotificationModel> allNotifications =
+          await _notificationService.getUserNotifications();
+      final List<NotificationModel> plantNotifications =
+          allNotifications
+              .where((notification) => notification.plantId == widget.plant.id)
+              .toList();
 
       setState(() {
         _allImages = images;
@@ -78,18 +84,19 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
   void _handleDelete() {
     showDialog(
       context: context,
-      builder: (context) => DeleteConfirmationDialog(
-        plantName: widget.plant.name,
-        onConfirm: () {
-          Navigator.pop(context);
-          Navigator.pop(context);
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) {
-              context.read<PlantProvider>().deletePlant(widget.plant.id);
-            }
-          });
-        },
-      ),
+      builder:
+          (context) => DeleteConfirmationDialog(
+            plantName: widget.plant.name,
+            onConfirm: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (context.mounted) {
+                  context.read<PlantProvider>().deletePlant(widget.plant.id);
+                }
+              });
+            },
+          ),
     );
   }
 
@@ -105,19 +112,22 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
             onDeleteSelected: _handleDelete,
           ),
           SliverToBoxAdapter(
-            child: _isLoading
-                ? const Center(
-              child: Padding(
-                padding: EdgeInsets.all(50),
-                child: CircularProgressIndicator(),
-              ),
-            )
-                : Column(
-              children: [
-                PlantInfoSection(plant: widget.plant),
-                _buildTabSection(),
-              ],
-            ),
+            child:
+                _isLoading
+                    ? Center(
+                      // Removed const
+                      child: Padding(
+                        // Responsive padding
+                        padding: EdgeInsets.all(SizeConfig().width(0.125)),
+                        child: CircularProgressIndicator(),
+                      ),
+                    )
+                    : Column(
+                      children: [
+                        PlantInfoSection(plant: widget.plant),
+                        _buildTabSection(),
+                      ],
+                    ),
           ),
         ],
       ),
@@ -134,16 +144,40 @@ class _PlantDetailScreenState extends State<PlantDetailScreen> with TickerProvid
             labelColor: ColorsManager.greenPrimaryColor,
             unselectedLabelColor: Theme.of(context).primaryColor,
             indicatorColor: ColorsManager.greenPrimaryColor,
-            tabs: const [
-              Tab(icon: Icon(Icons.schedule), text: 'Care Schedule'),
-              Tab(icon: Icon(Icons.notifications), text: 'Reminders'),
-              Tab(icon: Icon(Icons.photo_library), text: 'Gallery'),
-              Tab(icon: Icon(Icons.history), text: 'History'),
+            tabs: [
+              Tab(
+                icon: Icon(
+                  Icons.schedule,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                text: 'Care Schedule',
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.notifications,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                text: 'Reminders',
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.photo_library,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                text: 'Gallery',
+              ),
+              Tab(
+                icon: Icon(
+                  Icons.history,
+                  size: SizeConfig().responsiveFont(24),
+                ),
+                text: 'History',
+              ),
             ],
           ),
         ),
         SizedBox(
-          height: 400,
+          height: SizeConfig().height(0.5),
           child: TabBarView(
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),

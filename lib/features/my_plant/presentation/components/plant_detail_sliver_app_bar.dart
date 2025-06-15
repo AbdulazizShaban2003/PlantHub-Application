@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 class PlantDetailSliverAppBar extends StatelessWidget {
   final String plantName;
@@ -18,29 +19,33 @@ class PlantDetailSliverAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 300,
+      expandedHeight: SizeConfig().height(0.375),
       pinned: true,
       forceMaterialTransparency: true,
       flexibleSpace: FlexibleSpaceBar(
         title: Text(
           plantName,
-          style: const TextStyle(
+          style: TextStyle(
+            fontSize: SizeConfig().responsiveFont(20),
             fontWeight: FontWeight.bold,
             shadows: [
               Shadow(
-                offset: Offset(1, 1),
-                blurRadius: 3,
+                offset: Offset(
+                  SizeConfig().width(0.0025),
+                  SizeConfig().width(0.0025),
+                ),
+                blurRadius: SizeConfig().width(0.0075),
                 color: Colors.black54,
               ),
             ],
           ),
         ),
-        background: _buildImageGallery(),
+        background: _buildImageGallery(context),
       ),
       actions: [
         IconButton(
           onPressed: onEditPressed,
-          icon: const Icon(Icons.edit),
+          icon: Icon(Icons.edit, size: SizeConfig().responsiveFont(24)),
         ),
         PopupMenuButton<String>(
           onSelected: (value) {
@@ -48,31 +53,42 @@ class PlantDetailSliverAppBar extends StatelessWidget {
               onDeleteSelected();
             }
           },
-          itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: 'delete',
-              child: Row(
-                children: [
-                  Icon(Icons.delete, color: Colors.red),
-                  SizedBox(width: 8),
-                  Text('Delete Plant', style: TextStyle(color: Colors.red)),
-                ],
-              ),
-            ),
-          ],
+          itemBuilder:
+              (context) => [
+                PopupMenuItem(
+                  value: 'delete',
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                        size: SizeConfig().responsiveFont(20),
+                      ),
+                      SizedBox(width: SizeConfig().width(0.02)),
+                      Text(
+                        'Delete Plant',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: SizeConfig().responsiveFont(16),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
         ),
       ],
     );
   }
 
-  Widget _buildImageGallery() {
+  Widget _buildImageGallery(BuildContext context) {
     if (allImages.isEmpty) {
       return Container(
         color: Colors.green.withOpacity(0.1),
-        child: const Center(
+        child: Center(
           child: Icon(
             Icons.eco,
-            size: 80,
+            size: SizeConfig().responsiveFont(80),
             color: Colors.green,
           ),
         ),
@@ -85,36 +101,38 @@ class PlantDetailSliverAppBar extends StatelessWidget {
         final imagePath = allImages[index];
         return Container(
           decoration: BoxDecoration(
-            image: File(imagePath).existsSync()
-                ? DecorationImage(
-              image: FileImage(File(imagePath)),
-              fit: BoxFit.cover,
-            )
-                : null,
+            image:
+                File(imagePath).existsSync()
+                    ? DecorationImage(
+                      image: FileImage(File(imagePath)),
+                      fit: BoxFit.cover,
+                    )
+                    : null,
           ),
-          child: !File(imagePath).existsSync()
-              ? Container(
-            color: Colors.green.withOpacity(0.1),
-            child: const Center(
-              child: Icon(
-                Icons.broken_image,
-                size: 80,
-                color: Colors.grey,
-              ),
-            ),
-          )
-              : Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.3),
-                ],
-              ),
-            ),
-          ),
+          child:
+              !File(imagePath).existsSync()
+                  ? Container(
+                    color: Colors.green.withOpacity(0.1),
+                    child: Center(
+                      child: Icon(
+                        Icons.broken_image,
+                        size: SizeConfig().responsiveFont(80),
+                        color: Colors.grey,
+                      ),
+                    ),
+                  )
+                  : Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.3),
+                        ],
+                      ),
+                    ),
+                  ),
         );
       },
     );

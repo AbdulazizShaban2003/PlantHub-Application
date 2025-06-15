@@ -51,7 +51,7 @@ class MyPlantCard extends StatelessWidget {
                   child: Container(
                     width: SizeConfig().width(0.3),
                     height: SizeConfig().height(0.15),
-                    color: Colors.grey[200],
+                    color: ColorsManager.greyColor[200],
                     child: plant.mainImagePath.isNotEmpty &&
                         File(plant.mainImagePath).existsSync()
                         ? Image.file(
@@ -86,7 +86,7 @@ class MyPlantCard extends StatelessWidget {
                       plant.category,
                       style: TextStyle(
                           fontSize: SizeConfig().responsiveFont(14),
-                          color: Colors.grey[800]),
+                          color: ColorsManager.greyColor),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),

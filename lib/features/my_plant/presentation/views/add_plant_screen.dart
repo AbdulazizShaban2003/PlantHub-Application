@@ -443,8 +443,6 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
       name: _nameController.text.trim(),
       category: _categoryController.text.trim(),
       description: _descriptionController.text.trim(),
-      mainImage: _mainImage!,
-      additionalImages: _additionalImages,
       actions: actions,
     );
 
