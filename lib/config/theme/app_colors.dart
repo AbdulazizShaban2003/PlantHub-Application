@@ -18,7 +18,7 @@ class ColorsManager{
   static const mediumSeaGreenColor=Color(0xFF81C784);
   static const lightLimeGreenColor=Color(0xFFAED581);
   static const darkGreenColor= Color(0xFF3E4E2A);
-  static const greenPrimaryColor=  Color(0xFF00A86B);
+  static const greenPrimaryColor=  Color(0xFF00A67E);
   static const lightGreenColor= Color(0xFFB2FF59);
   static const brownColor = Colors.brown;
   static const lightBrownColor = Color(0xFFF5F5DC);

@@ -45,10 +45,9 @@ class _MyPlantViewState extends State<MyPlantView>
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.all(9.0),
+          padding: const EdgeInsets.all(12.5),
           child: Image(
             image: AssetImage(AssetsManager.iconPlant),
-            height: SizeConfig().height(0.05),
           ),
         ),
         title: Text(
@@ -86,12 +85,12 @@ class _MyPlantViewState extends State<MyPlantView>
         controller: _tabController,
         children: [
           const PlantsContent(),
-          HarvestGuideWidget(),
+          const HarvestGuideWidget(),
         ],
       ),
       floatingActionButton: _tabController.index == 0
           ? Padding(
-        padding: const EdgeInsets.only(bottom: 80.0),
+        padding:  EdgeInsets.only(bottom: SizeConfig().height(0.1)),
         child: FloatingActionButton(
           heroTag: 'plants_fab',
           onPressed: () {

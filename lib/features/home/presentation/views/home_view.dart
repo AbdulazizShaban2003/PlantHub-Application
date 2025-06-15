@@ -13,6 +13,28 @@ import '../../../../core/utils/size_config.dart';
 import '../../../articles/domain/repositories/plant_repo.dart';
 import '../../../articles/view_model.dart';
 import '../../../diagnosis/presentation/views/diagnosis_screen.dart';
+import '../../../diagnosis/presentation/views/disease_category_screen.dart' show DiagnosisSuccessScreen;
+import '../../../my_plant/presentation/views/my_plant_view.dart';
+import '../../../my_plant/services/firebase_service_notification.dart';
+import '../widgets/hom_view_body.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:plant_hub_app/features/account/presentation/views/account_view.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/views/common_diseases_view.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/views/history_screen.dart';
+import 'package:plant_hub_app/features/diagnosis/presentation/widgets/common_diseases_section.dart';
+import 'package:provider/provider.dart';
+import 'package:camera/camera.dart';
+
+import '../../../../config/theme/app_colors.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/utils/size_config.dart';
+import '../../../articles/domain/repositories/plant_repo.dart';
+import '../../../articles/view_model.dart';
+import '../../../diagnosis/presentation/views/diagnosis_screen.dart';
+import '../../../diagnosis/presentation/views/camera_screen.dart';
 import '../../../my_plant/presentation/views/my_plant_view.dart';
 import '../../../my_plant/services/firebase_service_notification.dart';
 import '../widgets/hom_view_body.dart';
@@ -50,6 +72,48 @@ class _HomeViewState extends State<HomeView> {
     const AccountView(),
   ];
 
+  // Function to open camera for diagnosis
+  Future<void> _openCameraForDiagnosis() async {
+    try {
+      // Get available cameras
+      final cameras = await availableCameras();
+      if (cameras.isEmpty) {
+        _showErrorSnackBar('No cameras available on this device');
+        return;
+      }
+
+      // Navigate to camera screen
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CameraScreen(cameras: cameras),
+        ),
+      );
+
+      // If diagnosis was successful, show success screen
+      if (result == true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DiagnosisSuccessScreen(),
+          ),
+        );
+      }
+    } catch (e) {
+      _showErrorSnackBar('Error accessing camera: $e');
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 3),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,8 +150,8 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor:Color(0xFF00A67E),
+        onPressed: _openCameraForDiagnosis, // Updated to call camera function
+        backgroundColor: Color(0xFF00A67E),
         elevation: 4,
         shape: const CircleBorder(),
         child: Icon(
@@ -110,10 +174,9 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Icon(
             icon,
-            color:
-                isSelected
-                    ? ColorsManager.greenPrimaryColor
-                    : ColorsManager.greyColor,
+            color: isSelected
+                ? ColorsManager.greenPrimaryColor
+                : ColorsManager.greyColor,
             size: SizeConfig().responsiveFont(28),
           ),
           SizedBox(height: SizeConfig().height(0.005)),
@@ -121,10 +184,9 @@ class _HomeViewState extends State<HomeView> {
             label,
             style: TextStyle(
               fontSize: SizeConfig().responsiveFont(10),
-              color:
-                  isSelected
-                      ? ColorsManager.greenPrimaryColor
-                      : ColorsManager.greyColor,
+              color: isSelected
+                  ? ColorsManager.greenPrimaryColor
+                  : ColorsManager.greyColor,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -133,3 +195,4 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 }
+
