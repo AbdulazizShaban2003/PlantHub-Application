@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 
 // تأكد من أن هذه المسارات صحيحة لمشروعك
-import '../models/notification_model.dart';
+import '../data/models/notification_model.dart';
 
 import '../services/database_helper.dart';
 import 'firebase_service_notification.dart';

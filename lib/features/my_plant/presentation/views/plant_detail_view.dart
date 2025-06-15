@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:provider/provider.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 import '../../providers/plant_provider.dart';
 import '../../services/database_helper.dart';
 import '../../services/notification_service.dart';

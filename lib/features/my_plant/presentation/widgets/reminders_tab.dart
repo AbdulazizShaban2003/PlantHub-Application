@@ -3,7 +3,7 @@ import 'package:plant_hub_app/config/theme/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/size_config.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 
 class RemindersTab extends StatelessWidget {
   final List<NotificationModel> plantNotifications;

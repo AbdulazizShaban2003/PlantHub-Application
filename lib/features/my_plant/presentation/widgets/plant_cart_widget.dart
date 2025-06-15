@@ -1,10 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart' show SizeConfig;
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 import '../../providers/plant_provider.dart';
 import '../views/edit_plant_view.dart';
 import '../views/plant_detail_view.dart';
@@ -60,7 +61,7 @@ class MyPlantCard extends StatelessWidget {
                         : Icon(
                       Icons.eco,
                       size: SizeConfig().height(0.04),
-                      color: Colors.green,
+                      color: ColorsManager.greenPrimaryColor,
                     ),
                   ),
                 ),
@@ -85,7 +86,7 @@ class MyPlantCard extends StatelessWidget {
                       plant.category,
                       style: TextStyle(
                           fontSize: SizeConfig().responsiveFont(14),
-                          color: Colors.grey[600]),
+                          color: Colors.grey[800]),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
@@ -108,7 +109,7 @@ class MyPlantCard extends StatelessWidget {
                             child: Icon(
                               action.type.icon,
                               size: SizeConfig().height(0.015),
-                              color: Colors.white,
+                              color: ColorsManager.whiteColor,
                             ),
                           ),
                         )
@@ -123,6 +124,7 @@ class MyPlantCard extends StatelessWidget {
                 onPressed: () => _showPlantOptions(context, plant),
                 icon: Icon(Icons.more_vert,
                     size: SizeConfig().responsiveFont(24)),
+                color: Theme.of(context).primaryColor,
                 constraints: BoxConstraints(
                   minWidth: SizeConfig().height(0.05),
                   minHeight: SizeConfig().height(0.05),
@@ -138,6 +140,7 @@ class MyPlantCard extends StatelessWidget {
 
   void _showPlantOptions(BuildContext context, Plant plant) {
     showModalBottomSheet(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       context: context,
       builder: (context) => Container(
         padding: EdgeInsets.all(SizeConfig().width(0.04)),
@@ -148,7 +151,11 @@ class MyPlantCard extends StatelessWidget {
               leading: Icon(Icons.visibility,
                   size: SizeConfig().responsiveFont(24)),
               title: Text(AppStrings.viewDetails,
-                  style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500
+                  )
+
+              ),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -168,7 +175,9 @@ class MyPlantCard extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.edit, size: SizeConfig().responsiveFont(24)),
               title: Text(AppStrings.editPlant,
-                  style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500
+                  )),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -187,12 +196,12 @@ class MyPlantCard extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.delete,
-                  color: Colors.red, size: SizeConfig().responsiveFont(24)),
+                  color: ColorsManager.redColor, size: SizeConfig().responsiveFont(24)),
               title: Text(
                 AppStrings.deletePlant,
-                style: TextStyle(
-                    color: Colors.red,
-                    fontSize: SizeConfig().responsiveFont(16)),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500
+                )
               ),
               onTap: () {
                 Navigator.pop(context);
@@ -212,12 +221,16 @@ class MyPlantCard extends StatelessWidget {
         title: Text(AppStrings.deletePlant,
             style: TextStyle(fontSize: SizeConfig().responsiveFont(18))),
         content: Text('${AppStrings.confirmDeletePlant} ${plant.name}?',
-            style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+            style:  Theme.of(context).textTheme.bodyMedium),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(AppStrings.cancel,
-                style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    fontWeight: FontWeight.w500
+                )
+
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -228,7 +241,7 @@ class MyPlantCard extends StatelessWidget {
                 }
               });
             },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            style: TextButton.styleFrom(foregroundColor: ColorsManager.redColor),
             child: Text(AppStrings.deletePlant,
                 style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
           ),

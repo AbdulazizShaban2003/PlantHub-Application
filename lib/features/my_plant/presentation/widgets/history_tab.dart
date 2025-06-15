@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/date_formatter.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 
 class HistoryTab extends StatelessWidget {
   final List<NotificationModel> plantNotifications;

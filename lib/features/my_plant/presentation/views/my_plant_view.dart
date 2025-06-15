@@ -67,7 +67,7 @@ class _MyPlantViewState extends State<MyPlantView>
               labelColor: ColorsManager.greenPrimaryColor,
               unselectedLabelColor: Theme.of(context).primaryColor,
               indicatorColor: ColorsManager.greenPrimaryColor,
-              indicatorWeight: 3.0,
+              indicatorWeight: 4.0,
               indicatorSize: TabBarIndicatorSize.tab,
               indicatorPadding: const EdgeInsets.symmetric(horizontal: 16.0),
               labelStyle: TextStyle(

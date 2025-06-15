@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../../my_plant/models/notification_model.dart';
+import '../../my_plant/data/models/notification_model.dart';
 
 Color getActionTypeColor(String actionTypeName) {
   try {

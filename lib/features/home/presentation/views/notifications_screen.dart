@@ -3,7 +3,7 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:provider/provider.dart';
-import '../../../my_plant/models/notification_model.dart';
+import '../../../my_plant/data/models/notification_model.dart';
 import '../../../my_plant/presentation/views/plant_detail_view.dart';
 import '../../../my_plant/providers/plant_provider.dart';
 import '../../controller/notification_controller.dart';

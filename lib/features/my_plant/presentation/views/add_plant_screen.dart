@@ -1,11 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/features/my_plant/presentation/views/set_reminder_view.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../core/utils/size_config.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 import '../widgets/build_image_widget.dart';
 import '../../providers/plant_provider.dart';
 
@@ -51,6 +52,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(
           'Add New Plant',
           style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
@@ -122,7 +124,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
             height: SizeConfig().height(0.25),
             width: double.infinity,
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: ColorsManager.greyColor),
               borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
             ),
             child: _mainImage != null
@@ -139,7 +141,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 Icon(
                   Icons.add_a_photo,
                   size: SizeConfig().height(0.08),
-                  color: Colors.grey,
+                  color: ColorsManager.greyColor,
                 ),
                 SizedBox(height: SizeConfig().height(0.01)),
                 Text(
@@ -178,7 +180,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                 child: Container(
                   width: SizeConfig().width(0.25),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: ColorsManager.greyColor),
                     borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
                   ),
                   child: Column(
@@ -187,7 +189,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                       Icon(
                         Icons.add,
                         size: SizeConfig().height(0.05),
-                        color: Colors.grey,
+                        color: ColorsManager.greyColor,
                       ),
                       Text(
                         'Add',
@@ -221,13 +223,13 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
                           child: Container(
                             padding: EdgeInsets.all(SizeConfig().width(0.005)),
                             decoration: const BoxDecoration(
-                              color: Colors.red,
+                              color: ColorsManager.redColor,
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
                               Icons.close,
                               size: SizeConfig().height(0.02),
-                              color: Colors.white,
+                              color: ColorsManager.whiteColor,
                             ),
                           ),
                         ),
@@ -254,9 +256,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           children: [
             Text(
               'Care Actions',
-              style: TextStyle(
-                fontSize: SizeConfig().responsiveFont(16),
-              ),
+              style: Theme.of(context).textTheme.bodyMedium
             ),
             SizedBox(height: SizeConfig().height(0.02)),
             ...ActionType.values.map(
@@ -283,16 +283,13 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           ),
           child: Icon(
             actionType.icon,
-            color: Colors.white,
+            color: ColorsManager.whiteColor,
             size: SizeConfig().height(0.025),
           ),
         ),
         title: Text(
           actionType.displayName,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: SizeConfig().responsiveFont(14),
-          ),
+          style: Theme.of(context).textTheme.titleMedium
         ),
         trailing: Switch(
           value: isSelected,
@@ -304,7 +301,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
               }
             });
           },
-          activeColor: Colors.green,
+          activeColor: ColorsManager.greenPrimaryColor,
         ),
         onTap: isSelected ? () => _setReminder(actionType) : null,
         subtitle: isSelected && _actionReminders[actionType] != null
@@ -312,7 +309,7 @@ class _AddPlantScreenState extends State<AddPlantScreen> {
           'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
           style: TextStyle(
             fontSize: SizeConfig().responsiveFont(12),
-            color: Colors.green,
+            color: ColorsManager.greenColor,
           ),
         )
             : null,

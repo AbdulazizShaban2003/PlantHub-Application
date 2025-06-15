@@ -1,7 +1,7 @@
 // views/set_reminder_view.dart
 import 'package:flutter/material.dart';
 import '../../../../core/widgets/outlined_button_widget.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 import '../components/custom_dropdown.dart';
 import '../components/custom_time_picker.dart';
 import '../controllers/reminder_controller.dart';

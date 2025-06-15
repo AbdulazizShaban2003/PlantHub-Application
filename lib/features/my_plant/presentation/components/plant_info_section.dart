@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/date_formatter.dart';
 import '../../../../core/utils/size_config.dart';
-import '../../models/notification_model.dart';
+import '../../data/models/notification_model.dart';
 import '../components/plant_action_indicator.dart';
 
 class PlantInfoSection extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../models/notification_model.dart';
+import '../data/models/notification_model.dart';
 
 class FirebaseServiceNotify {
   static final FirebaseServiceNotify _instance = FirebaseServiceNotify._internal();

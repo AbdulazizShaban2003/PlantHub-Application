@@ -4,7 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
-import '../models/notification_model.dart';
+import '../data/models/notification_model.dart';
 import '../services/database_helper.dart';
 import '../services/firebase_service_notification.dart';
 import '../services/notification_service.dart';

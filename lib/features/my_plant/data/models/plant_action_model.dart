@@ -1,5 +1,5 @@
 
-import '../../models/notification_model.dart';
+import 'notification_model.dart';
 
 class PlantAction {
   final String id;

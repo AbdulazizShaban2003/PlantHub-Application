@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant_hub_app/features/my_plant/models/notification_model.dart';
+import 'package:plant_hub_app/features/my_plant/data/models/notification_model.dart';
 
 class PlantActionIndicator extends StatelessWidget {
   final PlantAction action;
