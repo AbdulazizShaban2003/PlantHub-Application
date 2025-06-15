@@ -6,7 +6,6 @@ import '../providers/history_provider.dart';
 import 'diagnosis_result_screen.dart';
 import 'diagnosis_healthy_screen.dart';
 
-
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
 
@@ -233,7 +232,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final response = item['response'] as PlantDiagnosisResponse?;
     if (response == null) return SizedBox.shrink();
 
-    final isHealthy = response.status.toLowerCase().contains('healthy');
+    // Determine if plant is healthy or diseased
+    final isHealthy = _isPlantHealthy(response);
     final timestamp = item['timestamp'] as DateTime;
     final formattedDate = '${timestamp.day}/${timestamp.month}/${timestamp.year}';
     final formattedTime = '${timestamp.hour}:${timestamp.minute.toString().padLeft(2, '0')}';
@@ -337,7 +337,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (!isHealthy && response.diseaseInfo.name.isNotEmpty)
+                    // Disease name or healthy status
+                    if (!isHealthy && response.diseaseInfo.name.isNotEmpty) ...[
                       Text(
                         response.diseaseInfo.name,
                         style: TextStyle(
@@ -347,7 +348,42 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
+                    ] else if (!isHealthy && response.data.disease.isNotEmpty) ...[
+                      Text(
+                        _formatDiseaseName(response.data.disease),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ] else if (isHealthy) ...[
+                      Text(
+                        'Plant is Healthy',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green.shade700,
+                        ),
+                      ),
+                    ],
+
                     SizedBox(height: 8),
+
+                    // Plant type if available
+                    if (response.diseaseInfo.plantType.isNotEmpty) ...[
+                      Text(
+                        'Plant: ${response.diseaseInfo.plantType}',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                    ],
+
+                    // Date and time
                     Row(
                       children: [
                         Icon(Icons.calendar_today, size: 14, color: Colors.grey.shade600),
@@ -371,11 +407,59 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 
+  bool _isPlantHealthy(PlantDiagnosisResponse response) {
+    final status = response.status.toLowerCase();
+    final disease = response.data.disease.toLowerCase();
+    final diseaseName = response.diseaseInfo.name.toLowerCase();
+
+    // Check for healthy indicators
+    if (status.contains('healthy') ||
+        disease.contains('healthy') ||
+        diseaseName.contains('healthy')) {
+      return true;
+    }
+
+    // Check for disease indicators
+    if (response.diseaseInfo.name.isNotEmpty &&
+        !response.diseaseInfo.name.toLowerCase().contains('healthy')) {
+      return false;
+    }
+
+    if (response.diseaseInfo.description.isNotEmpty ||
+        response.diseaseInfo.treatments.isNotEmpty) {
+      return false;
+    }
+
+    // Check for disease keywords in disease field
+    List<String> diseaseKeywords = [
+      'scab', 'blight', 'rot', 'wilt', 'spot', 'rust', 'mildew',
+      'canker', 'virus', 'bacterial', 'fungal', 'infection',
+      'diseased', 'disease', 'sick', 'infected'
+    ];
+
+    for (String keyword in diseaseKeywords) {
+      if (disease.contains(keyword)) {
+        return false;
+      }
+    }
+
+    // Default to healthy if no clear disease indicators
+    return true;
+  }
+
+  String _formatDiseaseName(String name) {
+    return name
+        .replaceAll('_', ' ')
+        .split(' ')
+        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+        .join(' ');
+  }
+
   void _navigateToDetail(Map<String, dynamic> item) {
     final response = item['response'] as PlantDiagnosisResponse;
     final imagePath = item['imagePath'] as String;
 
-    if (response.status.toLowerCase().contains('healthy')) {
+    if (_isPlantHealthy(response)) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -446,4 +530,3 @@ class _HistoryScreenState extends State<HistoryScreen> {
     );
   }
 }
-

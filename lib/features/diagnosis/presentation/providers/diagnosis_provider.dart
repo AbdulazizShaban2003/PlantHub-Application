@@ -55,21 +55,123 @@ class DiagnosisProvider with ChangeNotifier {
 
   Future<void> _handleDiagnosisResult(PlantDiagnosisResponse response) async {
     final status = response.status.toLowerCase();
+    final dataCategory = response.data.category.toLowerCase();
+    final dataDisease = response.data.disease.toLowerCase();
+    final diseaseDescription = response.diseaseInfo.description.toLowerCase();
 
-    if (status.contains('no') && status.contains('plant')) {
+    print('API Status: $status');
+    print('Data Category: $dataCategory');
+    print('Data Disease: $dataDisease');
+    print('Disease Description: $diseaseDescription');
+
+    // Check if it's not a plant
+    if (dataCategory.contains('not') && dataCategory.contains('plant')) {
       _status = DiagnosisStatus.noPlant;
-    } else if (status.contains('healthy')) {
+    }
+    else if (dataDisease.contains('not') && dataDisease.contains('plant')) {
+      _status = DiagnosisStatus.noPlant;
+    }
+    else if (status.contains('no') && status.contains('plant')) {
+      _status = DiagnosisStatus.noPlant;
+    }
+    // Check if it's healthy - Updated logic for new API response
+    else if (_isHealthyPlant(dataDisease, diseaseDescription, response)) {
       _status = DiagnosisStatus.healthy;
       await _saveToHistory(response);
-    } else if (status.contains('diseased') || response.diseaseInfo.name.isNotEmpty) {
+    }
+    // Check if it's diseased
+    else if (_isDiseasedPlant(dataDisease, response)) {
       _status = DiagnosisStatus.diseased;
       await _saveToHistory(response);
-    } else {
+    }
+    // Default case for success status
+    else if (status.contains('success')) {
+      // If we have disease information with actual disease data, it's diseased
+      if (response.diseaseInfo.name.isNotEmpty ||
+          response.diseaseInfo.treatments.isNotEmpty) {
+        _status = DiagnosisStatus.diseased;
+        await _saveToHistory(response);
+      }
+      // If description suggests healthy or we have care instructions, it's healthy
+      else if (diseaseDescription.contains('healthy') ||
+          diseaseDescription.contains('no disease') ||
+          response.data.care.isNotEmpty) {
+        _status = DiagnosisStatus.healthy;
+        await _saveToHistory(response);
+      }
+      else {
+        _status = DiagnosisStatus.noPlant;
+      }
+    }
+    else {
       _status = DiagnosisStatus.error;
-      _errorMessage = 'Unknown diagnosis result: $status';
+      _errorMessage = 'Unable to process diagnosis result. Please try again.';
     }
 
+    print('Final Status: $_status');
     notifyListeners();
+  }
+
+  bool _isHealthyPlant(String dataDisease, String diseaseDescription, PlantDiagnosisResponse response) {
+    // Check for explicit healthy indicators
+    if (dataDisease.contains('healthy') ||
+        diseaseDescription.contains('healthy') ||
+        diseaseDescription.contains('the plant is healthy')) {
+      return true;
+    }
+
+    // Check for "no disease" indicators
+    if (diseaseDescription.contains('no disease') ||
+        diseaseDescription.contains('not diseased')) {
+      return true;
+    }
+
+    // Check if disease field contains healthy pattern like "Grape___healthy"
+    if (dataDisease.contains('___healthy') ||
+        dataDisease.endsWith('_healthy')) {
+      return true;
+    }
+
+    return false;
+  }
+
+  bool _isDiseasedPlant(String dataDisease, PlantDiagnosisResponse response) {
+    // Check if we have actual disease information
+    if (response.diseaseInfo.name.isNotEmpty &&
+        !response.diseaseInfo.name.toLowerCase().contains('healthy')) {
+      return true;
+    }
+
+    if (response.diseaseInfo.treatments.isNotEmpty) {
+      return true;
+    }
+
+    // Check for disease patterns in data.disease field
+    if (dataDisease.isNotEmpty &&
+        !dataDisease.contains('healthy') &&
+        !dataDisease.contains('normal') &&
+        dataDisease != 'none') {
+
+      // Check for disease keywords
+      List<String> diseaseKeywords = [
+        'scab', 'blight', 'rot', 'wilt', 'spot', 'rust', 'mildew',
+        'canker', 'virus', 'bacterial', 'fungal', 'infection',
+        'diseased', 'disease', 'sick', 'infected', 'pathogen'
+      ];
+
+      for (String keyword in diseaseKeywords) {
+        if (dataDisease.contains(keyword)) {
+          return true;
+        }
+      }
+
+      // Check for disease naming patterns like "Apple___Apple_scab"
+      if (dataDisease.contains('___') && !dataDisease.contains('healthy')) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   Future<void> _saveToHistory(PlantDiagnosisResponse response) async {
@@ -91,3 +193,5 @@ class DiagnosisProvider with ChangeNotifier {
     super.dispose();
   }
 }
+
+
