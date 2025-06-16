@@ -3,27 +3,31 @@ import 'package:flutter/material.dart';
 
 import '../../../../config/theme/app_colors.dart';
 import '../../../../core/provider/language_provider.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 
-Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageProvider) {
+Widget buildLanguageSettingItem(
+    BuildContext context,
+    LanguageProvider languageProvider,
+    ) {
   return Container(
-    margin: const EdgeInsets.only(bottom: 25),
+    margin: EdgeInsets.only(bottom: SizeConfig().height(0.03)),
     child: Row(
       children: [
         Icon(
           Icons.language,
-          size: 24,
+          size: SizeConfig().responsiveFont(24),
           color: Theme.of(context).textTheme.bodyLarge?.color,
         ),
-        const SizedBox(width: 20),
+        SizedBox(width: SizeConfig().width(0.05)),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Language settings",
+                AppStrings.languageSettings.tr(),
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: SizeConfig().responsiveFont(16),
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -34,10 +38,11 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
         PopupMenuButton<String>(
           icon: Icon(
             Icons.arrow_forward_ios,
-            size: 18,
+            size: SizeConfig().responsiveFont(18),
             color: Theme.of(context).disabledColor,
           ),
           onSelected: (String languageCode) async {
+            await context.setLocale(Locale(languageCode));
             languageProvider.toggleLanguage();
           },
           itemBuilder: (BuildContext context) => [
@@ -45,19 +50,19 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
               value: 'en',
               child: Row(
                 children: [
-                  const SizedBox(width: 12),
+                  SizedBox(width: SizeConfig().width(0.03)),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'English',
+                          AppStrings.english.tr(),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
+                            fontSize: SizeConfig().responsiveFont(16),
                             color: context.locale.languageCode == 'en'
                                 ? ColorsManager.greenPrimaryColor
-
-                            : ColorsManager.blackColor,
+                                : ColorsManager.blackColor,
                           ),
                         ),
                       ],
@@ -66,9 +71,8 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                   if (context.locale.languageCode == 'en')
                     Icon(
                       Icons.check_circle,
-                      color:ColorsManager.greenPrimaryColor
-                      ,
-                      size: 20,
+                      color: ColorsManager.greenPrimaryColor,
+                      size: SizeConfig().responsiveFont(20),
                     ),
                 ],
               ),
@@ -83,9 +87,10 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Arabic',
+                          AppStrings.arabic.tr(),
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
+                            fontSize: SizeConfig().responsiveFont(16),
                             color: context.locale.languageCode == 'ar'
                                 ? ColorsManager.greenPrimaryColor
                                 : ColorsManager.blackColor,
@@ -98,17 +103,17 @@ Widget buildLanguageSettingItem(BuildContext context, LanguageProvider languageP
                     Icon(
                       Icons.check_circle,
                       color: ColorsManager.greenPrimaryColor,
-                      size: 20,
+                      size: SizeConfig().responsiveFont(20),
                     ),
                 ],
               ),
             ),
           ],
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
           ),
-          elevation: 8,
-          offset: const Offset(0, 40),
+          elevation: SizeConfig().height(0.01),
+          offset: Offset(0, SizeConfig().height(0.05)),
         ),
       ],
     ),

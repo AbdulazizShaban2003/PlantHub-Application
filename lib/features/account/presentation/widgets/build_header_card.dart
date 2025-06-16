@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
@@ -17,7 +18,7 @@ Widget buildHeaderCard(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
         gradient: LinearGradient(
-          colors: [Colors.green[400]!, Colors.green[600]!],
+          colors: [ColorsManager.greenColor[400]!, ColorsManager.greenColor[600]!],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -39,7 +40,7 @@ Widget buildHeaderCard(
                   style: TextStyle(
                     fontSize: SizeConfig().responsiveFont(20),
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: ColorsManager.whiteColor,
                   ),
                 ),
               ),

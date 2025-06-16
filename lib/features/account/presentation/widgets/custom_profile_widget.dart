@@ -4,6 +4,7 @@ import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/core/utils/asstes_manager.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../views/profile_view.dart';
 
 class CustomHeaderProfileWidget extends StatelessWidget {
@@ -22,7 +23,7 @@ class CustomHeaderProfileWidget extends StatelessWidget {
         SizedBox(height: SizeConfig().height(0.04)),
         Center(
           child: Text(
-            'Account',
+            AppStrings.account,
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontSize: SizeConfig().responsiveFont(22),
             ),

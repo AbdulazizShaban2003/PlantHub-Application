@@ -74,7 +74,7 @@ class ContactSupportScreen extends StatelessWidget {
                 }
               },
             ),
-            SizedBox(height: SizeConfig().height(0.02)), // Responsive spacing
+            SizedBox(height: SizeConfig().height(0.02)),
             _buildContactItem(
               icon: Icons.facebook,
               iconColor: const Color(0xFF1877F2),

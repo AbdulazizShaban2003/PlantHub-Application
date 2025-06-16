@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
 import '../../../../core/utils/asstes_manager.dart';
 
@@ -31,7 +32,7 @@ class SelectedImageWidget extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Colors.grey.shade300,
+              color: ColorsManager.greyColor.shade300,
               width: SizeConfig().width(0.003),
             ),
             image: _getProfileImageDecoration(),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/theme/app_colors.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart';
 
 Widget buildSettingItem({
   required BuildContext context,
@@ -12,21 +13,22 @@ Widget buildSettingItem({
   Function(bool)? onToggleChanged,
   VoidCallback? onTap,
 }) {
+  SizeConfig().init(context);
+
   return Container(
-    margin: const EdgeInsets.only(bottom: 25),
+    margin: EdgeInsets.only(bottom: SizeConfig().height(0.03)),
     child: GestureDetector(
       onTap: onTap,
       child: Row(
         children: [
           Icon(
             icon,
-            size: 24,
-            color:
-            isLogout
+            size: SizeConfig().responsiveFont(24),
+            color: isLogout
                 ? Colors.red
                 : Theme.of(context).textTheme.bodyLarge?.color,
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: SizeConfig().width(0.05)),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,10 +36,9 @@ Widget buildSettingItem({
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: SizeConfig().responsiveFont(16),
                     fontWeight: FontWeight.w400,
-                    color:
-                    isLogout
+                    color: isLogout
                         ? Colors.red
                         : Theme.of(context).textTheme.bodyLarge?.color,
                   ),
@@ -46,7 +47,7 @@ Widget buildSettingItem({
                   Text(
                     subtitle,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: SizeConfig().responsiveFont(14),
                       color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
                   ),
@@ -55,7 +56,7 @@ Widget buildSettingItem({
           ),
           if (hasToggle)
             Transform.scale(
-              scale: 0.8,
+              scale: SizeConfig().width(0.002),
               child: Switch(
                 value: toggleValue,
                 onChanged: onToggleChanged,
@@ -64,10 +65,10 @@ Widget buildSettingItem({
             ),
           if (!hasToggle && !isLogout)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.05)),
               child: Icon(
                 Icons.arrow_forward_ios,
-                size: 16,
+                size: SizeConfig().responsiveFont(16),
                 color: Theme.of(context).disabledColor,
               ),
             ),

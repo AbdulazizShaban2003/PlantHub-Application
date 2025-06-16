@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant_hub_app/config/theme/app_colors.dart';
 
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
@@ -18,7 +19,7 @@ Widget buildTipsSection() {
             style: TextStyle(
               fontSize: SizeConfig().responsiveFont(18),
               fontWeight: FontWeight.bold,
-              color: Colors.green[700],
+              color: ColorsManager.greenPrimaryColor,
             ),
           ),
           SizedBox(height: SizeConfig().height(0.02)),
@@ -56,7 +57,7 @@ Widget _buildTipItem(String emoji, String title, String description) {
               Text(
                 description,
                 style: TextStyle(
-                  color: Colors.grey[600],
+                  color: ColorsManager.greyColor[600],
                   fontSize: SizeConfig().responsiveFont(14),
                 ),
               ),

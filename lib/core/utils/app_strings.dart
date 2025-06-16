@@ -367,6 +367,9 @@ static const String message = "Messages";
   static const String description = 'Description';
   static const String myPlant = 'My Plants';
   static const String harvest = 'Harvest';
+  static const String languageSettings = 'language_settings';
+  static const String english = 'english';
+  static const String arabic = 'arabic';
 
 }
 
