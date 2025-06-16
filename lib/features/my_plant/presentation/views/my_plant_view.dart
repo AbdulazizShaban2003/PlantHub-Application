@@ -28,7 +28,6 @@ class _MyPlantViewState extends State<MyPlantView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         context.read<PlantProvider>().loadPlants();
-        context.read<NotificationProvider>().loadNotifications();
       }
     });
   }
@@ -41,26 +40,30 @@ class _MyPlantViewState extends State<MyPlantView>
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
 
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
-          padding: const EdgeInsets.all(12.5),
+          padding: EdgeInsets.all(SizeConfig().width(0.03125)),
           child: Image(
             image: AssetImage(AssetsManager.iconPlant),
+            height: SizeConfig().height(0.05),
           ),
         ),
         title: Text(
           AppStrings.myPlant,
-          style: Theme.of(context).textTheme.headlineSmall,
+          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            fontSize: SizeConfig().responsiveFont(22),
+          ),
         ),
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(48.0),
+          preferredSize: Size.fromHeight(SizeConfig().height(0.06)),
           child: Container(
             color: Theme.of(context).scaffoldBackgroundColor,
             child: TabBar(
               controller: _tabController,
-              tabs:  [
+              tabs: [
                 Tab(text: AppStrings.myPlant),
                 Tab(text: AppStrings.harvest),
               ],
@@ -69,7 +72,7 @@ class _MyPlantViewState extends State<MyPlantView>
               indicatorColor: ColorsManager.greenPrimaryColor,
               indicatorWeight: 4.0,
               indicatorSize: TabBarIndicatorSize.tab,
-              indicatorPadding: const EdgeInsets.symmetric(horizontal: 16.0),
+              indicatorPadding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.04)),
               labelStyle: TextStyle(
                 fontSize: SizeConfig().responsiveFont(16),
                 fontWeight: FontWeight.bold,
@@ -83,20 +86,20 @@ class _MyPlantViewState extends State<MyPlantView>
       ),
       body: TabBarView(
         controller: _tabController,
-        children: [
-          const PlantsContent(),
-          const HarvestGuideWidget(),
+        children: const [
+          PlantsContent(),
+          HarvestGuideWidget(),
         ],
       ),
       floatingActionButton: _tabController.index == 0
           ? Padding(
-        padding:  EdgeInsets.only(bottom: SizeConfig().height(0.1)),
+        padding: EdgeInsets.only(bottom: SizeConfig().height(0.1)),
         child: FloatingActionButton(
           heroTag: 'plants_fab',
           onPressed: () {
             Navigator.push(
-              context,
-              RouteHelper.navigateTo(const AddPlantScreen())).then((_) {
+                context,
+                RouteHelper.navigateTo(const AddPlantScreen())).then((_) {
               if (mounted) {
                 context.read<PlantProvider>().loadPlants();
               }
@@ -112,11 +115,10 @@ class _MyPlantViewState extends State<MyPlantView>
       )
           : _tabController.index == 1
           ? Padding(
-        padding: const EdgeInsets.only(bottom: 80.0),
+        padding: EdgeInsets.only(bottom: SizeConfig().height(0.1)),
         child: FloatingActionButton(
           heroTag: 'harvest_fab',
-          onPressed: () {
-          },
+          onPressed: () {},
           backgroundColor: ColorsManager.greenPrimaryColor,
           child: Icon(
             Icons.add,
@@ -126,7 +128,6 @@ class _MyPlantViewState extends State<MyPlantView>
         ),
       )
           : null,
-
     );
   }
 }

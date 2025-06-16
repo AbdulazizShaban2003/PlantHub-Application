@@ -371,6 +371,31 @@ static const String message = "Messages";
   static const String english = 'english';
   static const String arabic = 'arabic';
 
+
+  // Edit Plant Screen Strings
+  static const String save = 'save';
+  static const String basicInformation = 'basic_information';
+  static const String plantName = 'plant_name';
+  static const String pleaseEnterPlantName = 'please_enter_plant_name';
+  static const String category = 'category';
+  static const String pleaseEnterCategory = 'please_enter_category';
+  static const String pleaseEnterDescription = 'please_enter_description';
+  static const String images = 'images';
+  static const String mainImage = 'main_image';
+  static const String tapToChangeMainImage = 'tap_to_change_main_image';
+  static const String additionalImages = 'additional_images';
+  static const String add = 'add';
+  static const String careActions = 'care_actions';
+  static const String reminderSetFor = 'reminder_set_for';
+  static const String error = 'error';
+  static const String plantUpdatedSuccessfully = 'plant_updated_successfully';
+  static const String errorUpdatingPlant = 'error_updating_plant';
+
+  static const String setReminder = 'set_reminder';
+  static const String addNewTask = 'add_new_task';
+  static const String dateTime = 'date_time';
+  static const String pleaseAddAtLeastOneTask = 'please_add_at_least_one_task';
+
 }
 
 class RegxStrings {

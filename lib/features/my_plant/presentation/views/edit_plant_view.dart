@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:plant_hub_app/config/theme/app_colors.dart';
+import 'package:plant_hub_app/core/widgets/outlined_button_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import '../../data/models/notification_model.dart';
@@ -70,7 +70,6 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        forceMaterialTransparency: true,
         title: Text(
           'Edit Plant',
           style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
@@ -112,7 +111,6 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Widget _buildBasicInfoSection() {
     return Card(
       color: Theme.of(context).scaffoldBackgroundColor,
-      elevation: 0,
 
       child: Padding(
         padding: EdgeInsets.all(SizeConfig().width(0.04)),
@@ -151,7 +149,6 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
             ),
             SizedBox(height: SizeConfig().height(0.02)),
             TextFormField(
-
               controller: _categoryController,
               minLines: 1,
               maxLines: null,
@@ -205,7 +202,6 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildImageSection() {
     return Card(
-      elevation: 0,
       color: Theme.of(context).scaffoldBackgroundColor,
       child: Padding(
         padding: EdgeInsets.all(SizeConfig().width(0.04)),
@@ -410,9 +406,6 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
 
   Widget _buildActionSection() {
     return Card(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      elevation: 0,
-
       child: Padding(
         padding: EdgeInsets.all(SizeConfig().width(0.04)),
         child: Column(
@@ -471,7 +464,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
               }
             });
           },
-          activeColor: ColorsManager.greenPrimaryColor,
+          activeColor: Colors.green,
         ),
         onTap: isSelected ? () => _setReminder(actionType) : null,
         subtitle:
@@ -480,7 +473,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
                   'Reminder set for ${_actionReminders[actionType]!.time.toString().substring(0, 16)}',
                   style: TextStyle(
                     fontSize: SizeConfig().responsiveFont(12),
-                    color: ColorsManager.greenPrimaryColor,
+                    color: Colors.green,
                   ),
                 )
                 : null,
