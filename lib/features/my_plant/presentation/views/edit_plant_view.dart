@@ -70,6 +70,7 @@ class _EditPlantScreenState extends State<EditPlantScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(
           'Edit Plant',
           style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),

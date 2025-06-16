@@ -4,6 +4,7 @@ import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart'; // Import Cupertino for iOS-style widgets
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
@@ -87,56 +88,42 @@ class _ProfileViewState extends State<ProfileView> {
   }
 
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
+    DateTime? tempPickedDate = _selectedDate ?? DateTime.now();
+
+    await showCupertinoModalPopup<void>(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now(),
-      locale: Locale('en', 'US'),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: ColorScheme.light(
-              onPrimary:  ColorsManager.blackColor,
-              surface: Color(0xFFF5F5F5),
-
-            ),
-            datePickerTheme: DatePickerThemeData(
-              backgroundColor: Colors.white,
-              headerBackgroundColor: Colors.white,
-              headerForegroundColor: Colors.black,
-              dayStyle: TextStyle(color: Colors.black),
-              weekdayStyle: TextStyle(color: Colors.black),
-              todayBorder: BorderSide(color: Colors.blue),
-
-            ),
-            textTheme: Theme.of(context).textTheme.copyWith(
-              labelLarge: TextStyle(
-                fontSize: 16,
-                fontFamily: 'Roboto',
-              ),
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                minimumSize: Size(64, 50),
-                padding: EdgeInsets.symmetric(horizontal: 12),
-              ),
-            ),
+      builder: (BuildContext context) {
+        return Container(
+          height: 250, // Height of the picker
+          padding: const EdgeInsets.only(top: 6.0),
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaleFactor: 1.0,
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: SafeArea(
+            top: false,
+            child: CupertinoDatePicker(
+              initialDateTime: tempPickedDate,
+              mode: CupertinoDatePickerMode.date, // Only date mode
+              minimumDate: DateTime(1900), // Set your minimum birthdate
+              maximumDate: DateTime.now(), // Maximum date is today
+              onDateTimeChanged: (DateTime newDateTime) {
+                tempPickedDate = newDateTime; // Update temporary picked date
+              },
             ),
-            child: child!,
           ),
         );
       },
     );
 
-    if (picked != null && picked != _selectedDate) {
-      setState(() => _selectedDate = picked);
+    // Update the state only after the picker is dismissed
+    if (tempPickedDate != null && tempPickedDate != _selectedDate) {
+      setState(() {
+        _selectedDate = tempPickedDate;
+      });
     }
   }
+
   Future<void> _saveProfile() async {
     if (_nameController.text.isEmpty || _phoneController.text.isEmpty) {
       FlushbarHelper.createInformation(
@@ -172,7 +159,6 @@ class _ProfileViewState extends State<ProfileView> {
           message: AppStrings.profileSaved,
           duration: const Duration(seconds: 3),
         ).show(context);
-
       } catch (e) {
         Navigator.of(context, rootNavigator: true).pop();
 
@@ -258,14 +244,12 @@ class _ProfileViewState extends State<ProfileView> {
                           width: SizeConfig().width(0.3),
                           height: SizeConfig().height(0.01),
                           child: CountryCodePicker(
-
                             dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
                             dialogSize: Size(
                               SizeConfig().width(0.9),
                               SizeConfig().height(0.7),
                             ),
-                                 searchStyle: TextStyle(fontSize: SizeConfig().responsiveFont(10)),
-
+                            searchStyle: TextStyle(fontSize: SizeConfig().responsiveFont(10)),
                             onChanged: (code) {
                               setState(() {
                                 _countryCode = code.dialCode ?? "+20";
@@ -363,7 +347,7 @@ class _ProfileViewState extends State<ProfileView> {
                               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                 color: _selectedDate == null
                                     ? ColorsManager.greyColor
-                                    :Theme.of(context).primaryColor ,
+                                    : Theme.of(context).primaryColor,
                               ),
                             ),
                             Icon(
@@ -380,7 +364,6 @@ class _ProfileViewState extends State<ProfileView> {
                 SizedBox(height: SizeConfig().height(0.02)),
                 Divider(),
                 SizedBox(height: SizeConfig().height(0.03)),
-
                 OutlinedButtonWidget(
                   nameButton: AppKeyStringTr.save,
                   onPressed: _saveProfile,
@@ -394,4 +377,3 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 }
-

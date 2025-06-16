@@ -58,8 +58,8 @@ class AppThemes {
 
       hourMinuteColor: MaterialStateColor.resolveWith((states) =>
       states.contains(MaterialState.selected)
-          ? Colors.green[100]! // أخضر فاتح عند التحديد
-          : Colors.white, // أبيض عند عدم التحديد
+          ? Colors.green[100]!
+          : Colors.white,
       ),
 
       shape: RoundedRectangleBorder(
@@ -72,10 +72,8 @@ class AppThemes {
         color: Colors.black,
       ),
 
-      // أرقام الدايل (أسود)
       dialTextColor: Colors.black,
 
-      // نص "Select Time" (أسود وغامق)
       helpTextStyle: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.w600,
@@ -255,7 +253,7 @@ class AppThemes {
     ),
 
       dialogTheme: DialogTheme(
-        backgroundColor: Colors.grey[900], // للوضع المظلم
+        backgroundColor: Colors.grey[900],
         titleTextStyle: TextStyle(color: Colors.white, fontSize: 20),
         contentTextStyle: TextStyle(color: Colors.white70),
       ),

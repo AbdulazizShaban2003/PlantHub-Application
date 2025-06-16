@@ -1,6 +1,6 @@
-// controllers/reminder_controller.dart
 import 'package:flutter/material.dart';
-import '../../data/models/notification_model.dart';
+import 'package:flutter/cupertino.dart'; // Import Cupertino for iOS-style widgets
+import '../../data/models/notification_model.dart'; // Assuming this path is correct for your models
 
 class ReminderController {
   DateTime selectedDateTime = DateTime.now().add(const Duration(hours: 1));
@@ -39,29 +39,36 @@ class ReminderController {
   }
 
   Future<DateTime?> selectDateTime(BuildContext context) async {
-    final DateTime? date = await showDatePicker(
+    DateTime? pickedDate = selectedDateTime; // Initialize with current selected date
+
+    await showCupertinoModalPopup<void>(
       context: context,
-      initialDate: selectedDateTime,
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (BuildContext context) {
+        return Container(
+          height: 250,
+          padding: const EdgeInsets.only(top: 6.0),
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          child: SafeArea(
+            top: false,
+            child: CupertinoDatePicker(
+              initialDateTime: selectedDateTime,
+              mode: CupertinoDatePickerMode.dateAndTime,
+              use24hFormat: false,
+              onDateTimeChanged: (DateTime newDateTime) {
+                pickedDate = newDateTime;
+              },
+            ),
+          ),
+        );
+      },
     );
 
-    if (date != null) {
-      final TimeOfDay? time = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.fromDateTime(selectedDateTime),
-      );
-
-      if (time != null) {
-        selectedDateTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          time.hour,
-          time.minute,
-        );
-        return selectedDateTime;
-      }
+    if (pickedDate != null) {
+      selectedDateTime = pickedDate!;
+      return selectedDateTime;
     }
     return null;
   }
