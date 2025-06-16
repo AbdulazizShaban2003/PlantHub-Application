@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
@@ -28,18 +29,19 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
         plantProvider.fetchAllPlants();
       }
     });
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-              backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-              title: Text(AppKeyStringTr.popularArticles, style: Theme.of(context).textTheme.headlineMedium),
-              centerTitle: true,
-              iconTheme: Theme.of(context).iconTheme
+              title: Text(
+                AppKeyStringTr.popularArticles,
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontSize: SizeConfig().responsiveFont(22),
+                ),
+              ),
           ),
           SliverPadding(
-            padding: const EdgeInsets.all(5),
+            padding: EdgeInsets.all(SizeConfig().width(0.0125)),
             sliver: SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -48,11 +50,12 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
                 child: TextFormField(
                   style: TextStyle(fontSize: SizeConfig().responsiveFont(13)),
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: Icon(Icons.search, size: SizeConfig().responsiveFont(24)),
                     hintText: AppKeyStringTr.searchArticles,
+                    hintStyle: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
                     suffixIcon: plantProvider.searchQuery.isNotEmpty
                         ? IconButton(
-                      icon: const Icon(Icons.clear),
+                      icon: Icon(Icons.clear, size: SizeConfig().responsiveFont(24)),
                       onPressed: () => plantProvider.clearSearch(),
                     )
                         : null,
@@ -64,22 +67,23 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
               ),
             ),
           ),
-          ..._buildAllArticles(plantProvider),
+          ..._buildAllArticles(plantProvider, context),
         ],
       ),
     );
   }
 
-  List<Widget> _buildAllArticles(PlantViewModel plantProvider) {
+  List<Widget> _buildAllArticles(PlantViewModel plantProvider, BuildContext context) {
     if (plantProvider.isLoading) {
       return [
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.04)),
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
                   (context, index) =>
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 24.0),
+                    // Responsive padding
+                    padding: EdgeInsets.only(bottom: SizeConfig().height(0.03)),
                     child: Shimmer.fromColors(
                       baseColor: Colors.grey[300]!,
                       highlightColor: Colors.grey[100]!,
@@ -88,22 +92,22 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
                         children: [
                           Container(
                             width: double.infinity,
-                            height: 200,
+                            height: SizeConfig().height(0.25),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(12),
+                              borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          SizedBox(height: SizeConfig().height(0.015)),
                           Container(
                             width: double.infinity,
-                            height: 20,
+                            height: SizeConfig().height(0.025),
                             color: Colors.white,
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: SizeConfig().height(0.01)),
                           Container(
-                            width: 200,
-                            height: 16,
+                            width: SizeConfig().width(0.5),
+                            height: SizeConfig().height(0.02),
                             color: Colors.white,
                           ),
                         ],
@@ -120,11 +124,11 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
     if (plantProvider.error != null) {
       return [
         SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+          padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.04), vertical: SizeConfig().height(0.02)),
           sliver: SliverToBoxAdapter(
             child: Text(
               plantProvider.error!,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: Colors.red, fontSize: SizeConfig().responsiveFont(16)),
             ),
           ),
         ),
@@ -133,7 +137,7 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
 
     if (plantProvider.displayedPlants.isEmpty &&
         plantProvider.searchQuery.isNotEmpty) {
-      return const [
+      return [
         SliverToBoxAdapter(
           child: CustomNoPlantWidget(),
         ),
@@ -142,13 +146,13 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
 
     return [
       SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.04)),
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
                 (context, index) {
               final article = plantProvider.displayedPlants[index];
               return Padding(
-                padding: const EdgeInsets.only(bottom: 24.0),
+                padding: EdgeInsets.only(bottom: SizeConfig().height(0.03)),
                 child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -162,30 +166,30 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
                         child: CachedNetworkImage(
                           imageUrl: article.image,
                           width: double.infinity,
-                          height: 200,
+                          height: SizeConfig().height(0.25),
                           fit: BoxFit.cover,
                           placeholder: (context, url) =>
                               Container(
                                 color: Colors.grey[200],
-                                child: const Center(
+                                child: Center(
                                   child: CircularProgressIndicator(),
                                 ),
                               ),
                           errorWidget: (context, url, error) =>
                               Container(
                                 color: Colors.grey[200],
-                                child: const Icon(
-                                    Icons.error, color: Colors.red),
+                                child: Icon( // Removed const
+                                    Icons.error, color: Colors.red, size: SizeConfig().responsiveFont(30)),
                               ),
                           fadeInDuration: const Duration(milliseconds: 300),
                           fadeInCurve: Curves.easeIn,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: SizeConfig().height(0.015)),
 
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,7 +206,7 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          const Spacer(), // Keep const
                           _buildArticleMenu(context, article),
                         ],
                       )
@@ -220,6 +224,8 @@ class _PopularArticlesViewState extends State<PopularArticlesView> {
 }
 
 Widget _buildArticleMenu(BuildContext context, Plant article) {
+  SizeConfig().init(context);
+
   final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
 
   return StreamBuilder<bool>(
@@ -227,16 +233,16 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
     builder: (context, snapshot) {
       final isBookmarked = snapshot.data ?? false;
       return PopupMenuButton<String>(
-        icon: const Icon(Icons.more_vert),
+        icon: Icon(Icons.more_vert, size: SizeConfig().responsiveFont(24),color: Theme.of(context).primaryColor,),
         onSelected: (value) => _handleMenuSelection(context, value, article),
         itemBuilder: (context) => [
-          const PopupMenuItem<String>(
+          PopupMenuItem<String>(
             value: 'share',
             child: Row(
               children: [
-                Icon(Icons.share, size: 20),
-                SizedBox(width: 8),
-                Text('Share'),
+                Icon(Icons.share, size: SizeConfig().responsiveFont(20)),
+                SizedBox(width: SizeConfig().width(0.02)),
+                Text('Share', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
               ],
             ),
           ),
@@ -246,10 +252,10 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
               children: [
                 Icon(
                   isBookmarked ? Icons.bookmark : Icons.bookmark_border_outlined,
-                  size: 18,
+                  size: SizeConfig().responsiveFont(18),
                 ),
-                const SizedBox(width: 8),
-                Text(isBookmarked ? 'إزالة من المفضلة' : 'إضافة للمفضلة'),
+                SizedBox(width: SizeConfig().width(0.02)),
+                Text(isBookmarked ? 'remove bookmark' : 'add bookmark', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
               ],
             ),
           ),
@@ -270,16 +276,13 @@ Future<void> _handleMenuSelection(
     if (isBookmarked) {
       await bookmarkService.removeBookmark(article.id);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تمت إزالة من المفضلة')),
-        );
+        FlushbarHelper.createSuccess(message: "remove bookmark");
       }
     } else {
       await bookmarkService.addBookmark(article.id);
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('تمت الإضافة إلى المفضلة')),
-        );
+        FlushbarHelper.createSuccess(message: "add bookmark");
+
       }
     }
   }

@@ -6,10 +6,13 @@ import 'package:shimmer/shimmer.dart';
 import 'package:plant_hub_app/config/routes/route_helper.dart';
 import 'package:plant_hub_app/features/articles/presentation/views/article_plant_details_view.dart';
 import 'package:provider/provider.dart';
+import '../../../../core/function/flush_bar_fun.dart';
+import '../../../../core/function/plant_share.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
 import '../../../articles/data/models/plant_model.dart';
 import '../../../articles/view_model.dart';
+import '../../../bookMark/data/datasource/bookmark_service.dart';
 import '../components/build_header.dart';
 
 class CustomPopularArticles extends StatelessWidget {
@@ -91,22 +94,95 @@ class CustomPopularArticles extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          _buildArticleText(article, context, plantProvider),
+          Row(
+            children: [
+              SizedBox(
+                width: 190,
+                  child: _buildArticleText(article, context, plantProvider)),
+
+              
+            ],
+          ),
         ],
       ),
     );
   }
+  Widget _buildArticleMenu(BuildContext context, Plant article) {
+    SizeConfig().init(context);
 
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+
+    return StreamBuilder<bool>(
+      stream: bookmarkService.getBookmarkStatusStream(article.id),
+      builder: (context, snapshot) {
+        final isBookmarked = snapshot.data ?? false;
+        return PopupMenuButton<String>(
+          icon: Icon(Icons.more_vert, size: SizeConfig().responsiveFont(24),color: Theme.of(context).primaryColor,),
+          onSelected: (value) => _handleMenuSelection(context, value, article),
+          itemBuilder: (context) => [
+            PopupMenuItem<String>(
+              value: 'share',
+              child: Row(
+                children: [
+                  Icon(Icons.share, size: SizeConfig().responsiveFont(20)),
+                  SizedBox(width: SizeConfig().width(0.02)),
+                  Text('Share', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                ],
+              ),
+            ),
+            PopupMenuItem<String>(
+              value: 'bookmark',
+              child: Row(
+                children: [
+                  Icon(
+                    isBookmarked ? Icons.bookmark : Icons.bookmark_border_outlined,
+                    size: SizeConfig().responsiveFont(18),
+                  ),
+                  SizedBox(width: SizeConfig().width(0.02)),
+                  Text(isBookmarked ? 'remove bookmark' : 'add bookmark', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _handleMenuSelection(
+      BuildContext context, String value, Plant article) async {
+    final bookmarkService = Provider.of<BookmarkService>(context, listen: false);
+
+    if (value == 'share') {
+      sharePlantDetails(plant: article, context: context);
+    } else if (value == 'bookmark') {
+      final isBookmarked = await bookmarkService.isBookmarked(article.id);
+      if (isBookmarked) {
+        await bookmarkService.removeBookmark(article.id);
+        if (context.mounted) {
+          FlushbarHelper.showSuccess(message: "remove bookmark", context: context);
+        }
+      } else {
+        await bookmarkService.addBookmark(article.id);
+        if (context.mounted) {
+          FlushbarHelper.showSuccess(message: "add bookmark",context: context);
+
+        }
+      }
+    }
+  }
+
+  
   Widget _buildEnhancedShimmerEffect() {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
-      itemCount: 3, // عرض 3 عناصر وهمية
+      itemCount: 3,
       separatorBuilder: (context, index) => SizedBox(width: SizeConfig().width(0.03)),
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
           baseColor: Colors.grey[300]!,
           highlightColor: Colors.grey[100]!,
-          period: const Duration(milliseconds: 1500), // زيادة مدة التأثير
+          period: const Duration(milliseconds: 1500), 
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
