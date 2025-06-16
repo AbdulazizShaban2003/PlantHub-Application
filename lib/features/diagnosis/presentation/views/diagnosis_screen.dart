@@ -88,6 +88,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   TextField(
                     controller: _searchController,
                     onChanged: (query) {
+                      DiseaseProvider().searchDiseases(query);
                     },
                     decoration: InputDecoration(
                       hintText: 'Search diseases...',
@@ -149,7 +150,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
                         SizedBox(width: 20),
 
-                        // Text and Button
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,12 +176,11 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
                               SizedBox(height: 16),
 
-                              // Diagnose button
                               ElevatedButton(
                                 onPressed: () => _showCameraScreen(),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Color(0xFF00A67E),
-                                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                  padding: EdgeInsets.symmetric(horizontal: 9, vertical: 6),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25),
                                   ),
