@@ -9,8 +9,8 @@ import 'package:plant_hub_app/features/account/presentation/views/support_us_scr
 import 'package:provider/provider.dart';
 import '../../../../core/provider/theme_provider.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../notification/notification_settings_screen.dart';
 import '../../../auth/presentation/manager/auth_provider.dart';
+import '../../../notification/notification_settings_screen.dart';
 import '../components/build_language_setting_item.dart';
 import '../components/build_setting_item_component.dart';
 import '../widgets/custom_profile_widget.dart';

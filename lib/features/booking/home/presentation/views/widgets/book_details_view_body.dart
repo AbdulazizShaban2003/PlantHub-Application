@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:plant_hub_app/core/utils/size_config.dart';
-import 'package:plant_hub_app/features/booking/home/presentation/views/widgets/similar_books_section.dart';
 
 import '../../../data/models/book_model/book_model.dart';
 import 'books_action.dart';
@@ -25,15 +24,14 @@ class BookDetailsViewBody extends StatelessWidget {
             child: Column(
               children: [
                 const CustomBookDetailsAppBar(),
+                SizedBox(
+                  height: SizeConfig().height(0.07),
+                ),
                 BookDetailsSection(book: bookModel,),
              SizedBox(
                     height: SizeConfig().height(0.09),
                   ),
-              
-                const SimilarBooksSection(),
-                 SizedBox(
-                  height: SizeConfig().height(0.05),
-                ),
+
               ],
             ),
           ),

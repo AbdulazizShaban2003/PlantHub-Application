@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart';
-import 'package:shared_preferences/shared_preferences.dart'; //
-import '../features/my_plant/services/notification_service.dart'; //
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../my_plant/services/notification_service.dart'; //
 
 class NotificationSettingsScreen extends StatefulWidget {
   final bool initialValue;

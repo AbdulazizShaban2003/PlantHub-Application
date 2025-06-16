@@ -22,4 +22,9 @@ abstract class HomeRepo {
       'plants'
     ],
   });
+
+  // إضافة وظيفة البحث الجديدة
+  Future<Either<FailureApi, List<BookModel>>> searchBooks({
+    required String query,
+  });
 }

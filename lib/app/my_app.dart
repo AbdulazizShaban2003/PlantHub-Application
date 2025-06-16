@@ -28,7 +28,6 @@ import '../features/booking/home/data/models/book_model/book_model.dart';
 import '../features/booking/home/data/repos/home_repo_impl.dart';
 import '../features/booking/home/presentation/manger/featured_books_cubit/featured_books_cubit.dart';
 import '../features/booking/home/presentation/manger/newest_books_cubit/newset_books_cubit.dart';
-import '../features/booking/home/presentation/manger/smila_books_cubit/similar_books_cubit.dart';
 import '../features/chatAi/manager/chat_provider.dart';
 import '../features/diagnosis/presentation/providers/diagnosis_provider.dart';
 import '../features/diagnosis/presentation/providers/disease_provider.dart';
@@ -65,18 +64,6 @@ class _PlantHubState extends State<PlantHub> {
           create:
               (context) =>
                   NewsetBooksCubit(sl.get<HomeRepoImpl>())..fetchNewestBooks(),
-        ),
-        BlocProvider(
-          create: (context) {
-            final cubit = SimilarBooksCubit(sl.get<HomeRepoImpl>());
-            if (bookModel.volumeInfo.categories != null &&
-                bookModel.volumeInfo.categories!.isNotEmpty) {
-              cubit.fetchSimilarBooks(
-                category: bookModel.volumeInfo.categories![0],
-              );
-            }
-            return cubit;
-          },
         ),
       ],
       child: MultiProvider(
