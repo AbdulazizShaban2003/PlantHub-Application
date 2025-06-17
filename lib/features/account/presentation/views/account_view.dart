@@ -6,6 +6,7 @@ import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:plant_hub_app/core/widgets/outlined_button_widget.dart';
 import 'package:plant_hub_app/features/account/presentation/views/privacy_policy_screen.dart';
 import 'package:plant_hub_app/features/account/presentation/views/support_us_screen.dart';
+import 'package:plant_hub_app/features/auth/presentation/views/login_view.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/provider/theme_provider.dart';
 import '../../../../core/utils/app_strings.dart';
@@ -200,8 +201,11 @@ class _AccountViewState extends State<AccountView> {
                 OutlinedButtonWidget(
                   nameButton: AppStrings.logout,
                   onPressed: () {
-                    Navigator.of(context).pop();
-                    // Add your logout logic here
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginView()),
+                          (Route<dynamic> route) => false,
+                    );
                   },
                   foregroundColor: ColorsManager.redColor,
                   backgroundColor: ColorsManager.whiteColor,

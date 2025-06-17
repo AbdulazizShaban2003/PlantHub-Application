@@ -70,20 +70,20 @@ class FirebaseErrors {
   static void showAuthError(BuildContext context, String errorCode) {
     final message =
         authErrors[errorCode] ?? 'Unknown authentication error: $errorCode';
-    FlushbarHelper.showError(context: context, message: message);
+    FlushbarHelperTest.showError(context: context, message: message);
   }
 
   /// Shows Firestore error using Flushbar
   static void showFirestoreError(BuildContext context, String errorCode) {
     final message = firestoreErrors[errorCode] ?? 'Database error: $errorCode';
-    FlushbarHelper.showError(context: context, message: message);
+    FlushbarHelperTest.showError(context: context, message: message);
   }
 
   /// Shows notification error using Flushbar
   static void showNotificationError(BuildContext context, String errorCode) {
     final message =
         notificationErrors[errorCode] ?? 'Notification error: $errorCode';
-    FlushbarHelper.showError(context: context, message: message);
+    FlushbarHelperTest.showError(context: context, message: message);
   }
 
   /// Handles any Firebase exception and shows appropriate error
@@ -93,7 +93,7 @@ class FirebaseErrors {
     } else if (error is FirebaseException) {
       showFirestoreError(context, error.code);
     } else {
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: 'Unexpected error: ${error.toString()}',
       );

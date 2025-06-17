@@ -135,7 +135,7 @@ class _LoginViewState extends State<LoginView> {
                 onPressed: () async {
                   await authViewModel.signInWithGoogle(context);
                   if (authViewModel.user != null) {
-                    FlushbarHelper.showSuccess(
+                    FlushbarHelperTest.showSuccess(
                       context: context,
                       message: AppStrings.verificationEmailSent,
                     );

@@ -44,7 +44,7 @@ Future<void> handleError(
     message = 'An unexpected error occurred';
   }
 
-  FlushbarHelper.showError(context: context, message: message);
+  FlushbarHelperTest.showError(context: context, message: message);
 
   // Optionally log the error for debugging
   debugPrint('Error: $error');

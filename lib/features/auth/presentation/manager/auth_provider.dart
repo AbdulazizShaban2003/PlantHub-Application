@@ -1,3 +1,4 @@
+import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -34,17 +35,17 @@ class AuthProviderManager with ChangeNotifier {
     result.fold(
           (error) {
         _setError(error);
-        FlushbarHelper.showError(context: context, message: error);
+        FlushbarHelperTest.showError(context: context, message: error);
       },
           (verified) {
         _isEmailVerified = verified;
         if (verified) {
-          FlushbarHelper.showSuccess(
+          FlushbarHelperTest.showSuccess(
             context: context,
             message: AppStrings.emailVerifiedSuccess,
           );
         } else {
-          FlushbarHelper.showInfo(
+          FlushbarHelperTest.showInfo(
             context: context,
             message: AppStrings.emailNotVerified,
           );
@@ -62,10 +63,10 @@ class AuthProviderManager with ChangeNotifier {
     result.fold(
           (error) {
         _setError(error);
-        FlushbarHelper.showError(context: context, message: error);
+        FlushbarHelperTest.showError(context: context, message: error);
       },
           (_) {
-        FlushbarHelper.showSuccess(
+        FlushbarHelperTest.showSuccess(
           context: context,
           message: AppStrings.verificationEmailResent,
         );
@@ -94,14 +95,21 @@ class AuthProviderManager with ChangeNotifier {
       await result.fold(
             (error) async {
           _setError(error);
-          FlushbarHelper.showError(context: context, message: error);
+          FlushbarHelperTest.showError(context: context, message: AppStrings.verificationEmailSent);
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => LoginView()),
+                (Route<dynamic> route) => false,
+          );
+          FlushbarHelperTest.showSuccess(context: context, message: AppStrings.verificationEmailSent);
+
         },
             (user) async {
           _setUser(user);
           final verificationResult = await _repository.sendEmailVerification();
           verificationResult.fold(
-                (error) => FlushbarHelper.showError(context: context, message: error),
-                (_) => FlushbarHelper.showSuccess(
+                (error) => FlushbarHelperTest.showError(context: context, message: error),
+                (_) => FlushbarHelperTest.showSuccess(
               context: context,
               message: AppStrings.verificationEmailSent,
             ),
@@ -110,7 +118,7 @@ class AuthProviderManager with ChangeNotifier {
       );
     } catch (e) {
       _setError(AppStrings.unexpectedError);
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: '${AppStrings.accountCreationFailed}${e.toString()}',
       );
@@ -138,7 +146,7 @@ class AuthProviderManager with ChangeNotifier {
       await result.fold(
             (error) async {
           _setError(error);
-          FlushbarHelper.showError(context: context, message: error);
+          FlushbarHelperTest.showError(context: context, message: error);
         },
             (user) async {
           _setUser(user);
@@ -147,17 +155,17 @@ class AuthProviderManager with ChangeNotifier {
 
 
           verificationResult.fold(
-                (error) => FlushbarHelper.showError(context: context, message: error),
+                (error) => FlushbarHelperTest.showError(context: context, message: error),
                 (verified) {
               _isEmailVerified = verified;
               if (verified) {
-                FlushbarHelper.showSuccess(
+                FlushbarHelperTest.showSuccess(
                   context: context,
                   message: AppStrings.loginSuccess,
                 );
               } else {
                 _repository.sendEmailVerification();
-                FlushbarHelper.showWarning(
+                FlushbarHelperTest.showWarning(
                   context: context,
                   message: AppStrings.verifyEmailFirst,
                 );
@@ -169,7 +177,7 @@ class AuthProviderManager with ChangeNotifier {
       );
     } catch (e) {
       _setError(AppStrings.loginFailed);
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: '${AppStrings.failedToLogin}${e.toString()}',
       );
@@ -197,7 +205,7 @@ class AuthProviderManager with ChangeNotifier {
       if (querySnapshot.docs.isEmpty) {
         Navigator.pop(context);
         _setError(AppStrings.emailNotFound);
-        FlushbarHelper.showError(
+        FlushbarHelperTest.showError(
           context: context,
           message: AppStrings.noAccountFound,
         );
@@ -210,7 +218,7 @@ class AuthProviderManager with ChangeNotifier {
 
       Navigator.pop(context);
 
-      FlushbarHelper.showSuccess(
+      FlushbarHelperTest.showSuccess(
         context: context,
         message: '${AppStrings.resetLinkSent}$cleanEmail',
       );
@@ -229,21 +237,21 @@ class AuthProviderManager with ChangeNotifier {
       switch (e.code) {
         case 'user-not-found':
           _setError(AppStrings.emailNotFound);
-          FlushbarHelper.showError(
+          FlushbarHelperTest.showError(
             context: context,
             message: AppStrings.noAccountFound,
           );
           break;
         case 'invalid-email':
           _setError(AppStrings.invalidEmail);
-          FlushbarHelper.showError(
+          FlushbarHelperTest.showError(
             context: context,
             message: AppStrings.enterValidEmail,
           );
           break;
         default:
           _setError(AppStrings.passwordResetFailed);
-          FlushbarHelper.showError(
+          FlushbarHelperTest.showError(
             context: context,
             message: e.message ?? AppStrings.failedToSendReset,
           );
@@ -251,7 +259,7 @@ class AuthProviderManager with ChangeNotifier {
     } catch (e) {
       Navigator.pop(context);
       _setError(AppStrings.passwordResetFailed);
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: '${AppStrings.failedToReset}${e.toString()}',
       );
@@ -267,10 +275,10 @@ class AuthProviderManager with ChangeNotifier {
       result.fold(
             (error) {
           _setError(error);
-          FlushbarHelper.showError(context: context, message: error);
+          FlushbarHelperTest.showError(context: context, message: error);
         },
             (token) {
-          FlushbarHelper.showSuccess(
+          FlushbarHelperTest.showSuccess(
             context: context,
             message: AppStrings.tokenRefreshedSuccessfully,
           );
@@ -278,7 +286,7 @@ class AuthProviderManager with ChangeNotifier {
       );
     } catch (e) {
       _setError(AppStrings.tokenRefreshError);
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: '${AppStrings.failedToRefreshToken}${e.toString()}',
       );
@@ -296,17 +304,17 @@ class AuthProviderManager with ChangeNotifier {
       await result.fold(
             (error) async {
           _setError(error);
-          FlushbarHelper.showError(context: context, message: error);
+          FlushbarHelperTest.showError(context: context, message: error);
         },
             (user) async {
           _setUser(user);
           final verificationResult = await _repository.checkEmailVerification();
 
           verificationResult.fold(
-                (error) => FlushbarHelper.showError(context: context, message: error),
+                (error) => FlushbarHelperTest.showError(context: context, message: error),
                 (verified) {
               _isEmailVerified = verified;
-              FlushbarHelper.showSuccess(
+              FlushbarHelperTest.showSuccess(
                 context: context,
                 message: AppStrings.googleSignInSuccess,
               );
@@ -317,7 +325,7 @@ class AuthProviderManager with ChangeNotifier {
       );
     } catch (e) {
       _setError(AppStrings.googleSignInFailed);
-      FlushbarHelper.showError(
+      FlushbarHelperTest.showError(
         context: context,
         message: '${AppStrings.failedGoogleSignIn}${e.toString()}',
       );
@@ -333,6 +341,7 @@ class AuthProviderManager with ChangeNotifier {
       operationController.showLoadingDialog(context, AppStrings.loggingOut);
 
       final result = await _repository.signOut();
+      FlushbarHelper.createSuccess(message: 'successfully sign out').show(context);
 
       result.fold(
             (error) {

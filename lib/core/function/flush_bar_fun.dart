@@ -1,6 +1,6 @@
 import 'package:another_flushbar/flushbar.dart' show Flushbar, FlushbarPosition, FlushbarStyle;
 import 'package:flutter/material.dart';
-class FlushbarHelper {
+class FlushbarHelperTest {
   static void showSuccess({
     required BuildContext context,
     required String message,

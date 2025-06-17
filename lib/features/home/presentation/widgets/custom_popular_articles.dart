@@ -160,12 +160,12 @@ class CustomPopularArticles extends StatelessWidget {
       if (isBookmarked) {
         await bookmarkService.removeBookmark(article.id);
         if (context.mounted) {
-          FlushbarHelper.showSuccess(message: "remove bookmark", context: context);
+          FlushbarHelperTest.showSuccess(message: "remove bookmark", context: context);
         }
       } else {
         await bookmarkService.addBookmark(article.id);
         if (context.mounted) {
-          FlushbarHelper.showSuccess(message: "add bookmark",context: context);
+          FlushbarHelperTest.showSuccess(message: "add bookmark",context: context);
 
         }
       }

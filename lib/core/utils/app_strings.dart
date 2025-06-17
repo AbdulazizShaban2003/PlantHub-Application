@@ -393,6 +393,10 @@ static const String message = "Messages";
   static const String searchBookHint = 'Search book';
   static const String newestBooks = 'newest books';
   static const String popularBooks = 'Popular books';
+  static const String successLogOut ='Successfully log out';
+  static const String successSignIn="Successfully sign in";
+  static const String signInSuccess = 'Signed in successfully';
+  static const String signInFailed = 'Sign in failed: ';
 }
 
 class RegxStrings {
