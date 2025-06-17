@@ -21,7 +21,6 @@ class DiagnosisErrorScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             Expanded(
               flex: 1,
               child: Center(
@@ -79,7 +78,6 @@ class DiagnosisErrorScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   SizedBox(height: SizeConfig().height(0.015)),
                 ],
               ),

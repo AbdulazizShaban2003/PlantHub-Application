@@ -5,7 +5,7 @@ import 'package:plant_hub_app/core/utils/size_config.dart';
 import 'package:plant_hub_app/features/articles/view_model.dart'
     show PlantViewModel;
 import '../../../articles/data/models/plant_model.dart';
-import '../components/build_empty_state.dart' show buildEmptyState;
+import '../components/build_empty_state_widget.dart';
 import '../widgets/access_login_bookmark.dart';
 import '../widgets/build_error_widget.dart';
 import '../widgets/build_plant_article_card.dart';
@@ -81,7 +81,7 @@ class _BookmarkViewState extends State<BookmarkView> {
 
                 final bookmarkedPlants = snapshot.data ?? [];
                 return bookmarkedPlants.isEmpty
-                    ? buildEmptyState(context)
+                    ? buildEmptyStateWidget(context)
                     : _buildPlantList(bookmarkedPlants);
               },
             ),

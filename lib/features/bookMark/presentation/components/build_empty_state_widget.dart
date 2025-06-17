@@ -4,7 +4,7 @@ import '../../../../config/theme/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/size_config.dart' show SizeConfig;
 
-Widget buildEmptyState(BuildContext context) {
+Widget buildEmptyStateWidget(BuildContext context) {
   return Center(
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,

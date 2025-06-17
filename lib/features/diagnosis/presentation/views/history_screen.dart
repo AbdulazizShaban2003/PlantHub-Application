@@ -5,6 +5,7 @@ import '../../data/plant_diagnosis_response_model.dart';
 import '../providers/history_provider.dart';
 import 'diagnosis_result_screen.dart';
 import 'diagnosis_healthy_screen.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart'; // Import SizeConfig
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -34,7 +35,10 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Diagnosis History'),
+        title: Text(
+          'Diagnosis History',
+          style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
+        ),
         actions: [
           Consumer<HistoryProvider>(
             builder: (context, historyProvider, child) {
@@ -53,23 +57,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 },
                 itemBuilder: (context) => [
                   if (historyProvider.historyItems.isNotEmpty)
-                    PopupMenuItem(
+                    PopupMenuItem( // Removed const
                       value: 'clear',
                       child: Row(
                         children: [
-                          Icon(Icons.delete_outline, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('Clear History'),
+                          Icon(Icons.delete_outline, color: Colors.red, size: SizeConfig().responsiveFont(24)),
+                          SizedBox(width: SizeConfig().width(0.02)),
+                          Text('Clear History', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                         ],
                       ),
                     ),
-                  PopupMenuItem(
+                  PopupMenuItem( // Removed const
                     value: 'reset',
                     child: Row(
                       children: [
-                        Icon(Icons.refresh, color: Colors.orange),
-                        SizedBox(width: 8),
-                        Text('Reset Database'),
+                        Icon(Icons.refresh, color: Colors.orange, size: SizeConfig().responsiveFont(24)),
+                        SizedBox(width: SizeConfig().width(0.02)),
+                        Text('Reset Database', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                       ],
                     ),
                   ),
@@ -83,7 +87,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
         children: [
           // Search bar
           Padding(
-            padding: EdgeInsets.all(16),
+            // Responsive padding
+            padding: EdgeInsets.all(SizeConfig().width(0.04)),
             child: TextField(
               controller: _searchController,
               onChanged: (query) {
@@ -92,10 +97,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
               },
               decoration: InputDecoration(
                 hintText: 'Search diagnosis history...',
-                prefixIcon: Icon(Icons.search, color: Colors.grey),
+                hintStyle: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+                prefixIcon: Icon(Icons.search, color: Colors.grey, size: SizeConfig().responsiveFont(24)),
                 suffixIcon: _searchController.text.isNotEmpty
                     ? IconButton(
-                  icon: Icon(Icons.clear),
+                  icon: Icon(Icons.clear, size: SizeConfig().responsiveFont(24)),
                   onPressed: () {
                     _searchController.clear();
                     Provider.of<HistoryProvider>(context, listen: false)
@@ -106,14 +112,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 filled: true,
                 fillColor: Colors.grey.shade100,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.circular(SizeConfig().width(0.075)),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 16,
+                  vertical: SizeConfig().height(0.015),
+                  horizontal: SizeConfig().width(0.04),
                 ),
               ),
+              style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
             ),
           ),
 
@@ -126,9 +133,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircularProgressIndicator(color: Color(0xFF00A67E)),
-                        SizedBox(height: 16),
-                        Text('Loading history...'),
+                        CircularProgressIndicator(color: const Color(0xFF00A67E)),
+                        SizedBox(height: SizeConfig().height(0.02)),
+                        Text('Loading history...', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                       ],
                     ),
                   );
@@ -139,31 +146,31 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.error_outline, size: 64, color: Colors.red),
-                        SizedBox(height: 16),
+                        Icon(Icons.error_outline, size: SizeConfig().responsiveFont(64), color: Colors.red),
+                        SizedBox(height: SizeConfig().height(0.02)),
                         Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 32),
+                          padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.08)),
                           child: Text(
                             historyProvider.errorMessage,
-                            style: TextStyle(color: Colors.red, fontSize: 16),
+                            style: TextStyle(color: Colors.red, fontSize: SizeConfig().responsiveFont(16)),
                             textAlign: TextAlign.center,
                           ),
                         ),
-                        SizedBox(height: 16),
+                        SizedBox(height: SizeConfig().height(0.02)),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
                               onPressed: () => historyProvider.loadHistory(),
-                              child: Text('Retry'),
+                              child: Text('Retry', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                             ),
-                            SizedBox(width: 16),
+                            SizedBox(width: SizeConfig().width(0.04)),
                             ElevatedButton(
                               onPressed: () => historyProvider.resetDatabase(),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.orange,
                               ),
-                              child: Text('Reset Database'),
+                              child: Text('Reset Database', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                             ),
                           ],
                         ),
@@ -177,23 +184,23 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.history, size: 80, color: Colors.grey.shade400),
-                        SizedBox(height: 16),
+                        Icon(Icons.history, size: SizeConfig().responsiveFont(80), color: Colors.grey.shade400),
+                        SizedBox(height: SizeConfig().height(0.02)),
                         Text(
                           _searchController.text.isEmpty
                               ? 'No diagnosis history yet'
                               : 'No results found for "${_searchController.text}"',
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: SizeConfig().responsiveFont(18),
                             color: Colors.grey.shade600,
                           ),
                         ),
                         if (_searchController.text.isEmpty) ...[
-                          SizedBox(height: 8),
+                          SizedBox(height: SizeConfig().height(0.01)),
                           Text(
                             'Start diagnosing plants to see your history here',
                             style: TextStyle(
-                              fontSize: 14,
+                              fontSize: SizeConfig().responsiveFont(14),
                               color: Colors.grey.shade500,
                             ),
                           ),
@@ -206,13 +213,14 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 return RefreshIndicator(
                   onRefresh: () => historyProvider.loadHistory(),
                   child: ListView.separated(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(SizeConfig().width(0.04)),
                     itemCount: historyProvider.historyItems.length,
-                    separatorBuilder: (context, index) => SizedBox(height: 16),
+                    separatorBuilder: (context, index) => SizedBox(height: SizeConfig().height(0.02)),
                     itemBuilder: (context, index) {
                       return _buildHistoryItem(
                         historyProvider.historyItems[index],
                         historyProvider,
+                        context,
                       );
                     },
                   ),
@@ -228,11 +236,13 @@ class _HistoryScreenState extends State<HistoryScreen> {
   Widget _buildHistoryItem(
       Map<String, dynamic> item,
       HistoryProvider historyProvider,
+      BuildContext context,
       ) {
-    final response = item['response'] as PlantDiagnosisResponse?;
-    if (response == null) return SizedBox.shrink();
+    SizeConfig().init(context);
 
-    // Determine if plant is healthy or diseased
+    final response = item['response'] as PlantDiagnosisResponse?;
+    if (response == null) return const SizedBox.shrink();
+
     final isHealthy = _isPlantHealthy(response);
     final timestamp = item['timestamp'] as DateTime;
     final formattedDate = '${timestamp.day}/${timestamp.month}/${timestamp.year}';
@@ -243,26 +253,27 @@ class _HistoryScreenState extends State<HistoryScreen> {
       direction: DismissDirection.endToStart,
       background: Container(
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 20),
+        padding: EdgeInsets.only(right: SizeConfig().width(0.05)),
         color: Colors.red,
-        child: Icon(Icons.delete, color: Colors.white, size: 24),
+        child: Icon(Icons.delete, color: Colors.white, size: SizeConfig().responsiveFont(24)),
       ),
       confirmDismiss: (direction) async {
         return await showDialog(
           context: context,
           builder: (BuildContext context) {
+            SizeConfig().init(context);
             return AlertDialog(
-              title: Text('Delete Item'),
-              content: Text('Are you sure you want to delete this diagnosis?'),
+              title: Text('Delete Item', style: TextStyle(fontSize: SizeConfig().responsiveFont(18))),
+              content: Text('Are you sure you want to delete this diagnosis?', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
               actions: [
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(false),
-                  child: Text('Cancel'),
+                  child: Text('Cancel', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
                 ),
                 TextButton(
                   onPressed: () => Navigator.of(context).pop(true),
                   style: TextButton.styleFrom(foregroundColor: Colors.red),
-                  child: Text('Delete'),
+                  child: Text('Delete', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
                 ),
               ],
             );
@@ -275,55 +286,54 @@ class _HistoryScreenState extends State<HistoryScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 4,
-                offset: Offset(0, 2),
+                spreadRadius: SizeConfig().width(0.0025),
+                blurRadius: SizeConfig().width(0.01),
+                offset: Offset(0, SizeConfig().height(0.0025)),
               ),
             ],
           ),
           child: Column(
             children: [
-              // Image and Status
               Stack(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(SizeConfig().width(0.03))),
                     child: Image.file(
                       File(item['imagePath']),
                       width: double.infinity,
-                      height: 150,
+                      height: SizeConfig().height(0.1875),
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: double.infinity,
-                        height: 150,
+                        height: SizeConfig().height(0.1875),
                         color: Colors.grey.shade200,
                         child: Icon(
                           Icons.image_not_supported,
                           color: Colors.grey,
-                          size: 48,
+                          size: SizeConfig().responsiveFont(48),
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    top: 12,
-                    right: 12,
+                    top: SizeConfig().height(0.015),
+                    right: SizeConfig().width(0.03),
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: EdgeInsets.symmetric(horizontal: SizeConfig().width(0.03), vertical: SizeConfig().height(0.0075)),
                       decoration: BoxDecoration(
                         color: isHealthy ? Colors.green : Colors.red,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(SizeConfig().width(0.05)),
                       ),
                       child: Text(
                         isHealthy ? 'Healthy' : 'Diseased',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12,
+                          fontSize: SizeConfig().responsiveFont(12),
                         ),
                       ),
                     ),
@@ -333,16 +343,16 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
               // Details
               Padding(
-                padding: EdgeInsets.all(16),
+                // Responsive padding
+                padding: EdgeInsets.all(SizeConfig().width(0.04)),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Disease name or healthy status
                     if (!isHealthy && response.diseaseInfo.name.isNotEmpty) ...[
                       Text(
                         response.diseaseInfo.name,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: SizeConfig().responsiveFont(16),
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 2,
@@ -352,7 +362,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Text(
                         _formatDiseaseName(response.data.disease),
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: SizeConfig().responsiveFont(16),
                           fontWeight: FontWeight.bold,
                         ),
                         maxLines: 2,
@@ -362,36 +372,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       Text(
                         'Plant is Healthy',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: SizeConfig().responsiveFont(16),
                           fontWeight: FontWeight.bold,
                           color: Colors.green.shade700,
                         ),
                       ),
                     ],
 
-                    SizedBox(height: 8),
+                    SizedBox(height: SizeConfig().height(0.01)),
 
-                    // Plant type if available
                     if (response.diseaseInfo.plantType.isNotEmpty) ...[
                       Text(
                         'Plant: ${response.diseaseInfo.plantType}',
                         style: TextStyle(
-                          fontSize: 14,
+                          fontSize: SizeConfig().responsiveFont(14),
                           color: Colors.grey.shade600,
                         ),
                       ),
-                      SizedBox(height: 4),
+                      SizedBox(height: SizeConfig().height(0.005)),
                     ],
 
-                    // Date and time
                     Row(
                       children: [
-                        Icon(Icons.calendar_today, size: 14, color: Colors.grey.shade600),
-                        SizedBox(width: 4),
+                        Icon(Icons.calendar_today, size: SizeConfig().responsiveFont(14), color: Colors.grey.shade600),
+                        SizedBox(width: SizeConfig().width(0.01)),
                         Text(
                           '$formattedDate at $formattedTime',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: SizeConfig().responsiveFont(14),
                             color: Colors.grey.shade600,
                           ),
                         ),
@@ -412,14 +420,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     final disease = response.data.disease.toLowerCase();
     final diseaseName = response.diseaseInfo.name.toLowerCase();
 
-    // Check for healthy indicators
     if (status.contains('healthy') ||
         disease.contains('healthy') ||
         diseaseName.contains('healthy')) {
       return true;
     }
 
-    // Check for disease indicators
     if (response.diseaseInfo.name.isNotEmpty &&
         !response.diseaseInfo.name.toLowerCase().contains('healthy')) {
       return false;
@@ -430,7 +436,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
       return false;
     }
 
-    // Check for disease keywords in disease field
     List<String> diseaseKeywords = [
       'scab', 'blight', 'rot', 'wilt', 'spot', 'rust', 'mildew',
       'canker', 'virus', 'bacterial', 'fungal', 'infection',
@@ -442,8 +447,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
         return false;
       }
     }
-
-    // Default to healthy if no clear disease indicators
     return true;
   }
 
@@ -486,12 +489,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Clear History'),
-        content: Text('Are you sure you want to clear all diagnosis history? This action cannot be undone.'),
+        title: Text('Clear History', style: TextStyle(fontSize: SizeConfig().responsiveFont(18))),
+        content: Text('Are you sure you want to clear all diagnosis history? This action cannot be undone.', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))), // Responsive font size
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: Text('Cancel', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
           ),
           TextButton(
             onPressed: () {
@@ -499,7 +502,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               historyProvider.clearHistory();
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: Text('Clear All'),
+            child: Text('Clear All', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
           ),
         ],
       ),
@@ -510,12 +513,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Reset Database'),
-        content: Text('This will completely reset the database and clear all history. Use this if you\'re experiencing database errors. Continue?'),
+        title: Text('Reset Database', style: TextStyle(fontSize: SizeConfig().responsiveFont(18))),
+        content: Text('This will completely reset the database and clear all history. Use this if you\'re experiencing database errors. Continue?', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))), // Responsive font size
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: Text('Cancel'),
+            child: Text('Cancel', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
           ),
           TextButton(
             onPressed: () {
@@ -523,7 +526,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
               historyProvider.resetDatabase();
             },
             style: TextButton.styleFrom(foregroundColor: Colors.orange),
-            child: Text('Reset'),
+            child: Text('Reset', style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
           ),
         ],
       ),

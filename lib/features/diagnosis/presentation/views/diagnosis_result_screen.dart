@@ -6,10 +6,10 @@ class DiagnosisResultScreen extends StatelessWidget {
   final PlantDiagnosisResponse response;
 
   const DiagnosisResultScreen({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.response,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

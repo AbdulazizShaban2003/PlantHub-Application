@@ -11,7 +11,7 @@ import 'history_screen.dart';
 import 'disease_detail_screen.dart';
 import 'package:camera/camera.dart';
 import 'camera_screen.dart';
-
+import 'package:plant_hub_app/core/utils/size_config.dart';
 class DiagnosisScreen extends StatefulWidget {
   const DiagnosisScreen({super.key});
 
@@ -38,17 +38,23 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Diagnosis',style: Theme.of(context).textTheme.headlineMedium,),
+        title: Text(
+          'Diagnosis',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+            fontSize: SizeConfig().responsiveFont(22),
+          ),
+        ),
         actions: [
           IconButton(
-            icon: Icon(Icons.history),
+            icon: Icon(Icons.history, size: SizeConfig().responsiveFont(24)),
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => HistoryScreen()),
+                MaterialPageRoute(builder: (_) => const HistoryScreen()),
               );
             },
           ),
@@ -56,21 +62,22 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       ),
       body: Consumer<DiagnosisProvider>(
         builder: (context, diagnosisProvider, child) {
-          // Show loading if processing
           if (diagnosisProvider.status == DiagnosisStatus.loading) {
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(color: Color(0xFF00A67E)),
-                  SizedBox(height: 16),
-                  Text('Analyzing your plant...'),
+                  CircularProgressIndicator(color: const Color(0xFF00A67E)),
+                  SizedBox(height: SizeConfig().height(0.02)),
+                  Text(
+                    'Analyzing your plant...',
+                    style: TextStyle(fontSize: SizeConfig().responsiveFont(16)),
+                  ),
                 ],
               ),
             );
           }
 
-          // Navigate based on diagnosis result
           WidgetsBinding.instance.addPostFrameCallback((_) {
             _navigateBasedOnResult(diagnosisProvider);
           });
@@ -80,75 +87,76 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
               await Provider.of<DiseaseProvider>(context, listen: false).loadCommonDiseases();
             },
             child: SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.all(20),
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.all(SizeConfig().width(0.05)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
                     controller: _searchController,
                     onChanged: (query) {
+
                       DiseaseProvider().searchDiseases(query);
                     },
                     decoration: InputDecoration(
                       hintText: 'Search diseases...',
-                      prefixIcon: Icon(Icons.search, color: Colors.grey),
+                      hintStyle: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+                      prefixIcon: Icon(Icons.search, color: Colors.grey, size: SizeConfig().responsiveFont(24)),
                       filled: true,
                       fillColor: Colors.grey.shade100,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
+                        borderRadius: BorderRadius.circular(SizeConfig().width(0.075)),
                         borderSide: BorderSide.none,
                       ),
                       contentPadding: EdgeInsets.symmetric(
-                        vertical: 5,
-                        horizontal: 10,
+                        vertical: SizeConfig().height(0.00625),
+                        horizontal: SizeConfig().width(0.025),
                       ),
                     ),
+                    style: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: SizeConfig().height(0.025)),
 
                   Container(
                     width: double.infinity,
-
-                    padding: EdgeInsets.all(20),
+                    padding: EdgeInsets.all(SizeConfig().width(0.05)),
                     decoration: BoxDecoration(
                       color: Colors.white,
-
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(SizeConfig().width(0.04)),
                       boxShadow: [
                         BoxShadow(
                           color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: 1,
-                          blurRadius: 8,
-                          offset: Offset(0, 2),
+                          spreadRadius: SizeConfig().width(0.0025),
+                          blurRadius: SizeConfig().width(0.02),
+                          offset: Offset(0, SizeConfig().height(0.0025)),
                         ),
                       ],
                     ),
                     child: Row(
                       children: [
                         SizedBox(
-                          width: 100,
-                          height: 100,
+                          width: SizeConfig().width(0.25),
+                          height: SizeConfig().width(0.25),
                           child: Image.asset(
                             'assets/images/icon_diagnosis.png',
                             fit: BoxFit.contain,
                             errorBuilder: (context, error, stackTrace) => Container(
-                              width: 100,
-                              height: 100,
+                              width: SizeConfig().width(0.25),
+                              height: SizeConfig().width(0.25),
                               decoration: BoxDecoration(
-                                color: Color(0xFF00A67E).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(12),
+                                color: const Color(0xFF00A67E).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
                               ),
                               child: Icon(
                                 Icons.eco,
-                                size: 50,
-                                color: Color(0xFF00A67E),
+                                size: SizeConfig().responsiveFont(50),
+                                color: const Color(0xFF00A67E),
                               ),
                             ),
                           ),
                         ),
 
-                        SizedBox(width: 20),
+                        SizedBox(width: SizeConfig().width(0.05)),
 
                         Expanded(
                           child: Column(
@@ -157,38 +165,40 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                               Text(
                                 'Check Your Plant',
                                 style: TextStyle(
-                                  fontSize: 15,
+                                  fontSize: SizeConfig().responsiveFont(15),
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black87,
                                 ),
                               ),
 
-                              SizedBox(height: 8),
-
+                              SizedBox(height: SizeConfig().height(0.01)),
                               Text(
                                 'Take photos, start diagnose diseases, & get plant care tips',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: SizeConfig().responsiveFont(12),
                                   color: Colors.grey[600],
                                   height: 1.4,
                                 ),
                               ),
 
-                              SizedBox(height: 16),
+                              SizedBox(height: SizeConfig().height(0.02)),
 
                               ElevatedButton(
                                 onPressed: () => _showCameraScreen(),
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(0xFF00A67E),
-                                  padding: EdgeInsets.symmetric(horizontal: 9, vertical: 6),
+                                  backgroundColor: const Color(0xFF00A67E),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig().width(0.0225),
+                                    vertical: SizeConfig().height(0.0075),
+                                  ),
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
+                                    borderRadius: BorderRadius.circular(SizeConfig().width(0.0625)),
                                   ),
                                 ),
                                 child: Text(
                                   'Diagnose',
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: SizeConfig().responsiveFont(16),
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -201,27 +211,25 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 32),
-
+                  SizedBox(height: SizeConfig().height(0.04)),
 
                   Text(
                     'Common Diseases',
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: SizeConfig().responsiveFont(18),
                       fontWeight: FontWeight.bold,
                     ),
                   ),
 
-                  SizedBox(height: 16),
+                  SizedBox(height: SizeConfig().height(0.02)),
 
-                  // Disease cards
                   Consumer<DiseaseProvider>(
                     builder: (context, diseaseProvider, child) {
                       if (diseaseProvider.isLoading) {
                         return Center(
                           child: Padding(
-                            padding: EdgeInsets.all(40),
-                            child: CircularProgressIndicator(color: Color(0xFF00A67E)),
+                            padding: EdgeInsets.all(SizeConfig().width(0.1)),
+                            child: CircularProgressIndicator(color: const Color(0xFF00A67E)),
                           ),
                         );
                       }
@@ -230,16 +238,16 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                         return Center(
                           child: Column(
                             children: [
-                              Icon(Icons.error_outline, size: 48, color: Colors.red),
-                              SizedBox(height: 8),
+                              Icon(Icons.error_outline, size: SizeConfig().responsiveFont(48), color: Colors.red),
+                              SizedBox(height: SizeConfig().height(0.01)),
                               Text(
                                 'Failed to load diseases',
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(color: Colors.red, fontSize: SizeConfig().responsiveFont(16)),
                               ),
-                              SizedBox(height: 8),
+                              SizedBox(height: SizeConfig().height(0.01)),
                               ElevatedButton(
                                 onPressed: () => diseaseProvider.loadCommonDiseases(),
-                                child: Text('Retry'),
+                                child: Text('Retry', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
                               ),
                             ],
                           ),
@@ -249,10 +257,10 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                       if (diseaseProvider.commonDiseases.isEmpty) {
                         return Center(
                           child: Padding(
-                            padding: EdgeInsets.all(40),
+                            padding: EdgeInsets.all(SizeConfig().width(0.1)),
                             child: Text(
                               'No diseases found',
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(color: Colors.grey, fontSize: SizeConfig().responsiveFont(16)),
                             ),
                           ),
                         );
@@ -260,12 +268,12 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
                       return GridView.builder(
                         shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 0.75,
+                          crossAxisSpacing: SizeConfig().width(0.03),
+                          mainAxisSpacing: SizeConfig().height(0.015),
+                          childAspectRatio: 0.75, //
                         ),
                         itemCount: diseaseProvider.commonDiseases.length,
                         itemBuilder: (context, index) {
@@ -275,25 +283,23 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                       );
                     },
                   ),
-
-                  // Show error message if any
                   if (diagnosisProvider.status == DiagnosisStatus.error) ...[
-                    SizedBox(height: 16),
+                    SizedBox(height: SizeConfig().height(0.02)),
                     Container(
-                      padding: EdgeInsets.all(12),
+                      padding: EdgeInsets.all(SizeConfig().width(0.03)),
                       decoration: BoxDecoration(
                         color: Colors.red.shade50,
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
                         border: Border.all(color: Colors.red.shade200),
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.error_outline, color: Colors.red),
-                          SizedBox(width: 8),
+                          Icon(Icons.error_outline, color: Colors.red, size: SizeConfig().responsiveFont(24)),
+                          SizedBox(width: SizeConfig().width(0.02)),
                           Expanded(
                             child: Text(
                               diagnosisProvider.errorMessage,
-                              style: TextStyle(color: Colors.red.shade700),
+                              style: TextStyle(color: Colors.red.shade700, fontSize: SizeConfig().responsiveFont(14)),
                             ),
                           ),
                         ],
@@ -325,13 +331,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
           boxShadow: [
             BoxShadow(
               color: Colors.grey.withOpacity(0.1),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: Offset(0, 2),
+              spreadRadius: SizeConfig().width(0.0025),
+              blurRadius: SizeConfig().width(0.01),
+              offset: Offset(0, SizeConfig().height(0.0025)),
             ),
           ],
         ),
@@ -342,10 +348,11 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(SizeConfig().width(0.03))),
                 child: Image.network(
                   disease.image,
                   width: double.infinity,
+                  height: SizeConfig().height(0.25),
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: double.infinity,
@@ -353,17 +360,16 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     child: Icon(
                       Icons.image_not_supported,
                       color: Colors.grey,
-                      size: 30,
+                      size: SizeConfig().responsiveFont(30),
                     ),
                   ),
                 ),
               ),
             ),
 
-            // Disease info - Fixed height to prevent overflow
             Container(
-              height: 60,
-              padding: EdgeInsets.all(8),
+              height: SizeConfig().height(0.075),
+              padding: EdgeInsets.all(SizeConfig().width(0.02)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -372,19 +378,19 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     child: Text(
                       disease.name,
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: SizeConfig().responsiveFont(12),
                         fontWeight: FontWeight.bold,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  SizedBox(height: SizeConfig().height(0.0025)),
                   Flexible(
                     child: Text(
                       disease.description,
                       style: TextStyle(
-                        fontSize: 10,
+                        fontSize: SizeConfig().responsiveFont(10), // Responsive font size (Original 10)
                         color: Colors.grey.shade600,
                       ),
                       maxLines: 1,
@@ -421,7 +427,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DiagnosisSuccessScreen(),
+            builder: (context) => const DiagnosisSuccessScreen(),
           ),
         );
       }
@@ -433,7 +439,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
   void _showErrorSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message, style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
         backgroundColor: Colors.red,
       ),
     );
@@ -444,7 +450,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       case DiagnosisStatus.noPlant:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => DiagnosisErrorScreen()),
+          MaterialPageRoute(builder: (_) => const DiagnosisErrorScreen()),
         );
         break;
       case DiagnosisStatus.healthy:

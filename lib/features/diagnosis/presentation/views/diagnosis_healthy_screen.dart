@@ -19,6 +19,7 @@ class DiagnosisHealthyScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(
           'Diagnosis Results',
           style: TextStyle(fontSize: SizeConfig().responsiveFont(20)),
@@ -107,7 +108,7 @@ class DiagnosisHealthyScreen extends StatelessWidget {
 
               ClipRRect(
                 borderRadius: BorderRadius.circular(SizeConfig().width(0.04)),
-                child: Container(
+                child: SizedBox(
                   height: SizeConfig().height(0.3125),
                   width: double.infinity,
                   child: Image.file(File(imagePath), fit: BoxFit.cover),

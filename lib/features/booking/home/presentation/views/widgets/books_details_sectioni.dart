@@ -28,9 +28,7 @@ class BookDetailsSection extends StatelessWidget {
         ),
         Text(
           book.volumeInfo.title!,
-          style: Styles.textStyle18.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.bodyLarge,
           textAlign: TextAlign.center,
         ),
         const SizedBox(

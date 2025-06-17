@@ -3,6 +3,8 @@ import '../../data/disease_info.dart';
 import 'disease_detail_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/disease_provider.dart';
+import 'package:plant_hub_app/core/utils/size_config.dart'; // Import SizeConfig
+
 class CommonDiseasesView extends StatefulWidget {
   const CommonDiseasesView({super.key});
 
@@ -25,21 +27,19 @@ class _CommonDiseasesViewState extends State<CommonDiseasesView> {
       builder: (context, diseaseProvider, child) {
         final commonDiseases = diseaseProvider.commonDiseases;
         final isLoading = diseaseProvider.isLoading;
-
         return Column(
           children: [
-            const SizedBox(height: 16),
-
+            SizedBox(height: SizeConfig().height(0.02)),
             SizedBox(
-              height: 200,
+              height: SizeConfig().height(0.25),
               child: isLoading
-                  ? Center(child: CircularProgressIndicator(color: Color(0xFF00A67E)))
+                  ? Center(child: CircularProgressIndicator(color: const Color(0xFF00A67E)))
                   : commonDiseases.isEmpty
-                  ? Center(child: Text('No diseases found'))
+                  ? Center(child: Text('No diseases found', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))))
                   : ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: commonDiseases.length,
-                separatorBuilder: (context, index) => SizedBox(width: 10),
+                separatorBuilder: (context, index) => SizedBox(width: SizeConfig().width(0.025)),
                 itemBuilder: (context, index) {
                   final disease = commonDiseases[index];
                   return _buildDiseaseItem(disease);
@@ -51,7 +51,6 @@ class _CommonDiseasesViewState extends State<CommonDiseasesView> {
       },
     );
   }
-
   Widget _buildDiseaseItem(DiseaseModel disease) {
     return GestureDetector(
       onTap: () {
@@ -65,31 +64,31 @@ class _CommonDiseasesViewState extends State<CommonDiseasesView> {
           ),
         );
       },
-      child: Container(
-        width: 100,
+      child: SizedBox(
+        width: SizeConfig().width(0.25),
         child: Column(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(SizeConfig().width(0.02)),
               child: Image.network(
                 disease.image,
-                width: 100,
-                height: 80,
+                width: SizeConfig().width(0.25),
+                height: SizeConfig().height(0.1),
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) => Container(
-                  width: 100,
-                  height: 80,
+                  width: SizeConfig().width(0.25),
+                  height: SizeConfig().height(0.1),
                   color: Colors.grey.shade200,
-                  child: Icon(Icons.image_not_supported, color: Colors.grey),
+                  child: Icon(Icons.image_not_supported, color: Colors.grey, size: SizeConfig().responsiveFont(30)),
                 ),
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: SizeConfig().height(0.01)),
             // Disease Name
             Text(
               disease.name,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: SizeConfig().responsiveFont(12),
                 fontWeight: FontWeight.w500,
               ),
               maxLines: 2,
@@ -106,9 +105,11 @@ class _CommonDiseasesViewState extends State<CommonDiseasesView> {
 class DiseaseSearchDelegate extends SearchDelegate {
   @override
   List<Widget> buildActions(BuildContext context) {
+    SizeConfig().init(context);
+
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: Icon(Icons.clear, size: SizeConfig().responsiveFont(24)),
         onPressed: () {
           query = '';
         },
@@ -118,8 +119,10 @@ class DiseaseSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
+    SizeConfig().init(context);
+
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: Icon(Icons.arrow_back, size: SizeConfig().responsiveFont(24)),
       onPressed: () {
         close(context, null);
       },
@@ -137,8 +140,9 @@ class DiseaseSearchDelegate extends SearchDelegate {
   }
 
   Widget _buildSearchResults(BuildContext context) {
+
     if (query.isEmpty) {
-      return Center(child: Text('Enter a search term'));
+      return Center(child: Text('Enter a search term', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))));
     }
 
     return FutureBuilder<List<DiseaseModel>>(
@@ -149,7 +153,7 @@ class DiseaseSearchDelegate extends SearchDelegate {
         }
 
         if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
+          return Center(child: Text('Error: ${snapshot.error}', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))));
         }
 
         final results = snapshot.data ?? [];
@@ -158,9 +162,9 @@ class DiseaseSearchDelegate extends SearchDelegate {
           itemBuilder: (context, index) {
             final disease = results[index];
             return ListTile(
-              leading: Image.network(disease.image, width: 50, height: 50),
-              title: Text(disease.name),
-              subtitle: Text(disease.description),
+              leading: Image.network(disease.image, width: SizeConfig().width(0.125), height: SizeConfig().height(0.0625)),
+              title: Text(disease.name, style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+              subtitle: Text(disease.description, style: TextStyle(fontSize: SizeConfig().responsiveFont(14))),
               onTap: () {
                 Navigator.push(
                   context,
