@@ -233,6 +233,7 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
     builder: (context, snapshot) {
       final isBookmarked = snapshot.data ?? false;
       return PopupMenuButton<String>(
+        color: Theme.of(context).scaffoldBackgroundColor,
         icon: Icon(Icons.more_vert, size: SizeConfig().responsiveFont(24),color: Theme.of(context).primaryColor,),
         onSelected: (value) => _handleMenuSelection(context, value, article),
         itemBuilder: (context) => [
@@ -240,22 +241,24 @@ Widget _buildArticleMenu(BuildContext context, Plant article) {
             value: 'share',
             child: Row(
               children: [
-                Icon(Icons.share, size: SizeConfig().responsiveFont(20)),
+                Icon(Icons.share, size: SizeConfig().responsiveFont(20),color: Theme.of(context).primaryColor,),
                 SizedBox(width: SizeConfig().width(0.02)),
-                Text('Share', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                Text('Share', style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
           PopupMenuItem<String>(
+
             value: 'bookmark',
             child: Row(
               children: [
                 Icon(
                   isBookmarked ? Icons.bookmark : Icons.bookmark_border_outlined,
                   size: SizeConfig().responsiveFont(18),
+                    color: Theme.of(context).primaryColor
                 ),
                 SizedBox(width: SizeConfig().width(0.02)),
-                Text(isBookmarked ? 'remove bookmark' : 'add bookmark', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
+                Text(isBookmarked ? 'remove bookmark' : 'add bookmark', style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
           ),
@@ -276,12 +279,13 @@ Future<void> _handleMenuSelection(
     if (isBookmarked) {
       await bookmarkService.removeBookmark(article.id);
       if (context.mounted) {
-        FlushbarHelper.createSuccess(message: "remove bookmark");
+        FlushbarHelper.createSuccess(message: 'remove bookmark').show(context);
       }
     } else {
       await bookmarkService.addBookmark(article.id);
       if (context.mounted) {
-        FlushbarHelper.createSuccess(message: "add bookmark");
+        FlushbarHelper.createSuccess(message: 'add bookmark').show(context);
+
 
       }
     }

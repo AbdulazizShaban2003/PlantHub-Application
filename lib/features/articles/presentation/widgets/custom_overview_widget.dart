@@ -17,28 +17,27 @@ class OverviewTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: SizeConfig().height(0.015)),
-            Text(
-              AppKeyStringTr.prayerPlant,
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-             SizedBox(height: SizeConfig().height(0.015)),
-            CustomPrayerPlant(plant: plant),
-             SizedBox(height: SizeConfig().height(0.015)),
-            SectionTitle(title: AppKeyStringTr.photoGallery, icon: Icons.image),
-            ImageGallery(images: plant.listImage),
-            SectionTitle(title: AppKeyStringTr.description, icon: Icons.description),
-            Text(
-              plant.description,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-
-            SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
+      padding: const EdgeInsets.all(15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: SizeConfig().height(0.015)),
+          Text(
+            AppKeyStringTr.prayerPlant,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          SizedBox(height: SizeConfig().height(0.015)),
+          CustomPrayerPlant(plant: plant),
+          SizedBox(height: SizeConfig().height(0.015)),
+          SectionTitle(title: AppKeyStringTr.photoGallery, icon: Icons.image),
+          ImageGallery(images: plant.listImage ?? []),
+          SectionTitle(title: AppKeyStringTr.description, icon: Icons.description),
+          Text(
+            plant.description ?? 'No description available',
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+          SectionTitle(title: AppKeyStringTr.distribution, icon: Icons.location_on),
+          if (plant.distribution != null) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -48,10 +47,10 @@ class OverviewTab extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                  SizedBox(width: SizeConfig().width(0.05)),
+                SizedBox(width: SizeConfig().width(0.05)),
                 Expanded(
                   child: Text(
-                    plant.distribution.native,
+                    plant.distribution?.native ?? 'Not specified',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -66,28 +65,29 @@ class OverviewTab extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-             SizedBox(height: SizeConfig().height(0.02)),
-            Wrap(
-              spacing: 32,
-              runSpacing: 16,
-              children: plant.distribution.current.map((item) {
-                return Text(
-                  "$item,",
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                );
-              }).toList(),
-            ),
-               SizedBox(height: SizeConfig().height(0.015)),
-            SectionTitle(title: AppKeyStringTr.askPlantExpert, icon: Icons.help_outline),
-             SizedBox(height: SizeConfig().height(0.015)),
-            const CustomAskExpert(),
-             SizedBox(height: SizeConfig().height(0.015)),
-            Divider(),
-            SizedBox(height:SizeConfig().height(0.015)),
+            SizedBox(height: SizeConfig().height(0.02)),
+            if (plant.distribution?.current != null)
+              Wrap(
+                spacing: 32,
+                runSpacing: 16,
+                children: plant.distribution!.current!.map((item) {
+                  return Text(
+                    "$item,",
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  );
+                }).toList(),
+              ),
           ],
-        ),
+          SizedBox(height: SizeConfig().height(0.015)),
+          SectionTitle(title: AppKeyStringTr.askPlantExpert, icon: Icons.help_outline),
+          SizedBox(height: SizeConfig().height(0.015)),
+          const CustomAskExpert(),
+          SizedBox(height: SizeConfig().height(0.015)),
+          const Divider(),
+          SizedBox(height: SizeConfig().height(0.015)),
+        ],
       ),
     );
   }

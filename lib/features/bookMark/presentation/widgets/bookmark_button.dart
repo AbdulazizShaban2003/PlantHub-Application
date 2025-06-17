@@ -42,7 +42,7 @@ class BookmarkButton extends StatelessWidget {
           )
               : Icon(
             isBookmarked ? Icons.bookmark : Icons.bookmark_border,
-            color: isBookmarked ? ColorsManager.greenPrimaryColor : Theme.of(context).primaryColor,
+            color: isBookmarked ? ColorsManager.greenPrimaryColor : Theme.of(context).scaffoldBackgroundColor,
             size: iconSize,
           ),
           onPressed: isLoading ? null : () => _toggleBookmark(context, service, isBookmarked),
