@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../providers/plant_provider.dart';
-import '../widgets/harvest_content_widget.dart';
 import '../widgets/plant_content_widget.dart';
 import 'add_plant_screen.dart';
+import 'harvest_view.dart';
 
 class MyPlantView extends StatefulWidget {
   const MyPlantView({super.key});
@@ -88,7 +88,7 @@ class _MyPlantViewState extends State<MyPlantView>
         controller: _tabController,
         children: const [
           PlantsContent(),
-          HarvestGuideWidget(),
+          HarvestView(),
         ],
       ),
       floatingActionButton: _tabController.index == 0

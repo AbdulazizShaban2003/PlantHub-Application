@@ -50,9 +50,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         _showClearHistoryDialog(historyProvider);
                       }
                       break;
-                    case 'reset':
-                      _showResetDatabaseDialog(historyProvider);
-                      break;
                   }
                 },
                 itemBuilder: (context) => [
@@ -67,16 +64,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
                         ],
                       ),
                     ),
-                  PopupMenuItem( // Removed const
-                    value: 'reset',
-                    child: Row(
-                      children: [
-                        Icon(Icons.refresh, color: Colors.orange, size: SizeConfig().responsiveFont(24)),
-                        SizedBox(width: SizeConfig().width(0.02)),
-                        Text('Reset Database', style: TextStyle(fontSize: SizeConfig().responsiveFont(16))),
-                      ],
-                    ),
-                  ),
                 ],
               );
             },
@@ -110,7 +97,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 )
                     : null,
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: Colors.white.withOpacity(0.2),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(SizeConfig().width(0.075)),
                   borderSide: BorderSide.none,
@@ -180,32 +167,38 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 }
 
                 if (historyProvider.historyItems.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.history, size: SizeConfig().responsiveFont(80), color: Colors.grey.shade400),
-                        SizedBox(height: SizeConfig().height(0.02)),
-                        Text(
-                          _searchController.text.isEmpty
-                              ? 'No diagnosis history yet'
-                              : 'No results found for "${_searchController.text}"',
-                          style: TextStyle(
-                            fontSize: SizeConfig().responsiveFont(18),
-                            color: Colors.grey.shade600,
-                          ),
-                        ),
-                        if (_searchController.text.isEmpty) ...[
-                          SizedBox(height: SizeConfig().height(0.01)),
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.history, size: SizeConfig().responsiveFont(80), color: Colors.grey.shade400),
+                          SizedBox(height: SizeConfig().height(0.02)),
                           Text(
-                            'Start diagnosing plants to see your history here',
+                            _searchController.text.isEmpty
+                                ? 'No diagnosis history yet'
+                                : 'No results found for "${_searchController.text}"',
                             style: TextStyle(
-                              fontSize: SizeConfig().responsiveFont(14),
-                              color: Colors.grey.shade500,
+                              fontSize: SizeConfig().responsiveFont(18),
+                              color: Colors.grey.shade600,
                             ),
                           ),
+                          if (_searchController.text.isEmpty) ...[
+                            SizedBox(height: SizeConfig().height(0.01)),
+                            Text(
+                              'Start diagnosing plants to see your history here',
+
+                              style: TextStyle(
+
+                                fontSize: SizeConfig().responsiveFont(14),
+                                color: Colors.grey.shade500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ],
-                      ],
+                      ),
                     ),
                   );
                 }

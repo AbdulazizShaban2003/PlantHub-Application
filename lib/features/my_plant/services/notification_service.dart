@@ -28,30 +28,49 @@ class NotificationService {
   final FirebaseServiceNotify _firebaseService = FirebaseServiceNotify();
   final Uuid _uuid = const Uuid();
 
-  /// تهيئة خدمة الإشعارات، وإعداد المنصات والأذونات.
+   Future<void> showInstantNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+    AndroidNotificationDetails(
+      'instant_channel_id',
+      'Instant Notifications',
+      channelDescription: 'Notifications shown immediately upon app launch',
+      importance: Importance.high,
+      priority: Priority.high,
+      ticker: 'ticker',
+    );
+    const NotificationDetails platformChannelSpecifics =
+    NotificationDetails(android: androidPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      platformChannelSpecifics,
+      payload: payload,
+    );
+  }
   Future<void> initialize() async {
     try {
       print('🔧 Initializing notification service...');
 
-      // إعدادات أندرويد: تحدد الأيقونة التي ستستخدم للإشعارات.
       const AndroidInitializationSettings initializationSettingsAndroid =
       AndroidInitializationSettings('@mipmap/launcher_icon');
 
-      // إعدادات iOS: تطلب الأذونات الضرورية للتنبيهات والشارات والأصوات.
       const DarwinInitializationSettings initializationSettingsIOS =
       DarwinInitializationSettings(
         requestAlertPermission: true,
         requestBadgePermission: true,
         requestSoundPermission: true,
       );
-
-      // إعدادات التهيئة العامة لكلا المنصتين.
       const InitializationSettings initializationSettings = InitializationSettings(
         android: initializationSettingsAndroid,
         iOS: initializationSettingsIOS,
       );
 
-      // تنفيذ تهيئة الـ plugin.
       final bool? initialized = await _flutterLocalNotificationsPlugin.initialize(
         initializationSettings,
         onDidReceiveNotificationResponse: _onNotificationTapped,
@@ -79,8 +98,6 @@ class NotificationService {
     }
   }
 
-  /// يتعامل مع الإشعارات الواردة لإصدارات iOS الأقدم عندما يكون التطبيق في المقدمة.
-  // ignore: prefer_static_class_instance_members
   static void _onDidReceiveLocalNotification(
       int id,
       String? title,

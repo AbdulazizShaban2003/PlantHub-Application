@@ -5,6 +5,7 @@ import '../../../../config/theme/app_colors.dart';
 import '../../../../core/utils/app_strings.dart';
 import '../../../../core/utils/asstes_manager.dart';
 import '../../../../core/utils/size_config.dart';
+import '../../../my_plant/services/notification_service.dart';
 import '../controller/splash_controller.dart';
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -18,6 +19,12 @@ class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
     super.initState();
+    NotificationService().showInstantNotification(
+      id: 0,
+      title: 'Welcome to Plant Hub !',
+      body: 'We are glad to have you here.',
+      payload: 'welcome_notification',
+    );
     _controller.showLogoImageController(
         setState: () => setState(() => showLogo = true),
         showLogoImage: showLogo,

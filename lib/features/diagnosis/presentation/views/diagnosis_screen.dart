@@ -41,12 +41,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        forceMaterialTransparency: true,
         title: Text(
           'Diagnosis',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontSize: SizeConfig().responsiveFont(22),
           ),
+
         ),
         actions: [
           IconButton(
@@ -95,15 +96,14 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                   TextField(
                     controller: _searchController,
                     onChanged: (query) {
-
                       DiseaseProvider().searchDiseases(query);
                     },
                     decoration: InputDecoration(
                       hintText: 'Search diseases...',
-                      hintStyle: TextStyle(fontSize: SizeConfig().responsiveFont(14)),
+                      hintStyle: Theme.of(context).textTheme.bodySmall,
                       prefixIcon: Icon(Icons.search, color: Colors.grey, size: SizeConfig().responsiveFont(24)),
                       filled: true,
-                      fillColor: Colors.grey.shade100,
+                      fillColor: Colors.grey.withOpacity(0.1),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(SizeConfig().width(0.075)),
                         borderSide: BorderSide.none,
@@ -121,22 +121,14 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     width: double.infinity,
                     padding: EdgeInsets.all(SizeConfig().width(0.05)),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).scaffoldBackgroundColor,
                       borderRadius: BorderRadius.circular(SizeConfig().width(0.04)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.1),
-                          spreadRadius: SizeConfig().width(0.0025),
-                          blurRadius: SizeConfig().width(0.02),
-                          offset: Offset(0, SizeConfig().height(0.0025)),
-                        ),
-                      ],
                     ),
                     child: Row(
                       children: [
                         SizedBox(
                           width: SizeConfig().width(0.25),
-                          height: SizeConfig().width(0.25),
+                          height: SizeConfig().width(0.2),
                           child: Image.asset(
                             'assets/images/icon_diagnosis.png',
                             fit: BoxFit.contain,
@@ -164,21 +156,13 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                             children: [
                               Text(
                                 'Check Your Plant',
-                                style: TextStyle(
-                                  fontSize: SizeConfig().responsiveFont(15),
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
-                                ),
+                                style: Theme.of(context).textTheme.bodyMedium
                               ),
 
                               SizedBox(height: SizeConfig().height(0.01)),
                               Text(
                                 'Take photos, start diagnose diseases, & get plant care tips',
-                                style: TextStyle(
-                                  fontSize: SizeConfig().responsiveFont(12),
-                                  color: Colors.grey[600],
-                                  height: 1.4,
-                                ),
+                                style: Theme.of(context).textTheme.titleSmall
                               ),
 
                               SizedBox(height: SizeConfig().height(0.02)),
@@ -187,10 +171,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                                 onPressed: () => _showCameraScreen(),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF00A67E),
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig().width(0.0225),
-                                    vertical: SizeConfig().height(0.0075),
-                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(SizeConfig().width(0.0625)),
                                   ),
@@ -330,7 +310,6 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
       },
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
           borderRadius: BorderRadius.circular(SizeConfig().width(0.03)),
           boxShadow: [
             BoxShadow(
@@ -348,7 +327,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
             Expanded(
               flex: 3,
               child: ClipRRect(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(SizeConfig().width(0.03))),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(SizeConfig().width(0.03)),bottom: Radius.circular(SizeConfig().width(0.03)),),
                 child: Image.network(
                   disease.image,
                   width: double.infinity,
@@ -390,7 +369,7 @@ class _DiagnosisScreenState extends State<DiagnosisScreen> {
                     child: Text(
                       disease.description,
                       style: TextStyle(
-                        fontSize: SizeConfig().responsiveFont(10), // Responsive font size (Original 10)
+                        fontSize: SizeConfig().responsiveFont(10),
                         color: Colors.grey.shade600,
                       ),
                       maxLines: 1,
