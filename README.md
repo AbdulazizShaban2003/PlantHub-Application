@@ -19,6 +19,53 @@
 PlantHub is a plant-focused mobile application built with Flutter. It brings together tools for identifying possible plant diseases, exploring plant-care information, organizing personal plants, and learning through articles and an AI-powered chat experience.
 
 The project combines a feature-oriented Flutter codebase with Firebase services, local storage, camera and image selection, localization, and a remote diagnosis API.
+🧭 Application Workflow
+The diagram below summarizes the main user journeys and the services they connect to. It reflects the integrations found in the project source code.
+```mermaid
+flowchart TB
+    U([👤 User]) --> APP[🌿 PlantHub Mobile App]
+
+    APP --> AUTH[🔐 Sign in / Sign up]
+    APP --> DIAG[📷 Plant Disease Diagnosis]
+    APP --> LIB[🌱 Plant Library & Articles]
+    APP --> MYP[🪴 My Plants & Reminders]
+    APP --> CHAT[💬 AI Plant Assistant]
+    APP --> BOOK[📚 Plant Books]
+    APP --> SAVED[🔖 Bookmarks & History]
+
+    AUTH --> FA[Firebase Authentication]
+    AUTH --> FS[(Cloud Firestore)]
+    LIB --> FS
+    MYP --> FS
+    CHAT --> GEM[Google Gemini]
+    CHAT --> LOCAL[(Local SQLite Storage)]
+    BOOK --> BOOKS[Google Books API]
+    DIAG --> PICK[Camera / Image Picker]
+    PICK --> API[Plant Diagnosis REST API]
+    API --> RESULT[🩺 Diagnosis Result]
+    RESULT --> HISTORY[(Local Diagnosis History)]
+    SAVED --> FS
+    APP --> MSG[Firebase Cloud Messaging]
+    APP --> LOCALP[Local Notifications & Preferences]
+
+    classDef app fill:#e7f7ec,stroke:#16803c,color:#123b22,stroke-width:2px
+    classDef service fill:#eef4ff,stroke:#4878c0,color:#10264a
+    class APP app
+    class FA,FS,GEM,BOOKS,API,LOCAL,HISTORY,MSG,LOCALP service
+```
+How the diagnosis flow works: the user captures or selects a plant image, PlantHub uploads it to the configured diagnosis REST API, and the app parses and displays the response. Diagnosis history is also supported locally. The diagnosis API is separate from the Gemini-powered chat assistant.
+🧩 Main Integrations at a Glance
+<p align="center">
+  <img src="https://img.shields.io/badge/Flutter-App%20UI-02569B?logo=flutter&logoColor=white" alt="Flutter" />
+  <img src="https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20Messaging-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
+  <img src="https://img.shields.io/badge/Google%20Gemini-AI%20Chat-8E75B2?logo=googlegemini&logoColor=white" alt="Google Gemini" />
+  <img src="https://img.shields.io/badge/Dio-REST%20API-1677FF" alt="Dio REST API client" />
+  <img src="https://img.shields.io/badge/SQLite-Local%20Storage-003B57?logo=sqlite&logoColor=white" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Google%20Books-Book%20Search-4285F4?logo=google&logoColor=white" alt="Google Books API" />
+</p>
+
+Architecture note: this is a feature-oriented Flutter application. Firebase, Gemini, the plant-diagnosis REST API, and Google Books serve different purposes; the diagnosis endpoint is not the same service as the AI chat.
+
 ✨ Features
 - Plant disease diagnosis — capture or select a plant image and submit it to the diagnosis API to receive a result.
 - Diagnosis history — retain and revisit previous diagnosis results using local storage.
@@ -117,26 +164,3 @@ The output is normally created at build/app/outputs/flutter-apk/app-release.apk.
 🧪 Testing
 The repository includes a Flutter test/ directory. Run the current test suite with:
 flutter test
-For future improvements, add focused unit tests for diagnosis-response parsing, repositories and providers, as well as widget tests for the main user flows.
-🗺️ Roadmap Ideas
-- Add a dedicated screenshots and demo section to document the main screens.
-- Expand automated tests for authentication, diagnosis, plant management, and localization.
-- Centralize environment-specific configuration and remove embedded secrets.
-- Document the diagnosis API request/response contract and expected Firestore schema.
-- Add a reproducible release workflow and versioned release notes.
-🤝 Contributing
-Contributions and suggestions are welcome.
-1. Fork the repository.
-2. Create a branch for your change: git checkout -b feature/your-change.
-3. Make and test your changes.
-4. Commit with a clear message.
-5. Open a pull request describing the change and how it was tested.
-👨‍💻 Author
-Abdulaziz Shaban
-- GitHub: @AbdulazizShaban2003
-- Project: PlantHub-Application
-📄 License
-No license file was identified in the supplied project archive. Until a license is added, do not assume that the project is available for unrestricted reuse. Add a LICENSE file to state the intended terms.
-<div align="center">
-  <sub>Built with Flutter 🌱 · Helping plant lovers learn, care, and grow.</sub>
-</div>
