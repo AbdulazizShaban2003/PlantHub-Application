@@ -101,7 +101,10 @@ Explore the PlantHub mobile application and its main features.
   <img src="https://github.com/user-attachments/assets/05e0f90c-0a98-44f6-aba7-8618ee22f481" alt="PlantHub Screenshot 3" width="150" />
   <img src="https://github.com/user-attachments/assets/c8b77802-cfb5-4451-9e7a-6d2fc64339bb" alt="PlantHub Screenshot 4" width="150" />
   <img src="https://github.com/user-attachments/assets/321ad86e-3777-46c8-bb72-b1f1767327b1" alt="PlantHub Screenshot 5" width="150" />
+  <img width="150" src="https://github.com/user-attachments/assets/1e2b334e-dd8e-4265-a3ee-f7751374e9f5" />
+<img width="150" src="https://github.com/user-attachments/assets/df9c0006-4245-4914-a259-e8b7f2534b50" />
 </p>
+
 
 
 ## 🧰 Tech Stack
