@@ -243,20 +243,3 @@ Contributions and suggestions are welcome.
 3. Make and test your changes.
 4. Commit with a clear message.
 5. Open a pull request describing the change and how it was tested.
-
-## 👨‍💻 Author
-
-**Abdulaziz Shaban**
-
-- GitHub: [@AbdulazizShaban2003](https://github.com/AbdulazizShaban2003)
-- Project: [PlantHub-Application](https://github.com/AbdulazizShaban2003/PlantHub-Application)
-
-## 📄 License
-
-No license file was identified in the supplied project archive. Until a license is added, do not assume that the project is available for unrestricted reuse. Add a `LICENSE` file to state the intended terms.
-
----
-
-<div align="center">
-  <sub>Built with Flutter 🌱 · Helping plant lovers learn, care, and grow.</sub>
-</div>
