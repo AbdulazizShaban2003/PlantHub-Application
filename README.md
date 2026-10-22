@@ -1,4 +1,3 @@
-<img width="306" height="615" alt="Pasted image" src="https://github.com/user-attachments/assets/c30bc5a6-ab55-4209-afb2-375c9c304038" />
 <div align="center">
   <img src="assets/images/logo.png" alt="PlantHub logo" width="120" />
   <h1>PlantHub 🌿</h1>
@@ -91,6 +90,16 @@ flowchart TB
 - **Additional usability features** — camera access, image sharing, connectivity feedback, loading/error states, and theme settings.
 
 > Diagnosis results are informational and should not replace assessment by a qualified agricultural or plant-health specialist.
+
+## 📱 App Screenshots
+
+Explore the PlantHub mobile application and its main features.
+<img width="343" height="724" alt="Pasted image (3)" src="https://github.com/user-attachments/assets/7107e614-5cd0-4db2-8fdd-21228265acb6" />
+<img width="392" height="828" alt="Pasted image (2)" src="https://github.com/user-attachments/assets/f750662e-2425-44b2-a00c-74a69fca04b7" />
+<img width="306" height="615" alt="Pasted image" src="https://github.com/user-attachments/assets/05e0f90c-0a98-44f6-aba7-8618ee22f481" />
+<img width="606" height="1280" alt="image" src="https://github.com/user-attachments/assets/c8b77802-cfb5-4451-9e7a-6d2fc64339bb" />
+<img width="606" height="1280" alt="image" src="https://github.com/user-attachments/assets/321ad86e-3777-46c8-bb72-b1f1767327b1" />
+
 
 ## 🧰 Tech Stack
 
