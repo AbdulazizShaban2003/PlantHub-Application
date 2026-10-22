@@ -1,3 +1,6 @@
+![Uploading Pasted image.png…]()
+<img width="392" height="828" alt="Pasted image (2)" src="https://github.com/user-attachments/assets/2d902f46-fe6f-4043-ba28-a0bdb97bc09e" />
+<img width="343" height="724" alt="Pasted image (3)" src="https://github.com/user-attachments/assets/1fdec5c4-7f9b-4392-8c7e-679a6fae468f" />
 <div align="center">
   <img src="assets/images/logo.png" alt="PlantHub logo" width="120" />
   <h1>PlantHub 🌿</h1>
