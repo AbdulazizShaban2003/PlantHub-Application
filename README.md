@@ -43,19 +43,6 @@ flowchart TB
 
 **How the diagnosis flow works:** the user captures or selects a plant image, PlantHub uploads it to the configured diagnosis REST API, and the app parses and displays the response. Diagnosis history is also supported locally. The diagnosis API is separate from the Gemini-powered chat assistant.
 
-## Main Integrations at a Glance
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Flutter-App%20UI-02569B?logo=flutter&logoColor=white" alt="Flutter" />
-  <img src="https://img.shields.io/badge/Firebase-Auth%20%7C%20Firestore%20%7C%20Messaging-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
-  <img src="https://img.shields.io/badge/Google%20Gemini-AI%20Chat-8E75B2?logo=googlegemini&logoColor=white" alt="Google Gemini" />
-  <img src="https://img.shields.io/badge/Dio-REST%20API-1677FF" alt="Dio REST API client" />
-  <img src="https://img.shields.io/badge/SQLite-Local%20Storage-003B57?logo=sqlite&logoColor=white" alt="SQLite" />
-  <img src="https://img.shields.io/badge/Google%20Books-Book%20Search-4285F4?logo=google&logoColor=white" alt="Google Books API" />
-</p>
-
-> **Architecture note:** this is a feature-oriented Flutter application. Firebase, Gemini, the plant-diagnosis REST API, and Google Books serve different purposes; the diagnosis endpoint is not the same service as the AI chat.
-
 ##  Features
 
 - **Plant disease diagnosis** — capture or select a plant image and submit it to the diagnosis API to receive a result.
