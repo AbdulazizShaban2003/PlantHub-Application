@@ -13,27 +13,27 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 **PlantHub** is a plant-focused mobile application built with Flutter. It brings together tools for identifying possible plant diseases, exploring plant-care information, organizing personal plants, and learning through articles and an AI-powered chat experience.
 
 The project combines a feature-oriented Flutter codebase with Firebase services, local storage, camera and image selection, localization, and a remote diagnosis API.
 
-## 🧭 Application Workflow
+##  Application Workflow
 
 The diagram below summarizes the main user journeys and the services they connect to. It reflects the integrations found in the project source code.
 
 ```mermaid
 flowchart TB
-    U([👤 User]) --> APP[🌿 PlantHub Mobile App]
+    U([ User]) --> APP[ PlantHub Mobile App]
 
-    APP --> AUTH[🔐 Sign in / Sign up]
-    APP --> DIAG[📷 Plant Disease Diagnosis]
-    APP --> LIB[🌱 Plant Library & Articles]
-    APP --> MYP[🪴 My Plants & Reminders]
-    APP --> CHAT[💬 AI Plant Assistant]
-    APP --> BOOK[📚 Plant Books]
-    APP --> SAVED[🔖 Bookmarks & History]
+    APP --> AUTH[ Sign in / Sign up]
+    APP --> DIAG[ Plant Disease Diagnosis]
+    APP --> LIB[ Plant Library & Articles]
+    APP --> MYP[ My Plants & Reminders]
+    APP --> CHAT[ AI Plant Assistant]
+    APP --> BOOK[ Plant Books]
+    APP --> SAVED[ Bookmarks & History]
 
     AUTH --> FA[Firebase Authentication]
     AUTH --> FS[(Cloud Firestore)]
@@ -58,7 +58,7 @@ flowchart TB
 
 **How the diagnosis flow works:** the user captures or selects a plant image, PlantHub uploads it to the configured diagnosis REST API, and the app parses and displays the response. Diagnosis history is also supported locally. The diagnosis API is separate from the Gemini-powered chat assistant.
 
-## 🧩 Main Integrations at a Glance
+## Main Integrations at a Glance
 
 <p align="center">
   <img src="https://img.shields.io/badge/Flutter-App%20UI-02569B?logo=flutter&logoColor=white" alt="Flutter" />
@@ -71,7 +71,7 @@ flowchart TB
 
 > **Architecture note:** this is a feature-oriented Flutter application. Firebase, Gemini, the plant-diagnosis REST API, and Google Books serve different purposes; the diagnosis endpoint is not the same service as the AI chat.
 
-## ✨ Features
+##  Features
 
 - **Plant disease diagnosis** — capture or select a plant image and submit it to the diagnosis API to receive a result.
 - **Diagnosis history** — retain and revisit previous diagnosis results using local storage.
@@ -87,7 +87,7 @@ flowchart TB
 
 > Diagnosis results are informational and should not replace assessment by a qualified agricultural or plant-health specialist.
 
-## 📱 App Screenshots
+##  App Screenshots
 
 Explore the PlantHub mobile application and its main features.
 
@@ -103,7 +103,7 @@ Explore the PlantHub mobile application and its main features.
 
 
 
-## 🧰 Tech Stack
+##  Tech Stack
 
 | Area | Technologies |
 | --- | --- |
@@ -117,7 +117,7 @@ Explore the PlantHub mobile application and its main features.
 | Localization | `easy_localization` (Arabic and English) |
 | UI and utilities | Google Fonts, Lottie, Flutter SVG, Shimmer, Flutter Spinkit |
 
-## 🏗️ Project Structure
+##  Project Structure
 
 The `lib/` directory is organized primarily by application feature, with shared infrastructure under `core/`.
 
@@ -149,7 +149,7 @@ assets/
 └── translations/         # Arabic and English translation files
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -221,37 +221,17 @@ flutter build apk --release
 
 The output is normally created at `build/app/outputs/flutter-apk/app-release.apk`.
 
-## 🔐 Configuration and Security Notes
+## Configuration and Security Notes
 
 - Never publish private credentials, service-account files, access tokens, or unrestricted API keys.
 - Firebase client configuration is not a substitute for Firestore Security Rules, Firebase App Check, API restrictions, and proper backend authorization.
 - If a key has already been committed publicly, revoke or rotate it and review its usage. Removing it from the latest commit alone does not remove it from Git history.
 - Keep user data and local images private, and request camera, microphone, and notification permissions only when needed.
 
-## 🧪 Testing
+## Testing
 
 The repository includes a Flutter `test/` directory. Run the current test suite with:
 
 ```bash
 flutter test
 ```
-
-For future improvements, add focused unit tests for diagnosis-response parsing, repositories and providers, as well as widget tests for the main user flows.
-
-## 🗺️ Roadmap Ideas
-
-- Add a dedicated screenshots and demo section to document the main screens.
-- Expand automated tests for authentication, diagnosis, plant management, and localization.
-- Centralize environment-specific configuration and remove embedded secrets.
-- Document the diagnosis API request/response contract and expected Firestore schema.
-- Add a reproducible release workflow and versioned release notes.
-
-## 🤝 Contributing
-
-Contributions and suggestions are welcome.
-
-1. Fork the repository.
-2. Create a branch for your change: `git checkout -b feature/your-change`.
-3. Make and test your changes.
-4. Commit with a clear message.
-5. Open a pull request describing the change and how it was tested.
