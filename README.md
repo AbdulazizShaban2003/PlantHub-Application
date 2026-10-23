@@ -9,10 +9,6 @@
     <img src="https://img.shields.io/badge/Firebase-Integrated-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
     <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84" alt="Platforms" />
   </p>
-  <p>
-    <a href="https://github.com/AbdulazizShaban2003/PlantHub-Application">Repository</a>
-    · <a href="https://github.com/AbdulazizShaban2003">Developer Profile</a>
-  </p>
 </div>
 
 ---
