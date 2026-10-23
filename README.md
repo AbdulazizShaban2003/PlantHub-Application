@@ -2,17 +2,7 @@
   <img src="assets/images/logo.png" alt="PlantHub logo" width="120" />
   <h1>PlantHub 🌿</h1>
   <p><strong>Your companion for healthier plants.</strong></p>
-  <p>A Flutter mobile application for plant care, plant-disease diagnosis, and plant-related learning.</p>
-  <p>
-    <img src="https://img.shields.io/badge/Flutter-Mobile%20App-02569B?logo=flutter&logoColor=white" alt="Flutter" />
-    <img src="https://img.shields.io/badge/Dart-3.7%2B-0175C2?logo=dart&logoColor=white" alt="Dart" />
-    <img src="https://img.shields.io/badge/Firebase-Integrated-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
-    <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-3DDC84" alt="Platforms" />
-  </p>
-</div>
-
----
-
+ 
 ## Overview
 
 **PlantHub** is a plant-focused mobile application built with Flutter. It brings together tools for identifying possible plant diseases, exploring plant-care information, organizing personal plants, and learning through articles and an AI-powered chat experience.
