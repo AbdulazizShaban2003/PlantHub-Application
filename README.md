@@ -1,5 +1,3 @@
-  <h1>PlantHub 🌿</h1>
-
 ## Overview
 
 **PlantHub** is a plant-focused mobile application built with Flutter. It brings together tools for identifying possible plant diseases, exploring plant-care information, organizing personal plants, and learning through articles and an AI-powered chat experience.
